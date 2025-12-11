@@ -32,19 +32,19 @@ export function Contact() {
                     <div className="md:col-span-1 space-y-6">
                         <h3 className="font-bold text-white text-lg">Socials</h3>
                         <div className="space-y-4">
-                            <a href="#" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors group">
+                            <a href="https://github.com/luinbytes" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors group">
                                 <div className="p-2 bg-white/5 rounded-lg group-hover:bg-neon/20 group-hover:text-neon transition-colors">
                                     <Github className="w-5 h-5" />
                                 </div>
                                 <span>GitHub</span>
                             </a>
-                            <a href="#" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors group">
+                            <a href="https://x.com/x6c75" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors group">
                                 <div className="p-2 bg-white/5 rounded-lg group-hover:bg-neon/20 group-hover:text-neon transition-colors">
                                     <Twitter className="w-5 h-5" />
                                 </div>
-                                <span>Twitter</span>
+                                <span>@x6c75</span>
                             </a>
-                            <a href="mailto:lu@luinbytes.dev" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors group">
+                            <a href="mailto:0x6c75@protonmail.com" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors group">
                                 <div className="p-2 bg-white/5 rounded-lg group-hover:bg-neon/20 group-hover:text-neon transition-colors">
                                     <Mail className="w-5 h-5" />
                                 </div>
