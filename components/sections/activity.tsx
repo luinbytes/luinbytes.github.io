@@ -1,0 +1,169 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { ActivityCalendar } from "react-activity-calendar";
+import { GitCommit, Package, Zap } from "lucide-react";
+import { format } from "date-fns";
+
+export function Activity() {
+    const [commits, setCommits] = useState<any[]>([]);
+    const [calendarData, setCalendarData] = useState<any[]>([]);
+
+    useEffect(() => {
+        // Fetch recent events
+        fetch("https://api.github.com/users/luinbytes/events/public")
+            .then(res => res.json())
+            .then(data => {
+                const pushEvents = data
+                    .filter((event: any) => event.type === "PushEvent")
+                    .slice(0, 5)
+                    .map((event: any) => ({
+                        id: event.id,
+                        repo: event.repo.name,
+                        message: event.payload.commits?.[0]?.message || "Pushed updates",
+                        date: format(new Date(event.created_at), "MMM d, yyyy"),
+                        type: "contribution"
+                    }));
+                setCommits(pushEvents);
+            })
+            .catch(err => console.error("Failed to fetch events", err));
+
+        // Fetch contributions (mocking structure for calendar as real API needs auth/proxy)
+        // In a real production app we would use a proxy or specific graphQL query
+        // For now, we simulate the "structure" but can't easily get the numbers without a token on client
+        // So we will fallback to a visual approximation or specific known activity if possible.
+        // However, user specifically asked for "actual github graph". 
+        // Best public way without token is using a service or scraping. 
+        // Let's use a public API wrapper for contributions if available or just the recent event stream to populate "today"
+
+        // Attempting to fetch from a public contribution API (e.g. github-contributions-api.jogruber.de)
+        fetch("https://github-contributions-api.jogruber.de/v4/luinbytes?y=last")
+            .then(res => res.json())
+            .then(data => {
+                if (data.contributions) {
+                    const formatted = data.contributions.map((day: any) => ({
+                        date: day.date,
+                        count: day.count,
+                        level: day.level
+                    }));
+                    setCalendarData(formatted);
+                }
+            })
+            .catch(err => console.error("Failed to fetch calendar", err));
+
+    }, []);
+
+    return (
+        <section id="activity" className="py-32 relative">
+            <div className="container px-4 mx-auto grid lg:grid-cols-2 gap-16">
+
+                {/* Left Column: Contributions & Graph */}
+                <div>
+                    <h2 className="text-3xl font-bold tracking-tighter mb-8 flex items-center gap-3">
+                        Activity
+                    </h2>
+
+                    <div className="bg-surface border border-white/10 p-6 rounded-xl mb-8">
+                        <div className="flex justify-between items-end mb-4">
+                            <span className="text-sm text-gray-400">Contributions (Last Year)</span>
+                            <span className="text-xs text-gray-500 font-mono">
+                                {calendarData.reduce((acc, curr) => acc + curr.count, 0)} Total
+                            </span>
+                        </div>
+
+                        {calendarData.length > 0 ? (
+                            <div className="w-full flex justify-center overflow-hidden">
+                                <ActivityCalendar
+                                    data={calendarData}
+                                    theme={{
+                                        light: ['#1a1a1a', '#0e4429', '#006d32', '#26a641', '#39d353'],
+                                        dark: ['#1a1a1a', '#3f2e3e', '#794a63', '#b3688a', '#ff9eb5'], // Pastel Pink Palette
+                                    }}
+                                    labels={{
+                                        totalCount: '{{count}} contributions in {{year}}',
+                                    }}
+                                    colorScheme="dark"
+                                    blockSize={9}
+                                    blockMargin={3}
+                                    fontSize={12}
+                                    style={{ width: '100%', height: 'auto', maxWidth: '100%' }}
+                                />
+                            </div>
+                        ) : (
+                            <div className="h-[120px] flex items-center justify-center text-gray-500 text-sm animate-pulse">
+                                Loading GitHub Data...
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="space-y-6">
+                        <h3 className="text-xl font-bold text-white mb-4">Recent Public Commits</h3>
+                        {commits.length > 0 ? commits.map((item) => (
+                            <div key={item.id} className="flex gap-4 group">
+                                <div className="mt-1 w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover:border-neon/50 transition-colors shrink-0">
+                                    <GitCommit className="w-4 h-4 text-neon" />
+                                </div>
+                                <div className="min-w-0">
+                                    <h4 className="text-white font-medium group-hover:text-neon transition-colors truncate w-full">
+                                        {item.repo}
+                                    </h4>
+                                    <p className="text-sm text-gray-400 truncate w-full max-w-[300px]">{item.message}</p>
+                                    <span className="text-xs text-gray-500 font-mono mt-1 block">{item.date}</span>
+                                </div>
+                            </div>
+                        )) : (
+                            <div className="text-gray-500 text-sm italic py-4">
+                                No recent public commits found. I might be working on private repos.
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Right Column: Build Log */}
+                <div>
+                    <h2 className="text-3xl font-bold tracking-tighter mb-8 flex items-center gap-3">
+                        Build Log <span className="text-sm font-normal text-gray-500 font-mono self-end mb-1">/ now</span>
+                    </h2>
+
+                    <div className="bg-surface border border-white/5 rounded-xl p-0 overflow-hidden">
+                        <div className="bg-white/5 px-6 py-3 border-b border-white/5 flex items-center gap-2">
+                            <div className="w-3 h-3 rounded-full bg-red-500/50" />
+                            <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
+                            <div className="w-3 h-3 rounded-full bg-green-500/50" />
+                            <span className="text-xs font-mono text-gray-500 ml-2">~/current-tasks</span>
+                        </div>
+                        <div className="p-6 font-mono text-sm space-y-4">
+                            <div className="flex gap-3 text-gray-300">
+                                <span className="text-neon shrink-0">➜</span>
+                                <span>Updating Raycast extensions</span>
+                            </div>
+                            <div className="flex gap-3 text-gray-300">
+                                <span className="text-neon shrink-0">➜</span>
+                                <span>Refactoring portfolio sites</span>
+                            </div>
+                            <div className="flex gap-3 text-gray-300">
+                                <span className="text-neon shrink-0">➜</span>
+                                <span>Playing around with Python scripts</span>
+                            </div>
+                            <div className="animate-pulse flex gap-3 text-gray-500">
+                                <span className="shrink-0">➜</span>
+                                <span className="w-2 h-4 bg-gray-500 block" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="mt-8 p-6 border border-white/10 rounded-xl bg-gradient-to-br from-neon/5 to-purple-500/5">
+                        <h3 className="font-bold text-white mb-2">Check the real source.</h3>
+                        <p className="text-gray-400 text-sm mb-4">
+                            My activity above is pulled directly from the GitHub API.
+                        </p>
+                        <a href="https://github.com/luinbytes" target="_blank" className="text-neon hover:underline text-sm font-bold">
+                            Visit GitHub Profile &rarr;
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    );
+}
