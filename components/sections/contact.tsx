@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Send, Mail, Github, Twitter } from "lucide-react";
+import { Send, Mail, Github, Twitter, Coffee } from "lucide-react";
 import { Footer } from "@/components/layout/footer";
 
 export function Contact() {
@@ -49,6 +49,12 @@ export function Contact() {
                                     <Mail className="w-5 h-5" />
                                 </div>
                                 <span>Email</span>
+                            </a>
+                            <a href="https://buymeacoffee.com/luinbytes" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors group">
+                                <div className="p-2 bg-white/5 rounded-lg group-hover:bg-yellow-400/20 group-hover:text-yellow-400 transition-colors">
+                                    <Coffee className="w-5 h-5" />
+                                </div>
+                                <span>Buy Me a Coffee</span>
                             </a>
                         </div>
                     </div>
