@@ -5,7 +5,7 @@ import { Activity } from "lucide-react";
 export function About() {
     const milestones = [
         { year: "2025", event: "Started developing Raycast extensions, maintainer of Iniuria.us AI Helper Bot" },
-        { year: "2024", event: "Built wplacer bot for r/place clones" },
+        { year: "2024", event: "Contributed to wplacer bot for r/place clones" },
         { year: "2020", event: "Started messing with servers, linux, self hosting and homelabbing" },
         { year: "2019", event: "Started learning React, Next.js, Tailwind CSS along side some C++ game software development" },
         { year: "2016", event: "Moved to PC Gaming" },
