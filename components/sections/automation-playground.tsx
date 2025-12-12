@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Search, Command, Terminal, Bot, Zap, Trash2, CheckCircle2 } from "lucide-react";
+import { Search, Command, Terminal, Bot, Zap, Hash, Bookmark, Copy, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function AutomationPlayground() {
@@ -12,18 +12,18 @@ export function AutomationPlayground() {
             <div className="container px-4 mx-auto relative z-10">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-6 flex items-center justify-center gap-3">
-                        <Zap className="w-8 h-8 text-yellow-400" />
-                        Automation Playground
+                        <Command className="w-8 h-8 text-neon" />
+                        Raycast Extensions
                     </h2>
                     <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-                        I don't just write code; I build systems that do the work for me.
-                        Here are interactive visualizations of how my tools work.
+                        Interactive demos of my Raycast extensions that make productivity effortless.
+                        Built with TypeScript and the Raycast API.
                     </p>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <RaycastDemo />
-                    <CanvasBotDemo />
+                    <DiscordUtilitiesDemo />
+                    <ASFBotDemo />
                 </div>
             </div>
         </section>
