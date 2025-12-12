@@ -15,16 +15,16 @@ export function About() {
     ];
 
     return (
-        <section id="about" className="py-32 relative border-t border-white/5">
-            <div className="container px-4 mx-auto max-w-4xl">
-                <div className="flex flex-col md:flex-row gap-16 items-start">
+        <section id="about" className="py-20 relative border-t border-white/5">
+            <div className="container px-4 mx-auto max-w-6xl">
+                <div className="flex flex-col md:flex-row gap-20 items-start">
 
                     <div className="flex-1">
-                        <h2 className="text-4xl font-bold tracking-tighter mb-8 flex items-center gap-3">
+                        <h2 className="text-4xl font-bold tracking-tighter mb-12 flex items-center gap-3">
                             <span className="text-neon">/</span> About Me
                         </h2>
 
-                        <div className="prose prose-invert prose-lg text-gray-400">
+                        <div className="prose prose-invert prose-lg text-gray-400 space-y-6">
                             <p>
                                 I’m a self-taught software engineer who learns by breaking things. My journey didn't start with "Hello World"—it started with the <span className="text-white font-bold">PlayStation 3</span> and <span className="text-white font-bold">Call of Duty: World at War</span>.
                             </p>
@@ -42,7 +42,7 @@ export function About() {
                             <Activity className="w-5 h-5 text-gray-500" />
                             Milestones
                         </h3>
-                        <div className="space-y-6 border-l border-white/10 pl-6 relative">
+                        <div className="space-y-8 border-l border-white/10 pl-6 relative">
                             {milestones.map((m, i) => (
                                 <div key={i} className="relative">
                                     <div className="absolute -left-[29px] top-1.5 w-3 h-3 bg-surface border border-white/20 rounded-full" />
