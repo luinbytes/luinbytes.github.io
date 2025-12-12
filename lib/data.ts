@@ -23,10 +23,7 @@ export interface ActivityItem {
     date: string; // ISO string or loose date "Dec 2025"
 }
 
-export interface BuildLogItem {
-    id: string;
-    content: string;
-}
+// BuildLogItem interface removed - Build Log section replaced with Quick Dev Stats
 
 export const projects: Project[] = [
     {
@@ -130,9 +127,4 @@ export const recentActivity: ActivityItem[] = [
     }
 ];
 
-export const buildLog: BuildLogItem[] = [
-    { id: "1", content: "Experimenting with a new Raycast extension that manages PC gaming profiles" },
-    { id: "2", content: "Building an AI-powered helper for managing Steam libraries" },
-    { id: "3", content: "Refactoring my home server backup scripts to use Restic" },
-    { id: "4", content: "Trying to make my mechanical keyboard firmware do my taxes (kidding... unless?)" },
-];
+// buildLog export removed - Build Log section replaced with Quick Dev Stats in activity.tsx

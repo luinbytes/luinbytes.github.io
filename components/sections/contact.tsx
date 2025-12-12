@@ -17,21 +17,21 @@ export function Contact() {
     };
 
     return (
-        <section id="contact" className="py-32 relative bg-surface border-t border-white/5">
+        <section id="contact" className="py-20 relative bg-surface border-t border-white/5">
             <div className="container px-4 mx-auto max-w-4xl">
-                <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-4 text-center">
+                <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-6 text-center">
                     Let's Build Something
                 </h2>
-                <p className="text-center text-gray-400 mb-12 max-w-xl mx-auto">
+                <p className="text-center text-gray-400 mb-16 max-w-xl mx-auto">
                     Got a tedious workflow that needs automating? Or just want to talk about Rust?
                     Drop me a line.
                 </p>
 
-                <div className="grid md:grid-cols-3 gap-12">
+                <div className="grid md:grid-cols-3 gap-16">
 
                     <div className="md:col-span-1 space-y-6">
                         <h3 className="font-bold text-white text-lg">Socials</h3>
-                        <div className="space-y-4">
+                        <div className="space-y-6">
                             <a href="https://github.com/luinbytes" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors group">
                                 <div className="p-2 bg-white/5 rounded-lg group-hover:bg-neon/20 group-hover:text-neon transition-colors">
                                     <Github className="w-5 h-5" />

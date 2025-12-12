@@ -9,9 +9,9 @@ export function Projects() {
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
     return (
-        <section id="projects" className="py-32 relative">
-            <div className="container px-4 mx-auto">
-                <div className="mb-20">
+        <section id="projects" className="py-24 relative border-t border-white/5">
+            <div className="container px-4 mx-auto max-w-7xl">
+                <div className="mb-16">
                     <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-6 flex items-center gap-3">
                         <Terminal className="w-8 h-8 text-neon" />
                         Selected Work
@@ -21,31 +21,31 @@ export function Projects() {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {projects.map((project) => (
                         <div
                             key={project.id}
                             onClick={() => setSelectedProject(project)}
-                            className="group relative bg-surface border border-white/10 rounded-xl p-6 hover:border-neon/50 transition-all duration-300 cursor-pointer overflow-hidden flex flex-col h-full"
+                            className="group relative bg-surface border border-white/10 rounded-xl p-8 hover:border-neon/50 transition-all duration-300 cursor-pointer overflow-hidden flex flex-col h-full"
                         >
                             {/* Type Badge */}
-                            <div className="absolute top-6 right-6">
+                            <div className="absolute top-8 right-8">
                                 <span className="text-xs font-mono text-neon/80 bg-neon/10 px-2 py-1 rounded-full border border-neon/20">
                                     {project.type}
                                 </span>
                             </div>
 
                             <div className="mt-8 mb-4">
-                                <h3 className="text-2xl font-bold mb-3 group-hover:text-neon transition-colors">
+                                <h3 className="text-2xl font-bold mb-4 group-hover:text-neon transition-colors">
                                     {project.name}
                                 </h3>
-                                <p className="text-gray-400 leading-relaxed mb-6">
+                                <p className="text-gray-400 leading-relaxed mb-8">
                                     {project.description}
                                 </p>
                             </div>
 
                             <div className="mt-auto">
-                                <div className="flex flex-wrap gap-2 text-xs font-mono text-gray-500 mb-4">
+                                <div className="flex flex-wrap gap-2 text-xs font-mono text-gray-500 mb-6">
                                     {project.techStack.slice(0, 3).map((tech) => (
                                         <span key={tech} className="bg-white/5 px-2 py-1 rounded">
                                             {tech}
