@@ -4,6 +4,7 @@ import { Projects } from "@/components/sections/projects";
 import { Activity } from "@/components/sections/activity";
 import { AutomationPlayground } from "@/components/sections/automation-playground";
 import { Contact } from "@/components/sections/contact";
+import { SectionErrorBoundary } from "@/components/error-boundary";
 
 export default function Home() {
   return (
@@ -12,8 +13,12 @@ export default function Home() {
       <div className="h-16" />
       <About />
       <Projects />
-      <AutomationPlayground />
-      <Activity />
+      <SectionErrorBoundary>
+        <AutomationPlayground />
+      </SectionErrorBoundary>
+      <SectionErrorBoundary>
+        <Activity />
+      </SectionErrorBoundary>
       <Contact />
     </div>
   );

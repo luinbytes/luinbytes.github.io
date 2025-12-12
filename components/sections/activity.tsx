@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { ActivityCalendar } from "react-activity-calendar";
-import { GitCommit, Package, Zap } from "lucide-react";
+import { GitCommit, AlertCircle, RefreshCcw } from "lucide-react";
 import { format } from "date-fns";
+import { fetchWithRetry, fetchGitHub, type ApiError } from "@/lib/api";
 
 export function Activity() {
     const [commits, setCommits] = useState<any[]>([]);
@@ -15,6 +16,11 @@ export function Activity() {
     const [currentStreak, setCurrentStreak] = useState<number>(0);
     const [yearlyCommits, setYearlyCommits] = useState<number>(0);
     const [statsLoaded, setStatsLoaded] = useState<boolean>(false);
+
+    // Error states
+    const [eventsError, setEventsError] = useState<ApiError | null>(null);
+    const [contributionsError, setContributionsError] = useState<ApiError | null>(null);
+    const [reposError, setReposError] = useState<ApiError | null>(null);
 
     // Language colors mapping
     const languageColors: Record<string, string> = {
@@ -83,10 +89,14 @@ export function Activity() {
     };
 
     useEffect(() => {
-        // Fetch recent events
-        fetch("https://api.github.com/users/luinbytes/events/public")
-            .then(res => res.json())
-            .then(data => {
+        const fetchData = async () => {
+            // Fetch recent events with retry and caching
+            try {
+                const data = await fetchGitHub<any[]>("/users/luinbytes/events/public", {
+                    cacheTTL: 5 * 60 * 1000, // 5 minutes cache
+                    onRetry: (attempt) => console.log(`Retrying events API (attempt ${attempt})`)
+                });
+
                 const pushEvents = data
                     .filter((event: any) => event.type === "PushEvent")
                     .slice(0, 5)
@@ -98,21 +108,19 @@ export function Activity() {
                         type: "contribution"
                     }));
                 setCommits(pushEvents);
-            })
-            .catch(err => console.error("Failed to fetch events", err));
+                setEventsError(null);
+            } catch (err) {
+                console.error("Failed to fetch events:", err);
+                setEventsError(err as ApiError);
+            }
 
-        // Fetch contributions (mocking structure for calendar as real API needs auth/proxy)
-        // In a real production app we would use a proxy or specific graphQL query
-        // For now, we simulate the "structure" but can't easily get the numbers without a token on client
-        // So we will fallback to a visual approximation or specific known activity if possible.
-        // However, user specifically asked for "actual github graph". 
-        // Best public way without token is using a service or scraping. 
-        // Let's use a public API wrapper for contributions if available or just the recent event stream to populate "today"
+            // Fetch contributions calendar with retry and caching
+            try {
+                const data = await fetchWithRetry<any>("https://github-contributions-api.jogruber.de/v4/luinbytes?y=last", {
+                    cacheTTL: 15 * 60 * 1000, // 15 minutes cache (this data changes infrequently)
+                    onRetry: (attempt) => console.log(`Retrying contributions API (attempt ${attempt})`)
+                });
 
-        // Attempting to fetch from a public contribution API (e.g. github-contributions-api.jogruber.de)
-        fetch("https://github-contributions-api.jogruber.de/v4/luinbytes?y=last")
-            .then(res => res.json())
-            .then(data => {
                 if (data.contributions) {
                     const formatted = data.contributions.map((day: any) => ({
                         date: day.date,
@@ -131,13 +139,19 @@ export function Activity() {
                         .reduce((sum: number, day: any) => sum + day.count, 0);
                     setYearlyCommits(thisYearContributions);
                 }
-            })
-            .catch(err => console.error("Failed to fetch calendar", err));
+                setContributionsError(null);
+            } catch (err) {
+                console.error("Failed to fetch contributions:", err);
+                setContributionsError(err as ApiError);
+            }
 
-        // Fetch GitHub repos for language stats
-        fetch("https://api.github.com/users/luinbytes/repos?per_page=100")
-            .then(res => res.json())
-            .then(repos => {
+            // Fetch GitHub repos for language stats with retry and caching
+            try {
+                const repos = await fetchGitHub<any[]>("/users/luinbytes/repos?per_page=100", {
+                    cacheTTL: 30 * 60 * 1000, // 30 minutes cache (repo data changes slowly)
+                    onRetry: (attempt) => console.log(`Retrying repos API (attempt ${attempt})`)
+                });
+
                 if (Array.isArray(repos)) {
                     // Filter out forks
                     const ownRepos = repos.filter((repo: any) => !repo.fork);
@@ -149,12 +163,15 @@ export function Activity() {
 
                     setStatsLoaded(true);
                 }
-            })
-            .catch(err => {
-                console.error("Failed to fetch repos", err);
-                setStatsLoaded(true);
-            });
+                setReposError(null);
+            } catch (err) {
+                console.error("Failed to fetch repos:", err);
+                setReposError(err as ApiError);
+                setStatsLoaded(true); // Show UI even if this fails
+            }
+        };
 
+        fetchData();
     }, []);
 
     return (
@@ -175,7 +192,26 @@ export function Activity() {
                             </span>
                         </div>
 
-                        {calendarData.length > 0 ? (
+                        {contributionsError ? (
+                            <div className="h-[120px] flex flex-col items-center justify-center gap-3 text-center px-4">
+                                <div className="flex items-center gap-2 text-red-400">
+                                    <AlertCircle className="w-5 h-5" />
+                                    <span className="font-medium">Failed to load contributions</span>
+                                </div>
+                                <p className="text-xs text-gray-500 max-w-md">
+                                    {contributionsError.isRateLimit
+                                        ? "GitHub API rate limit reached. Data will refresh when limit resets."
+                                        : contributionsError.message}
+                                </p>
+                                <button
+                                    onClick={() => window.location.reload()}
+                                    className="flex items-center gap-2 text-xs text-neon hover:underline mt-2"
+                                >
+                                    <RefreshCcw className="w-3 h-3" />
+                                    Retry
+                                </button>
+                            </div>
+                        ) : calendarData.length > 0 ? (
                             <div className="w-full flex justify-center overflow-hidden">
                                 <ActivityCalendar
                                     data={calendarData}
@@ -202,7 +238,26 @@ export function Activity() {
 
                     <div className="space-y-6">
                         <h3 className="text-xl font-bold text-white mb-4">Recent Public Commits</h3>
-                        {commits.length > 0 ? commits.map((item) => (
+                        {eventsError ? (
+                            <div className="bg-red-500/5 border border-red-500/20 rounded-xl p-6 text-center">
+                                <div className="flex items-center justify-center gap-2 text-red-400 mb-3">
+                                    <AlertCircle className="w-5 h-5" />
+                                    <span className="font-medium">Failed to load recent commits</span>
+                                </div>
+                                <p className="text-xs text-gray-500 mb-4">
+                                    {eventsError.isRateLimit
+                                        ? "GitHub API rate limit reached. Using cached data if available."
+                                        : eventsError.message}
+                                </p>
+                                <button
+                                    onClick={() => window.location.reload()}
+                                    className="flex items-center gap-2 text-xs text-neon hover:underline mx-auto"
+                                >
+                                    <RefreshCcw className="w-3 h-3" />
+                                    Retry
+                                </button>
+                            </div>
+                        ) : commits.length > 0 ? commits.map((item) => (
                             <div key={item.id} className="flex gap-4 group">
                                 <div className="mt-1 w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover:border-neon/50 transition-colors shrink-0">
                                     <GitCommit className="w-4 h-4 text-neon" />
@@ -229,7 +284,26 @@ export function Activity() {
                         Quick Stats <span className="text-sm font-normal text-gray-500 font-mono self-end mb-1">/ live</span>
                     </h2>
 
-                    {!statsLoaded ? (
+                    {reposError ? (
+                        <div className="bg-surface border border-white/10 rounded-xl p-8 h-[400px] flex flex-col items-center justify-center gap-4">
+                            <div className="flex items-center gap-2 text-red-400">
+                                <AlertCircle className="w-6 h-6" />
+                                <span className="font-bold text-lg">Failed to load stats</span>
+                            </div>
+                            <p className="text-sm text-gray-500 text-center max-w-md">
+                                {reposError.isRateLimit
+                                    ? "GitHub API rate limit reached. Stats will refresh when the limit resets."
+                                    : reposError.message}
+                            </p>
+                            <button
+                                onClick={() => window.location.reload()}
+                                className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm text-neon transition-colors"
+                            >
+                                <RefreshCcw className="w-4 h-4" />
+                                Retry
+                            </button>
+                        </div>
+                    ) : !statsLoaded ? (
                         <div className="bg-surface border border-white/10 rounded-xl p-8 h-[400px] flex items-center justify-center">
                             <div className="text-gray-500 text-sm animate-pulse">Loading GitHub stats...</div>
                         </div>
