@@ -9,10 +9,11 @@ export default function Home() {
   return (
     <div className="flex flex-col bg-background font-mono selection:bg-neon selection:text-black">
       <Hero />
-      <Projects />
+      <div className="h-16" />
       <About />
-      <Activity />
+      <Projects />
       <AutomationPlayground />
+      <Activity />
       <Contact />
     </div>
   );

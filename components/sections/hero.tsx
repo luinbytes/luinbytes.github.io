@@ -29,9 +29,9 @@ export function Hero() {
                     </span>
                 </h1>
 
-                <p className="text-lg md:text-2xl text-gray-400 mb-10 max-w-2xl leading-relaxed">
+                <p className="text-lg md:text-2xl text-gray-400 mb-12 max-w-2xl leading-relaxed">
                     Building AI-adjacent tools, Raycast extensions, and PC-gaming utilities.
-                    If it saves me 5 seconds, I’ll spend 5 hours automating it.
+                    If it saves me 5 seconds, I'll spend 5 hours automating it.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
