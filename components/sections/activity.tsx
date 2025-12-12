@@ -9,6 +9,79 @@ export function Activity() {
     const [commits, setCommits] = useState<any[]>([]);
     const [calendarData, setCalendarData] = useState<any[]>([]);
 
+    // Quick Stats state
+    const [repoCount, setRepoCount] = useState<number>(0);
+    const [languages, setLanguages] = useState<{ name: string; percentage: number; color: string }[]>([]);
+    const [currentStreak, setCurrentStreak] = useState<number>(0);
+    const [yearlyCommits, setYearlyCommits] = useState<number>(0);
+    const [statsLoaded, setStatsLoaded] = useState<boolean>(false);
+
+    // Language colors mapping
+    const languageColors: Record<string, string> = {
+        TypeScript: '#3178c6',
+        JavaScript: '#f1e05a',
+        Python: '#3572A5',
+        Rust: '#dea584',
+        'C#': '#178600',
+        Java: '#b07219',
+        Go: '#00ADD8',
+        Ruby: '#701516',
+        PHP: '#4F5D95',
+        CSS: '#563d7c',
+        HTML: '#e34c26',
+    };
+
+    // Calculate language breakdown from repos
+    const calculateLanguages = (repos: any[]) => {
+        const langCount: Record<string, number> = {};
+        repos.forEach(repo => {
+            if (repo.language) {
+                langCount[repo.language] = (langCount[repo.language] || 0) + 1;
+            }
+        });
+
+        const total = Object.values(langCount).reduce((a, b) => a + b, 0);
+        if (total === 0) return [];
+
+        return Object.entries(langCount)
+            .map(([lang, count]) => ({
+                name: lang,
+                percentage: Math.round((count / total) * 100),
+                color: languageColors[lang] || '#6e7681'
+            }))
+            .sort((a, b) => b.percentage - a.percentage)
+            .slice(0, 5);
+    };
+
+    // Calculate current streak from contribution data
+    const calculateStreak = (contributions: any[]) => {
+        if (!contributions || contributions.length === 0) return 0;
+
+        let streak = 0;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // Sort by date descending
+        const sorted = [...contributions].sort((a, b) =>
+            new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
+
+        for (const day of sorted) {
+            const dayDate = new Date(day.date);
+            dayDate.setHours(0, 0, 0, 0);
+
+            const daysDiff = Math.floor((today.getTime() - dayDate.getTime()) / (1000 * 60 * 60 * 24));
+
+            if (daysDiff === streak && day.count > 0) {
+                streak++;
+            } else if (daysDiff > streak) {
+                break;
+            }
+        }
+
+        return streak;
+    };
+
     useEffect(() => {
         // Fetch recent events
         fetch("https://api.github.com/users/luinbytes/events/public")
@@ -47,9 +120,40 @@ export function Activity() {
                         level: day.level
                     }));
                     setCalendarData(formatted);
+
+                    // Calculate streak and yearly commits from contribution data
+                    const streak = calculateStreak(formatted);
+                    setCurrentStreak(streak);
+
+                    const currentYear = new Date().getFullYear();
+                    const thisYearContributions = formatted
+                        .filter((day: any) => new Date(day.date).getFullYear() === currentYear)
+                        .reduce((sum: number, day: any) => sum + day.count, 0);
+                    setYearlyCommits(thisYearContributions);
                 }
             })
             .catch(err => console.error("Failed to fetch calendar", err));
+
+        // Fetch GitHub repos for language stats
+        fetch("https://api.github.com/users/luinbytes/repos?per_page=100")
+            .then(res => res.json())
+            .then(repos => {
+                if (Array.isArray(repos)) {
+                    // Filter out forks
+                    const ownRepos = repos.filter((repo: any) => !repo.fork);
+                    setRepoCount(ownRepos.length);
+
+                    // Calculate language breakdown
+                    const langs = calculateLanguages(ownRepos);
+                    setLanguages(langs);
+
+                    setStatsLoaded(true);
+                }
+            })
+            .catch(err => {
+                console.error("Failed to fetch repos", err);
+                setStatsLoaded(true);
+            });
 
     }, []);
 
