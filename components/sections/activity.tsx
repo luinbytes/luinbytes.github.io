@@ -223,48 +223,84 @@ export function Activity() {
                     </div>
                 </div>
 
-                {/* Right Column: Build Log */}
+                {/* Right Column: Quick Dev Stats */}
                 <div>
                     <h2 className="text-3xl font-bold tracking-tighter mb-8 flex items-center gap-3">
-                        Build Log <span className="text-sm font-normal text-gray-500 font-mono self-end mb-1">/ now</span>
+                        Quick Stats <span className="text-sm font-normal text-gray-500 font-mono self-end mb-1">/ live</span>
                     </h2>
 
-                    <div className="bg-surface border border-white/5 rounded-xl p-0 overflow-hidden">
-                        <div className="bg-white/5 px-6 py-3 border-b border-white/5 flex items-center gap-2">
-                            <div className="w-3 h-3 rounded-full bg-red-500/50" />
-                            <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
-                            <div className="w-3 h-3 rounded-full bg-green-500/50" />
-                            <span className="text-xs font-mono text-gray-500 ml-2">~/current-tasks</span>
+                    {!statsLoaded ? (
+                        <div className="bg-surface border border-white/10 rounded-xl p-8 h-[400px] flex items-center justify-center">
+                            <div className="text-gray-500 text-sm animate-pulse">Loading GitHub stats...</div>
                         </div>
-                        <div className="p-6 font-mono text-sm space-y-4">
-                            <div className="flex gap-3 text-gray-300">
-                                <span className="text-neon shrink-0">➜</span>
-                                <span>Updating Raycast extensions</span>
+                    ) : (
+                        <>
+                            {/* Stats Cards Grid */}
+                            <div className="grid grid-cols-2 gap-4 mb-6">
+                                <div className="bg-surface border border-white/10 rounded-xl p-6 hover:border-neon/30 transition-colors">
+                                    <div className="text-4xl font-bold text-neon mb-2 font-mono">{repoCount}</div>
+                                    <div className="text-sm text-gray-400 uppercase tracking-wide">Public Repos</div>
+                                </div>
+                                <div className="bg-surface border border-white/10 rounded-xl p-6 hover:border-neon/30 transition-colors">
+                                    <div className="text-4xl font-bold text-neon mb-2 font-mono">{yearlyCommits}</div>
+                                    <div className="text-sm text-gray-400 uppercase tracking-wide">This Year</div>
+                                </div>
                             </div>
-                            <div className="flex gap-3 text-gray-300">
-                                <span className="text-neon shrink-0">➜</span>
-                                <span>Refactoring portfolio sites</span>
-                            </div>
-                            <div className="flex gap-3 text-gray-300">
-                                <span className="text-neon shrink-0">➜</span>
-                                <span>Playing around with Python scripts</span>
-                            </div>
-                            <div className="animate-pulse flex gap-3 text-gray-500">
-                                <span className="shrink-0">➜</span>
-                                <span className="w-2 h-4 bg-gray-500 block" />
-                            </div>
-                        </div>
-                    </div>
 
-                    <div className="mt-8 p-6 border border-white/10 rounded-xl bg-gradient-to-br from-neon/5 to-purple-500/5">
-                        <h3 className="font-bold text-white mb-2">Check the real source.</h3>
-                        <p className="text-gray-400 text-sm mb-4">
-                            My activity above is pulled directly from the GitHub API.
-                        </p>
-                        <a href="https://github.com/luinbytes" target="_blank" className="text-neon hover:underline text-sm font-bold">
-                            Visit GitHub Profile &rarr;
-                        </a>
-                    </div>
+                            {/* Language Breakdown */}
+                            <div className="bg-surface border border-white/10 rounded-xl p-6 mb-6">
+                                <h3 className="text-lg font-bold text-white mb-4">Top Languages</h3>
+                                <div className="space-y-3">
+                                    {languages.map((lang, index) => (
+                                        <div key={index}>
+                                            <div className="flex justify-between items-center mb-1.5">
+                                                <div className="flex items-center gap-2">
+                                                    <div
+                                                        className="w-3 h-3 rounded-full"
+                                                        style={{ backgroundColor: lang.color }}
+                                                    />
+                                                    <span className="text-sm text-gray-300 font-medium">{lang.name}</span>
+                                                </div>
+                                                <span className="text-sm text-gray-500 font-mono">{lang.percentage}%</span>
+                                            </div>
+                                            <div className="h-2 bg-[#1a1a1a] rounded-full overflow-hidden">
+                                                <div
+                                                    className="h-full rounded-full transition-all duration-500"
+                                                    style={{
+                                                        width: `${lang.percentage}%`,
+                                                        backgroundColor: lang.color
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Streak Display */}
+                            {currentStreak > 0 && (
+                                <div className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-xl p-4 mb-6">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-3xl">🔥</span>
+                                        <div>
+                                            <div className="text-xl font-bold text-white font-mono">{currentStreak} day streak</div>
+                                            <div className="text-xs text-gray-400">Keep the momentum going!</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            <div className="p-6 border border-white/10 rounded-xl bg-gradient-to-br from-neon/5 to-purple-500/5">
+                                <h3 className="font-bold text-white mb-2">Real-time data.</h3>
+                                <p className="text-gray-400 text-sm mb-4">
+                                    These stats are pulled live from the GitHub API.
+                                </p>
+                                <a href="https://github.com/luinbytes" target="_blank" className="text-neon hover:underline text-sm font-bold">
+                                    Visit GitHub Profile &rarr;
+                                </a>
+                            </div>
+                        </>
+                    )}
                 </div>
 
             </div>
