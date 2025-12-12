@@ -158,12 +158,12 @@ export function Activity() {
     }, []);
 
     return (
-        <section id="activity" className="py-32 relative">
-            <div className="container px-4 mx-auto grid lg:grid-cols-2 gap-16">
+        <section id="activity" className="py-24 relative border-t border-white/5">
+            <div className="container px-4 mx-auto max-w-6xl grid lg:grid-cols-2 gap-20">
 
                 {/* Left Column: Contributions & Graph */}
                 <div>
-                    <h2 className="text-3xl font-bold tracking-tighter mb-8 flex items-center gap-3">
+                    <h2 className="text-3xl font-bold tracking-tighter mb-12 flex items-center gap-3">
                         Activity
                     </h2>
 
@@ -225,7 +225,7 @@ export function Activity() {
 
                 {/* Right Column: Quick Dev Stats */}
                 <div>
-                    <h2 className="text-3xl font-bold tracking-tighter mb-8 flex items-center gap-3">
+                    <h2 className="text-3xl font-bold tracking-tighter mb-12 flex items-center gap-3">
                         Quick Stats <span className="text-sm font-normal text-gray-500 font-mono self-end mb-1">/ live</span>
                     </h2>
 

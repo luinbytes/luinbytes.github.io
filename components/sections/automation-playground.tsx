@@ -9,7 +9,7 @@ export function AutomationPlayground() {
         <section id="playground" className="py-32 relative">
             <div className="absolute inset-0 bg-gradient-to-b from-black via-surface/50 to-black pointer-events-none" />
 
-            <div className="container px-4 mx-auto relative z-10">
+            <div className="container px-4 mx-auto max-w-7xl relative z-10">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-6 flex items-center justify-center gap-3">
                         <Command className="w-8 h-8 text-neon" />
@@ -21,7 +21,7 @@ export function AutomationPlayground() {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                     <DiscordUtilitiesDemo />
                     <ASFBotDemo />
                 </div>
@@ -161,6 +161,7 @@ function DiscordUtilitiesDemo() {
 function ASFBotDemo() {
     const [selectedBot, setSelectedBot] = useState(0);
     const [twoFATime, setTwoFATime] = useState(30);
+    const [twoFACode, setTwoFACode] = useState('123 456');
 
     const bots = [
         { id: 'bot1', name: 'MainAccount', status: 'Farming', game: 'Team Fortress 2', cards: '3/5', online: true },
@@ -168,10 +169,22 @@ function ASFBotDemo() {
         { id: 'bot3', name: 'TradingBot', status: 'Offline', game: null, cards: '0/0', online: false },
     ];
 
+    const generateCode = () => {
+        const code1 = Math.floor(Math.random() * 900 + 100);
+        const code2 = Math.floor(Math.random() * 900 + 100);
+        return `${code1} ${code2}`;
+    };
+
     useEffect(() => {
+        // Generate initial code on client
+        setTwoFACode(generateCode());
+
         const interval = setInterval(() => {
             setTwoFATime(prev => {
-                if (prev <= 1) return 30;
+                if (prev <= 1) {
+                    setTwoFACode(generateCode());
+                    return 30;
+                }
                 return prev - 1;
             });
         }, 1000);
@@ -242,7 +255,7 @@ function ASFBotDemo() {
                     </div>
                     <div className="flex items-center gap-2">
                         <div className="flex-1 bg-black/50 border border-white/10 rounded px-3 py-2 font-mono text-lg text-white text-center tracking-widest">
-                            {Math.floor(Math.random() * 900000 + 100000).toString().slice(0, 3)} {Math.floor(Math.random() * 900000 + 100000).toString().slice(0, 3)}
+                            {twoFACode}
                         </div>
                         <button className="p-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded transition-colors">
                             <Copy className="w-4 h-4 text-gray-400" />
