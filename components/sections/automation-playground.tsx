@@ -121,18 +121,18 @@ function DiscordUtilitiesDemo() {
                                     </div>
                                     <div className="flex items-center gap-2 mt-1">
                                         <div className="text-xs text-gray-500 truncate">{item.subtitle}</div>
-                                        {'tags' in item && item.tags && (
+                                        {('tags' in item && item.tags) ? (
                                             <div className="flex gap-1">
-                                                {item.tags.map(tag => (
+                                                {(item.tags as string[]).map(tag => (
                                                     <span key={tag} className="text-[10px] bg-[#5865F2]/20 text-[#5865F2] px-1.5 py-0.5 rounded">
                                                         {tag}
                                                     </span>
                                                 ))}
                                             </div>
-                                        )}
-                                        {'active' in item && item.active && (
+                                        ) : null}
+                                        {('active' in item && item.active) ? (
                                             <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">Active</span>
-                                        )}
+                                        ) : null}
                                     </div>
                                 </div>
                                 {i === selectedIndex && (
