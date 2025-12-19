@@ -12,7 +12,7 @@ export function Header() {
         const handleScroll = () => {
             setScrolled(window.scrollY > 50);
 
-            const sections = ["home", "projects", "about", "activity", "playground", "contact"];
+            const sections = ["home", "about", "projects", "playground", "activity", "contact"];
             const current = sections.find(section => {
                 const element = document.getElementById(section);
                 if (element) {
@@ -31,10 +31,10 @@ export function Header() {
 
     const navLinks = [
         { name: "Home", href: "#home" },
-        { name: "Projects", href: "#projects" },
         { name: "About", href: "#about" },
-        { name: "Activity", href: "#activity" },
+        { name: "Projects", href: "#projects" },
         { name: "Playground", href: "#playground" },
+        { name: "Activity", href: "#activity" },
         { name: "Contact", href: "#contact" },
     ];
 
