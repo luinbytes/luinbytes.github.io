@@ -7,7 +7,7 @@ export function About() {
         { year: "Late 2025", event: "First Raycast extension published to the store!" },
         { year: "Mid 2025", event: "Started developing Raycast extensions, maintainer of Iniuria.us AI Helper Bot" },
         { year: "2024", event: "The 'AI Boom', started developing with AI tools" },
-        { year: "2022", event: "LOTS of home labbing..." }, ,
+        { year: "2022", event: "LOTS of home labbing..." },
         { year: "2020", event: "Started messing with servers, linux, self hosting and homelabbing" },
         { year: "2019", event: "Started learning React, Next.js, Tailwind CSS along side some C++ game software development" },
         { year: "2016", event: "Moved to PC Gaming" },
