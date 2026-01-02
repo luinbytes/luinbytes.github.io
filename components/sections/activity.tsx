@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ActivityCalendar } from "react-activity-calendar";
 import { GitCommit, AlertCircle, RefreshCcw } from "lucide-react";
 import { format } from "date-fns";
@@ -8,7 +8,8 @@ import { fetchWithRetry, fetchGitHub, type ApiError } from "@/lib/api";
 
 export function Activity() {
     const [commits, setCommits] = useState<any[]>([]);
-    const [calendarData, setCalendarData] = useState<any[]>([]);
+    const [calendarData2026, setCalendarData2026] = useState<any[]>([]);
+    const [calendarData2025, setCalendarData2025] = useState<any[]>([]);
 
     // Quick Stats state
     const [repoCount, setRepoCount] = useState<number>(0);
@@ -16,6 +17,10 @@ export function Activity() {
     const [currentStreak, setCurrentStreak] = useState<number>(0);
     const [yearlyCommits, setYearlyCommits] = useState<number>(0);
     const [statsLoaded, setStatsLoaded] = useState<boolean>(false);
+
+    // Calendar responsive scaling
+    const calendarContainerRef = useRef<HTMLDivElement>(null);
+    const [calendarScale, setCalendarScale] = useState<number>(1);
 
     // Error states
     const [eventsError, setEventsError] = useState<ApiError | null>(null);
@@ -88,6 +93,28 @@ export function Activity() {
         return streak;
     };
 
+    // Resize observer to scale calendar to fit container
+    useEffect(() => {
+        const updateScale = () => {
+            if (calendarContainerRef.current) {
+                const containerWidth = calendarContainerRef.current.offsetWidth;
+                // Calendar native width is approximately 580px (53 weeks × 10px + padding)
+                const calendarNativeWidth = 580;
+                const scale = Math.min(containerWidth / calendarNativeWidth, 1);
+                setCalendarScale(scale);
+            }
+        };
+
+        updateScale();
+
+        const resizeObserver = new ResizeObserver(updateScale);
+        if (calendarContainerRef.current) {
+            resizeObserver.observe(calendarContainerRef.current);
+        }
+
+        return () => resizeObserver.disconnect();
+    }, [calendarData2026]);
+
     useEffect(() => {
         const fetchData = async () => {
             // Fetch recent events with retry and caching
@@ -126,31 +153,44 @@ export function Activity() {
                 setEventsError(err as ApiError);
             }
 
-            // Fetch contributions calendar with retry and caching
+            // Fetch contributions calendar for 2026 and 2025 with retry and caching
             try {
-                const data = await fetchWithRetry<any>("https://github-contributions-api.jogruber.de/v4/luinbytes?y=last", {
-                    cacheTTL: 15 * 60 * 1000, // 15 minutes cache (this data changes infrequently)
-                    onRetry: (attempt) => console.log(`Retrying contributions API (attempt ${attempt})`)
-                });
+                const [data2026, data2025] = await Promise.all([
+                    fetchWithRetry<any>(`https://github-contributions-api.jogruber.de/v4/luinbytes?y=2026`, {
+                        cacheTTL: 15 * 60 * 1000,
+                        onRetry: (attempt) => console.log(`Retrying 2026 contributions API (attempt ${attempt})`)
+                    }),
+                    fetchWithRetry<any>(`https://github-contributions-api.jogruber.de/v4/luinbytes?y=2025`, {
+                        cacheTTL: 15 * 60 * 1000,
+                        onRetry: (attempt) => console.log(`Retrying 2025 contributions API (attempt ${attempt})`)
+                    })
+                ]);
 
-                if (data.contributions) {
-                    const formatted = data.contributions.map((day: any) => ({
+                if (data2026.contributions) {
+                    const formatted = data2026.contributions.map((day: any) => ({
                         date: day.date,
                         count: day.count,
                         level: day.level
                     }));
-                    setCalendarData(formatted);
+                    setCalendarData2026(formatted);
 
-                    // Calculate streak and yearly commits from contribution data
+                    // Calculate streak from 2026 data
                     const streak = calculateStreak(formatted);
                     setCurrentStreak(streak);
 
-                    const currentYear = new Date().getFullYear();
-                    const thisYearContributions = formatted
-                        .filter((day: any) => new Date(day.date).getFullYear() === currentYear)
-                        .reduce((sum: number, day: any) => sum + day.count, 0);
+                    const thisYearContributions = formatted.reduce((sum: number, day: any) => sum + day.count, 0);
                     setYearlyCommits(thisYearContributions);
                 }
+
+                if (data2025.contributions) {
+                    const formatted = data2025.contributions.map((day: any) => ({
+                        date: day.date,
+                        count: day.count,
+                        level: day.level
+                    }));
+                    setCalendarData2025(formatted);
+                }
+
                 setContributionsError(null);
             } catch (err) {
                 console.error("Failed to fetch contributions:", err);
@@ -196,25 +236,21 @@ export function Activity() {
                         Activity
                     </h2>
 
-                    <div className="bg-surface border border-white/10 p-6 rounded-xl mb-8">
+                    {/* 2026 Contributions */}
+                    <div className="bg-surface border border-white/10 p-6 rounded-xl mb-4">
                         <div className="flex justify-between items-end mb-4">
-                            <span className="text-sm text-gray-400">Contributions (Last Year)</span>
+                            <span className="text-sm text-gray-400 font-medium">2026</span>
                             <span className="text-xs text-gray-500 font-mono">
-                                {calendarData.reduce((acc, curr) => acc + curr.count, 0)} Total
+                                {calendarData2026.reduce((acc: number, curr: any) => acc + curr.count, 0)} contributions
                             </span>
                         </div>
 
                         {contributionsError ? (
-                            <div className="h-[120px] flex flex-col items-center justify-center gap-3 text-center px-4">
+                            <div className="h-[100px] flex flex-col items-center justify-center gap-3 text-center px-4">
                                 <div className="flex items-center gap-2 text-red-400">
                                     <AlertCircle className="w-5 h-5" />
                                     <span className="font-medium">Failed to load contributions</span>
                                 </div>
-                                <p className="text-xs text-gray-500 max-w-md">
-                                    {contributionsError.isRateLimit
-                                        ? "GitHub API rate limit reached. Data will refresh when limit resets."
-                                        : contributionsError.message}
-                                </p>
                                 <button
                                     onClick={() => window.location.reload()}
                                     className="flex items-center gap-2 text-xs text-neon hover:underline mt-2"
@@ -223,27 +259,88 @@ export function Activity() {
                                     Retry
                                 </button>
                             </div>
-                        ) : calendarData.length > 0 ? (
-                            <div className="w-full flex justify-center overflow-hidden">
+                        ) : calendarData2026.length > 0 ? (
+                            <div
+                                ref={calendarContainerRef}
+                                className="w-full overflow-x-auto custom-scrollbar"
+                                style={{
+                                    scrollbarWidth: 'thin',
+                                    scrollbarColor: '#ff9eb5 #1a1a1a'
+                                }}
+                            >
+                                <style jsx>{`
+                                    .custom-scrollbar::-webkit-scrollbar {
+                                        height: 6px;
+                                    }
+                                    .custom-scrollbar::-webkit-scrollbar-track {
+                                        background: #1a1a1a;
+                                        border-radius: 3px;
+                                    }
+                                    .custom-scrollbar::-webkit-scrollbar-thumb {
+                                        background: linear-gradient(90deg, #794a63, #ff9eb5);
+                                        border-radius: 3px;
+                                    }
+                                    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                                        background: linear-gradient(90deg, #b3688a, #ff9eb5);
+                                    }
+                                `}</style>
                                 <ActivityCalendar
-                                    data={calendarData}
+                                    data={calendarData2026}
                                     theme={{
                                         light: ['#1a1a1a', '#0e4429', '#006d32', '#26a641', '#39d353'],
-                                        dark: ['#1a1a1a', '#3f2e3e', '#794a63', '#b3688a', '#ff9eb5'], // Pastel Pink Palette
+                                        dark: ['#1a1a1a', '#3f2e3e', '#794a63', '#b3688a', '#ff9eb5'],
                                     }}
                                     labels={{
                                         totalCount: '{{count}} contributions in {{year}}',
                                     }}
                                     colorScheme="dark"
-                                    blockSize={9}
-                                    blockMargin={3}
-                                    fontSize={12}
-                                    style={{ width: '100%', height: 'auto', maxWidth: '100%' }}
+                                    blockSize={8}
+                                    blockMargin={2}
+                                    fontSize={10}
                                 />
                             </div>
                         ) : (
-                            <div className="h-[120px] flex items-center justify-center text-gray-500 text-sm animate-pulse">
-                                Loading GitHub Data...
+                            <div className="h-[100px] flex items-center justify-center text-gray-500 text-sm animate-pulse">
+                                Loading 2026 data...
+                            </div>
+                        )}
+                    </div>
+
+                    {/* 2025 Contributions */}
+                    <div className="bg-surface border border-white/10 p-6 rounded-xl mb-8">
+                        <div className="flex justify-between items-end mb-4">
+                            <span className="text-sm text-gray-400 font-medium">2025</span>
+                            <span className="text-xs text-gray-500 font-mono">
+                                {calendarData2025.reduce((acc: number, curr: any) => acc + curr.count, 0)} contributions
+                            </span>
+                        </div>
+
+                        {calendarData2025.length > 0 ? (
+                            <div
+                                className="w-full overflow-x-auto custom-scrollbar"
+                                style={{
+                                    scrollbarWidth: 'thin',
+                                    scrollbarColor: '#ff9eb5 #1a1a1a'
+                                }}
+                            >
+                                <ActivityCalendar
+                                    data={calendarData2025}
+                                    theme={{
+                                        light: ['#1a1a1a', '#0e4429', '#006d32', '#26a641', '#39d353'],
+                                        dark: ['#1a1a1a', '#3f2e3e', '#794a63', '#b3688a', '#ff9eb5'],
+                                    }}
+                                    labels={{
+                                        totalCount: '{{count}} contributions in {{year}}',
+                                    }}
+                                    colorScheme="dark"
+                                    blockSize={8}
+                                    blockMargin={2}
+                                    fontSize={10}
+                                />
+                            </div>
+                        ) : (
+                            <div className="h-[100px] flex items-center justify-center text-gray-500 text-sm animate-pulse">
+                                Loading 2025 data...
                             </div>
                         )}
                     </div>

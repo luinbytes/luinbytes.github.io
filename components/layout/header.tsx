@@ -128,9 +128,12 @@ export function Header() {
                                         href="https://raycast.com/?via=lu"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white/10 transition-colors text-xs text-gray-500 hover:text-gray-300"
+                                        className="flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-gradient-to-r from-[#FF6154] to-[#FF8F47] text-white text-xs font-medium hover:opacity-90 transition-opacity"
                                     >
-                                        Get Raycast →
+                                        <svg className="w-3.5 h-3.5" viewBox="0 0 512 512" fill="currentColor">
+                                            <path d="M256 0L0 256l256 256 256-256L256 0zm0 96l160 160-160 160-160-160L256 96z" />
+                                        </svg>
+                                        Get Raycast
                                     </a>
                                 </div>
                             </div>
