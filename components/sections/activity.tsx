@@ -100,13 +100,25 @@ export function Activity() {
                 const pushEvents = data
                     .filter((event: any) => event.type === "PushEvent")
                     .slice(0, 5)
-                    .map((event: any) => ({
-                        id: event.id,
-                        repo: event.repo.name,
-                        message: event.payload.commits?.[0]?.message || "Pushed updates",
-                        date: format(new Date(event.created_at), "MMM d, yyyy"),
-                        type: "contribution"
-                    }));
+                    .map((event: any) => {
+                        const commits = event.payload.commits || [];
+                        const commitCount = commits.length;
+                        const firstCommit = commits[0];
+                        const commitMessage = firstCommit?.message?.split('\n')[0] || "Pushed updates"; // First line only
+                        const commitUrl = firstCommit?.sha
+                            ? `https://github.com/${event.repo.name}/commit/${firstCommit.sha}`
+                            : `https://github.com/${event.repo.name}`;
+
+                        return {
+                            id: event.id,
+                            repo: event.repo.name,
+                            message: commitMessage,
+                            commitCount,
+                            commitUrl,
+                            date: format(new Date(event.created_at), "MMM d, yyyy"),
+                            type: "contribution"
+                        };
+                    });
                 setCommits(pushEvents);
                 setEventsError(null);
             } catch (err) {
@@ -258,18 +270,31 @@ export function Activity() {
                                 </button>
                             </div>
                         ) : commits.length > 0 ? commits.map((item) => (
-                            <div key={item.id} className="flex gap-4 group">
+                            <a
+                                key={item.id}
+                                href={item.commitUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex gap-4 group cursor-pointer"
+                            >
                                 <div className="mt-1 w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover:border-neon/50 transition-colors shrink-0">
                                     <GitCommit className="w-4 h-4 text-neon" />
                                 </div>
-                                <div className="min-w-0">
-                                    <h4 className="text-white font-medium group-hover:text-neon transition-colors truncate w-full">
-                                        {item.repo}
+                                <div className="min-w-0 flex-1">
+                                    <h4 className="text-white font-medium group-hover:text-neon transition-colors truncate">
+                                        {item.message}
                                     </h4>
-                                    <p className="text-sm text-gray-400 truncate w-full max-w-[300px]">{item.message}</p>
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <span className="text-sm text-gray-400 truncate">{item.repo.replace('luinbytes/', '')}</span>
+                                        {item.commitCount > 1 && (
+                                            <span className="text-[10px] bg-neon/10 text-neon px-1.5 py-0.5 rounded font-mono">
+                                                +{item.commitCount - 1} more
+                                            </span>
+                                        )}
+                                    </div>
                                     <span className="text-xs text-gray-500 font-mono mt-1 block">{item.date}</span>
                                 </div>
-                            </div>
+                            </a>
                         )) : (
                             <div className="text-gray-500 text-sm italic py-4">
                                 No recent public commits found. I might be working on private repos.
