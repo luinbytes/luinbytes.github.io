@@ -129,28 +129,4 @@ export const projects: Project[] = [
     }
 ];
 
-export const recentActivity: ActivityItem[] = [
-    {
-        id: "1",
-        type: "contribution",
-        title: "Contributed to Raycast Extensions",
-        description: "Added new commands to the official Spotify extension.",
-        date: "Dec 2024",
-    },
-    {
-        id: "2",
-        type: "release",
-        title: "Shipped System Monitor v2.0",
-        description: "Complete rewrite with new graphs and historical data.",
-        date: "Nov 2024",
-    },
-    {
-        id: "3",
-        type: "experiment",
-        title: "Exploring Rust for Game Tooling",
-        description: "Porting my C# memory reader to Rust for performance.",
-        date: "Oct 2024",
-    }
-];
-
 // buildLog export removed - Build Log section replaced with Quick Dev Stats in activity.tsx
