@@ -57,6 +57,43 @@ export function Contact() {
                                 <span>Buy Me a Coffee</span>
                             </a>
                         </div>
+
+                        {/* Raycast Extensions */}
+                        <h3 className="font-bold text-white text-lg mt-8">Raycast Extensions</h3>
+                        <div className="space-y-3 mt-4">
+                            <a
+                                href="https://www.raycast.com/nazzy_wazzy_lu/window-walker?via=lu"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-3 px-3 py-2 bg-white/5 border border-white/10 rounded-lg hover:border-[#FF6154]/50 hover:bg-[#FF6154]/10 transition-colors group"
+                            >
+                                <span className="text-xl">🪟</span>
+                                <div className="flex-1">
+                                    <div className="text-sm font-medium text-white group-hover:text-[#FF6154]">Window Walker</div>
+                                    <div className="text-xs text-gray-500">Quick window switching</div>
+                                </div>
+                            </a>
+                            <a
+                                href="https://www.raycast.com/nazzy_wazzy_lu/archisteamfarm?via=lu"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-3 px-3 py-2 bg-white/5 border border-white/10 rounded-lg hover:border-[#FF6154]/50 hover:bg-[#FF6154]/10 transition-colors group"
+                            >
+                                <span className="text-xl">🎮</span>
+                                <div className="flex-1">
+                                    <div className="text-sm font-medium text-white group-hover:text-[#FF6154]">ArchiSteamFarm</div>
+                                    <div className="text-xs text-gray-500">Steam bot management</div>
+                                </div>
+                            </a>
+                            <a
+                                href="https://raycast.com/?via=lu"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 text-xs text-gray-500 hover:text-[#FF6154] transition-colors mt-2"
+                            >
+                                Get Raycast free →
+                            </a>
+                        </div>
                     </div>
 
                     <div className="md:col-span-2">

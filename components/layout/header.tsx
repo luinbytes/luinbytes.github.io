@@ -17,7 +17,6 @@ export function Header() {
                 const element = document.getElementById(section);
                 if (element) {
                     const rect = element.getBoundingClientRect();
-                    // Adjust these values to fine-tune when the specific link becomes active
                     return rect.top >= -150 && rect.top <= 300;
                 }
                 return false;
@@ -59,15 +58,18 @@ export function Header() {
         <header className={cn(
             "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b",
             scrolled
-                ? "bg-black/80 backdrop-blur-md border-white/10 py-3"
+                ? "bg-black/90 backdrop-blur-md border-white/10 py-2"
                 : "bg-transparent border-transparent py-5"
         )}>
             <div className="container mx-auto px-4 flex justify-between items-center">
-                <Link href="#home" onClick={(e) => scrollToSection(e, "#home")} className="text-xl font-bold tracking-tighter hover:text-neon transition-colors">
+                <Link href="#home" onClick={(e) => scrollToSection(e, "#home")} className={cn(
+                    "font-bold tracking-tighter hover:text-neon transition-all duration-300",
+                    scrolled ? "text-lg" : "text-xl"
+                )}>
                     luinbytes<span className="text-neon">.dev</span>
                 </Link>
 
-                <nav className="hidden md:flex gap-6">
+                <nav className="hidden md:flex gap-6 items-center">
                     {navLinks.map((link) => (
                         <a
                             key={link.name}
@@ -84,6 +86,56 @@ export function Header() {
                             )}
                         </a>
                     ))}
+
+                    {/* Raycast Extensions Dropdown */}
+                    <div className="relative ml-4 group">
+                        <a
+                            href="https://raycast.com/?via=lu"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={cn(
+                                "flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 bg-white/5 text-white font-medium transition-all duration-300 hover:border-[#FF6154]/50 hover:bg-[#FF6154]/10",
+                                scrolled ? "text-xs px-2.5 py-1" : "text-sm"
+                            )}
+                        >
+                            <svg className={cn("transition-all duration-300 text-[#FF6154]", scrolled ? "w-4 h-4" : "w-5 h-5")} viewBox="0 0 512 512" fill="currentColor">
+                                <path d="M256 0L0 256l256 256 256-256L256 0zm0 96l160 160-160 160-160-160L256 96z" />
+                            </svg>
+                            Raycast
+                        </a>
+                        <div className="absolute right-0 top-full mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <div className="bg-black/95 backdrop-blur-md border border-white/10 rounded-lg shadow-xl p-2 min-w-[200px]">
+                                <a
+                                    href="https://www.raycast.com/nazzy_wazzy_lu/window-walker?via=lu"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white/10 transition-colors text-sm text-gray-300 hover:text-white"
+                                >
+                                    <span className="text-lg">🪟</span>
+                                    Window Walker
+                                </a>
+                                <a
+                                    href="https://www.raycast.com/nazzy_wazzy_lu/archisteamfarm?via=lu"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white/10 transition-colors text-sm text-gray-300 hover:text-white"
+                                >
+                                    <span className="text-lg">🎮</span>
+                                    ArchiSteamFarm
+                                </a>
+                                <div className="border-t border-white/10 mt-2 pt-2">
+                                    <a
+                                        href="https://raycast.com/?via=lu"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white/10 transition-colors text-xs text-gray-500 hover:text-gray-300"
+                                    >
+                                        Get Raycast →
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </nav>
 
                 {/* Mobile Menu Placeholder */}
