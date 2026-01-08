@@ -87,6 +87,41 @@ export function Header() {
                         </a>
                     ))}
 
+                    {/* Applets Dropdown */}
+                    <div className="relative ml-4 group">
+                        <button
+                            className={cn(
+                                "flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 bg-white/5 text-white font-medium transition-all duration-300 hover:border-purple-400/50 hover:bg-purple-500/10",
+                                scrolled ? "text-xs px-2.5 py-1" : "text-sm"
+                            )}
+                        >
+                            <span className={cn("transition-all duration-300", scrolled ? "text-sm" : "text-base")}>🎨</span>
+                            Applets
+                        </button>
+                        <div className="absolute right-0 top-full mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <div className="bg-black/95 backdrop-blur-md border border-white/10 rounded-lg shadow-xl p-2 min-w-[180px]">
+                                <a
+                                    href="https://luinbytes.github.io/pixel-morph/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white/10 transition-colors text-sm text-gray-300 hover:text-white"
+                                >
+                                    <span className="text-lg">🖌️</span>
+                                    Pixel Morph
+                                </a>
+                                <a
+                                    href="https://luinbytes.github.io/afk/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white/10 transition-colors text-sm text-gray-300 hover:text-white"
+                                >
+                                    <span className="text-lg">💤</span>
+                                    AFK Tracker
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
                     {/* Raycast Extensions Dropdown */}
                     <div className="relative ml-4 group">
                         <a
