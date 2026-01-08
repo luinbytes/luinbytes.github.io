@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 export function Header() {
     const [activeSection, setActiveSection] = useState("home");
     const [scrolled, setScrolled] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -27,6 +28,18 @@ export function Header() {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
+
+    // Lock body scroll when mobile menu is open
+    useEffect(() => {
+        if (mobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [mobileMenuOpen]);
 
     const navLinks = [
         { name: "Home", href: "#home" },
@@ -51,6 +64,7 @@ export function Header() {
                 behavior: "smooth"
             });
             setActiveSection(targetId);
+            setMobileMenuOpen(false);
         }
     };
 
@@ -185,13 +199,124 @@ export function Header() {
                     </div>
                 </nav>
 
-                {/* Mobile Menu Placeholder */}
-                <button className="md:hidden text-gray-400 hover:text-white p-2">
-                    <span className="sr-only">Open menu</span>
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
-                    </svg>
+                {/* Mobile Menu Toggle */}
+                <button
+                    className="md:hidden text-gray-400 hover:text-white p-2 z-50"
+                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                    aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+                >
+                    <span className="sr-only">{mobileMenuOpen ? "Close menu" : "Open menu"}</span>
+                    {mobileMenuOpen ? (
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    ) : (
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    )}
                 </button>
+            </div>
+
+            {/* Mobile Menu Overlay */}
+            <div
+                className={cn(
+                    "fixed inset-0 bg-black/95 backdrop-blur-md z-40 transition-all duration-300 md:hidden",
+                    mobileMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"
+                )}
+                style={{ top: scrolled ? '52px' : '68px' }}
+            >
+                <nav className="flex flex-col h-full overflow-y-auto px-6 py-8">
+                    {/* Navigation Links */}
+                    <div className="space-y-1 mb-8">
+                        {navLinks.map((link) => (
+                            <a
+                                key={link.name}
+                                href={link.href}
+                                onClick={(e) => scrollToSection(e, link.href)}
+                                className={cn(
+                                    "block py-3 px-4 text-lg font-medium transition-all rounded-lg",
+                                    activeSection === link.href.replace("#", "")
+                                        ? "text-neon bg-neon/10"
+                                        : "text-gray-300 hover:text-white hover:bg-white/5"
+                                )}
+                            >
+                                {link.name}
+                            </a>
+                        ))}
+                    </div>
+
+                    {/* Divider */}
+                    <div className="border-t border-white/10 my-4" />
+
+                    {/* Applets Section */}
+                    <div className="mb-6">
+                        <h3 className="text-xs font-mono text-gray-500 uppercase tracking-wider mb-3 px-4">Applets</h3>
+                        <a
+                            href="https://luinbytes.github.io/pixel-morph/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors text-gray-300 hover:text-white"
+                        >
+                            <span className="text-xl">🖌️</span>
+                            Pixel Morph
+                        </a>
+                        <a
+                            href="https://luinbytes.github.io/afk/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors text-gray-300 hover:text-white"
+                        >
+                            <span className="text-xl">💤</span>
+                            AFK Tracker
+                        </a>
+                    </div>
+
+                    {/* Raycast Extensions Section */}
+                    <div className="mb-6">
+                        <h3 className="text-xs font-mono text-gray-500 uppercase tracking-wider mb-3 px-4">Raycast Extensions</h3>
+                        <a
+                            href="https://www.raycast.com/nazzy_wazzy_lu/window-walker?via=lu"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors text-gray-300 hover:text-white"
+                        >
+                            <span className="text-xl">🪟</span>
+                            Window Walker
+                        </a>
+                        <a
+                            href="https://www.raycast.com/nazzy_wazzy_lu/archisteamfarm?via=lu"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors text-gray-300 hover:text-white"
+                        >
+                            <span className="text-xl">🎮</span>
+                            ArchiSteamFarm
+                        </a>
+                        <a
+                            href="https://www.raycast.com/nazzy_wazzy_lu/lifx-advanced-controller?via=lu"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors text-gray-300 hover:text-white"
+                        >
+                            <span className="text-xl">💡</span>
+                            LIFX Controller
+                        </a>
+
+                        {/* Get Raycast CTA */}
+                        <a
+                            href="https://raycast.com/?via=lu"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-2 mx-4 mt-4 px-4 py-3 rounded-lg bg-gradient-to-r from-[#FF6154] to-[#FF8F47] text-white font-medium hover:opacity-90 transition-opacity"
+                        >
+                            <svg className="w-4 h-4" viewBox="0 0 512 512" fill="currentColor">
+                                <path d="M256 0L0 256l256 256 256-256L256 0zm0 96l160 160-160 160-160-160L256 96z" />
+                            </svg>
+                            Get Raycast Free
+                        </a>
+                    </div>
+                </nav>
             </div>
         </header>
     );
