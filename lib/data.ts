@@ -37,7 +37,7 @@ export const projects: Project[] = [
         techStack: ["TypeScript", "React", "Node.js"],
         tags: ["Raycast", "Productivity", "Open Source"],
         sourceUrl: "https://github.com/luinbytes/extensions",
-        featured: true,
+        featured: false,
     },
     {
         id: "window-walker",
@@ -63,7 +63,7 @@ export const projects: Project[] = [
         techStack: ["TypeScript", "Discord RPC"],
         tags: ["Discord", "Social", "Tools"],
         sourceUrl: "https://github.com/luinbytes/discord-utilities-raycast",
-        featured: true,
+        featured: false,
     },
     {
         id: "fastuploader",
@@ -112,7 +112,7 @@ export const projects: Project[] = [
         techStack: ["TypeScript", "Raycast API"],
         tags: ["Health", "Productivity", "Sleep"],
         sourceUrl: "https://github.com/luinbytes/extensions/tree/sleep-calculator-extension",
-        featured: false,
+        featured: true,
     },
     {
         id: "lifx-controller",
@@ -125,7 +125,21 @@ export const projects: Project[] = [
         techStack: ["TypeScript", "Raycast API", "LIFX API"],
         tags: ["Smart Home", "LIFX", "Automation"],
         sourceUrl: "https://github.com/luinbytes/extensions/tree/lifx-controller-extension",
-        featured: false,
+        featured: true,
+    },
+    {
+        id: "pixel-morph",
+        name: "Pixel Morph",
+        type: "Web App",
+        description: "Draw anything. Watch it become Obama.",
+        longDescription: "An interactive web-based drawing canvas that morphs your artwork into a pixel-art portrait of Obama in real-time. A fun experiment in canvas manipulation and image processing.",
+        approach: "Uses HTML5 Canvas for drawing with pixel-level manipulation to gradually transform strokes into the target image.",
+        outcome: "A quirky, entertaining art toy that surprises users with its transformation effect.",
+        techStack: ["JavaScript", "HTML5 Canvas", "CSS"],
+        tags: ["Art", "Canvas", "Fun", "Experimental"],
+        sourceUrl: "https://github.com/luinbytes/pixel-morph",
+        demoUrl: "https://luinbytes.github.io/pixel-morph/",
+        featured: true,
     }
 ];
 
