@@ -115,6 +115,15 @@ export function Header() {
                         <div className="absolute right-0 top-full mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                             <div className="bg-black/95 backdrop-blur-md border border-white/10 rounded-lg shadow-xl p-2 min-w-[180px]">
                                 <a
+                                    href="https://luinbytes.github.io/price-tracker/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white/10 transition-colors text-sm text-gray-300 hover:text-white"
+                                >
+                                    <span className="text-lg">🏷️</span>
+                                    Price Pulse
+                                </a>
+                                <a
                                     href="https://luinbytes.github.io/pixel-morph/"
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -252,6 +261,15 @@ export function Header() {
                     {/* Applets Section */}
                     <div className="mb-6">
                         <h3 className="text-xs font-mono text-gray-500 uppercase tracking-wider mb-3 px-4">Applets</h3>
+                        <a
+                            href="https://luinbytes.github.io/price-tracker/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors text-gray-300 hover:text-white"
+                        >
+                            <span className="text-xl">🏷️</span>
+                            Price Pulse
+                        </a>
                         <a
                             href="https://luinbytes.github.io/pixel-morph/"
                             target="_blank"
