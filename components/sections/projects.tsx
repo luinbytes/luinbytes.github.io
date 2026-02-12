@@ -150,6 +150,17 @@ export function Projects() {
                                     View Source
                                 </a>
                             )}
+                            {selectedProject.purchaseUrl && (
+                                <a
+                                    href={selectedProject.purchaseUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-2 px-6 py-3 bg-neon text-black font-bold rounded-lg hover:bg-neon/80 transition-colors"
+                                >
+                                    <ExternalLink className="w-4 h-4" />
+                                    Buy $10
+                                </a>
+                            )}
                             {selectedProject.demoUrl && (
                                 <a
                                     href={selectedProject.demoUrl}

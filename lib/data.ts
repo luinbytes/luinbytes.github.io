@@ -12,6 +12,7 @@ export interface Project {
     tags: string[];
     sourceUrl?: string; // GitHub or similar
     demoUrl?: string;
+    purchaseUrl?: string; // Gumroad or similar
     featured: boolean;
 }
 
@@ -30,14 +31,15 @@ export const projects: Project[] = [
         id: "file-deduplicator",
         name: "file-deduplicator",
         type: "CLI Tool",
-        description: "The only CLI tool that finds similar images, not just exact duplicates. (Coming Soon)",
+        description: "The only CLI tool that finds similar images, not just exact duplicates. v3.0.0 released! 🚀",
         longDescription: "A fast, parallel CLI duplicate finder with a killer feature: perceptual image hashing. Finds similar photos even when they've been edited, compressed, or renamed — something no other CLI tool does.",
         approach: "Built in Go for speed with parallel SHA256 hashing. Implements dHash, aHash, and pHash algorithms for perceptual similarity detection. Cross-platform with safe defaults (dry-run, move-instead-of-delete).",
         outcome: "Open source with paid binaries. The only CLI tool with perceptual image deduplication — perfect for cleaning up massive photo libraries.",
         techStack: ["Go", "Perceptual Hashing", "CLI", "Cross-Platform"],
-        tags: ["CLI", "Go", "Image Processing", "Open Source", "Coming Soon"],
+        tags: ["CLI", "Go", "Image Processing", "Open Source", "Released"],
         sourceUrl: "https://github.com/luinbytes/file-deduplicator",
         demoUrl: "https://luinbytes.github.io/file-deduplicator/",
+        purchaseUrl: "https://luinbytes.gumroad.com/l/file-deduplicator",
         featured: true,
     },
     {
