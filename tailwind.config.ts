@@ -11,8 +11,8 @@ const config: Config = {
       colors: {
         background: "#0a0a0a",
         foreground: "#ededed",
-        neon: "#00f3ff", // Cyan/Neon Blue
-        "neon-hover": "#00c2cc",
+        neon: "#ff9eb5", // Pink/Neon
+        "neon-hover": "#ff7da0",
         surface: "#111111",
         "surface-highlight": "#1a1a1a",
         border: "#333333",
