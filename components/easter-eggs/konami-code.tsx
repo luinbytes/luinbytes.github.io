@@ -16,11 +16,10 @@ const KONAMI_CODE = [
 
 const KONAMI_DISPLAY = ["↑", "↑", "↓", "↓", "←", "→", "B", "A"];
 
-const TIMEOUT_MS = 5000; // 5 second timeout for keyboard
-const D_PAD_TIMEOUT_MS = 10000; // 10 second auto-dismiss for D-PAD
-const SHAKE_THRESHOLD = 18; // Acceleration threshold for shake detection
+const TIMEOUT_MS = 5000;
+const D_PAD_TIMEOUT_MS = 10000;
+const SHAKE_THRESHOLD = 18;
 
-// Check if device is mobile
 function isMobile(): boolean {
   if (typeof window === "undefined") return false;
   return (
@@ -30,7 +29,6 @@ function isMobile(): boolean {
   );
 }
 
-// Check for reduced motion preference
 function prefersReducedMotion(): boolean {
   if (typeof window === "undefined") return false;
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -39,18 +37,20 @@ function prefersReducedMotion(): boolean {
 export function KonamiCode() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDPadOpen, setIsDPadOpen] = useState(false);
-  const [keySequence, setKeySequence] = useState<string[]>([]);
-  const [lastKeyTime, setLastKeyTime] = useState<number>(0);
-  const [isMobileDevice, setIsMobileDevice] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
   const [pressedButton, setPressedButton] = useState<string | null>(null);
   
+  // Use refs to track sequence - avoids stale closure issues
+  const keySequenceRef = useRef<string[]>([]);
+  const lastKeyTimeRef = useRef<number>(0);
   const dPadTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const shakeEnabledRef = useRef(false);
   const lastShakeTimeRef = useRef(0);
+  const [isMobileDevice, setIsMobileDevice] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
 
   const resetSequence = useCallback(() => {
-    setKeySequence([]);
+    keySequenceRef.current = [];
+    lastKeyTimeRef.current = 0;
   }, []);
 
   const handleSuccess = useCallback(() => {
@@ -59,30 +59,33 @@ export function KonamiCode() {
     resetSequence();
   }, [resetSequence]);
 
-  // Handle key press (both keyboard and D-PAD)
   const handleKeyPress = useCallback(
     (key: string) => {
       const currentTime = Date.now();
+      const lastTime = lastKeyTimeRef.current;
 
       // Reset if too much time has passed
-      if (currentTime - lastKeyTime > TIMEOUT_MS && keySequence.length > 0) {
+      if (currentTime - lastTime > TIMEOUT_MS && keySequenceRef.current.length > 0) {
         resetSequence();
       }
 
-      const nextKey = KONAMI_CODE[keySequence.length];
+      const nextKey = KONAMI_CODE[keySequenceRef.current.length];
 
       if (key === nextKey) {
-        const newSequence = [...keySequence, key];
-        setKeySequence(newSequence);
-        setLastKeyTime(currentTime);
+        keySequenceRef.current = [...keySequenceRef.current, key];
+        lastKeyTimeRef.current = currentTime;
 
         // Reset D-PAD timeout on activity
-        if (isDPadOpen) {
-          resetDPadTimeout();
+        if (isDPadOpen && dPadTimeoutRef.current) {
+          clearTimeout(dPadTimeoutRef.current);
+          dPadTimeoutRef.current = setTimeout(() => {
+            setIsDPadOpen(false);
+            resetSequence();
+          }, D_PAD_TIMEOUT_MS);
         }
 
         // Check if sequence is complete
-        if (newSequence.length === KONAMI_CODE.length) {
+        if (keySequenceRef.current.length === KONAMI_CODE.length) {
           handleSuccess();
         }
       } else {
@@ -90,26 +93,13 @@ export function KonamiCode() {
         resetSequence();
       }
     },
-    [keySequence, lastKeyTime, resetSequence, handleSuccess, isDPadOpen]
+    [resetSequence, handleSuccess, isDPadOpen]
   );
 
-  const resetDPadTimeout = useCallback(() => {
-    if (dPadTimeoutRef.current) {
-      clearTimeout(dPadTimeoutRef.current);
-    }
-    dPadTimeoutRef.current = setTimeout(() => {
-      setIsDPadOpen(false);
-      resetSequence();
-    }, D_PAD_TIMEOUT_MS);
-  }, [resetSequence]);
-
-  // Keyboard handler
-  const handleKeyDown = useCallback(
-    (event: KeyboardEvent) => {
-      handleKeyPress(event.code);
-    },
-    [handleKeyPress]
-  );
+  // Keyboard handler - defined once, uses refs for current values
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    handleKeyPress(event.code);
+  }, [handleKeyPress]);
 
   // D-PAD button handler
   const handleDPadPress = useCallback(
@@ -117,7 +107,6 @@ export function KonamiCode() {
       e.preventDefault();
       e.stopPropagation();
       
-      // Visual feedback
       setPressedButton(key);
       setTimeout(() => setPressedButton(null), 150);
       
@@ -141,19 +130,21 @@ export function KonamiCode() {
 
       const now = Date.now();
       
-      // Debounce shakes (prevent multiple triggers)
       if (now - lastShakeTimeRef.current < 1000) return;
 
       if (totalAcceleration > SHAKE_THRESHOLD) {
         lastShakeTimeRef.current = now;
         setIsDPadOpen(true);
-        resetDPadTimeout();
+        if (dPadTimeoutRef.current) clearTimeout(dPadTimeoutRef.current);
+        dPadTimeoutRef.current = setTimeout(() => {
+          setIsDPadOpen(false);
+          resetSequence();
+        }, D_PAD_TIMEOUT_MS);
       }
     },
-    [isDPadOpen, isModalOpen, resetDPadTimeout]
+    [isDPadOpen, isModalOpen, resetSequence]
   );
 
-  // Request permission for iOS
   const requestMotionPermission = useCallback(async () => {
     if (typeof DeviceMotionEvent !== "undefined" && 
         typeof (DeviceMotionEvent as any).requestPermission === "function") {
@@ -164,28 +155,27 @@ export function KonamiCode() {
         return false;
       }
     }
-    return true; // Non-iOS devices don't need permission
+    return true;
   }, []);
 
-  // Setup effects
+  // Check device type on mount
   useEffect(() => {
     setIsMobileDevice(isMobile());
     setReducedMotion(prefersReducedMotion());
   }, []);
 
+  // Setup keyboard listener - only once
   useEffect(() => {
-    // Keyboard listener (desktop)
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleKeyDown]);
 
+  // Setup shake detection
   useEffect(() => {
     if (!isMobileDevice || reducedMotion) return;
 
-    // Enable shake detection
     shakeEnabledRef.current = true;
 
-    // iOS requires user interaction to request permission
     const handleFirstTouch = async () => {
       const granted = await requestMotionPermission();
       if (granted) {
@@ -194,7 +184,6 @@ export function KonamiCode() {
       document.removeEventListener("touchstart", handleFirstTouch);
     };
 
-    // Check if permission is needed
     if (typeof DeviceMotionEvent !== "undefined" && 
         typeof (DeviceMotionEvent as any).requestPermission === "function") {
       document.addEventListener("touchstart", handleFirstTouch, { once: true });
@@ -223,7 +212,6 @@ export function KonamiCode() {
     }
   }, [resetSequence]);
 
-  // Handle click outside D-PAD
   const handleDPadBackdropClick = useCallback(
     (e: React.MouseEvent | React.TouchEvent) => {
       if (e.target === e.currentTarget) {
@@ -233,7 +221,6 @@ export function KonamiCode() {
     [closeDPad]
   );
 
-  // Handle click outside modal
   const handleModalBackdropClick = useCallback(
     (e: React.MouseEvent) => {
       if (e.target === e.currentTarget) {
@@ -243,7 +230,6 @@ export function KonamiCode() {
     [closeModal]
   );
 
-  // D-PAD Button component
   const DPadButton = ({ 
     keyName, 
     display, 
@@ -277,7 +263,6 @@ export function KonamiCode() {
 
   return (
     <>
-      {/* D-PAD Modal (Mobile) */}
       {isDPadOpen && !isModalOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
@@ -296,31 +281,27 @@ export function KonamiCode() {
             <div className="text-center mb-4">
               <p className="text-neon text-xs font-mono mb-1">Enter the Code</p>
               <p className="text-gray-500 text-xs">
-                {keySequence.length > 0 
-                  ? KONAMI_DISPLAY.slice(0, keySequence.length).join(" ") + " _".repeat(KONAMI_CODE.length - keySequence.length)
+                {keySequenceRef.current.length > 0 
+                  ? KONAMI_DISPLAY.slice(0, keySequenceRef.current.length).join(" ") + " _".repeat(KONAMI_CODE.length - keySequenceRef.current.length)
                   : KONAMI_DISPLAY.join(" ")
                 }
               </p>
             </div>
 
-            {/* D-PAD Layout */}
             <div className="flex flex-col items-center gap-2">
-              {/* Up button */}
               <DPadButton keyName="ArrowUp" display="↑" />
 
-              {/* Middle row: Left, Down, Right */}
               <div className="flex items-center gap-2">
                 <DPadButton keyName="ArrowLeft" display="←" />
                 <div className="flex flex-col gap-2">
-                  <div className="min-w-[52px] min-h-[52px]" /> {/* Spacer */}
+                  <div className="min-w-[52px] min-h-[52px]" />
                   <DPadButton keyName="ArrowDown" display="↓" />
                 </div>
                 <DPadButton keyName="ArrowRight" display="→" />
               </div>
 
-              {/* B and A buttons */}
               <div className="flex gap-2 mt-2">
-                <div className="flex-1" /> {/* Spacer */}
+                <div className="flex-1" />
                 <DPadButton keyName="KeyB" display="B" className="bg-neon/5" />
                 <DPadButton keyName="KeyA" display="A" className="bg-neon/5" />
               </div>
@@ -333,7 +314,6 @@ export function KonamiCode() {
         </div>
       )}
 
-      {/* Success Modal */}
       {isModalOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
