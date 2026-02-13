@@ -170,20 +170,6 @@ export const projects: Project[] = [
         sourceUrl: "https://github.com/luinbytes/pixel-morph",
         demoUrl: "https://luinbytes.github.io/pixel-morph/",
         featured: true,
-    },
-    {
-        id: "price-pulse",
-        name: "PricePulse",
-        type: "Web App",
-        description: "Real-time price tracking and comparison dashboard.",
-        longDescription: "A modern dashboard to track product prices across e-commerce sites, visualize trends, and automatically find the best deals.",
-        approach: "Leverages Puppeteer for scraping, Supabase for data persistence, and a polished React frontend for visualization.",
-        outcome: "Empowers users to make informed purchasing decisions with historical price data.",
-        techStack: ["React 19", "TypeScript", "Vite", "Supabase", "Puppeteer"],
-        tags: ["Shopping", "Dashboard", "Scraping", "Supabase"],
-        sourceUrl: "https://github.com/luinbytes/price-tracker",
-        demoUrl: "https://luinbytes.github.io/price-tracker/",
-        featured: true,
     }
 ];
 

@@ -160,8 +160,9 @@ export function Contact() {
             </div>
 
             {/* Footer embedded in contact section for flow */}
-            <div className="mt-20 pt-8 border-t border-white/10 text-center text-gray-500 text-sm font-mono">
-                <p>&copy; {new Date().getFullYear()} Luinbytes. Built with Next.js & Caffeine.</p>
+            <div className="mt-20 pt-8 border-t border-white/10 text-center font-mono">
+                <p className="text-gray-500 text-sm">&copy; {new Date().getFullYear()} Luinbytes. Built with Next.js & Caffeine.</p>
+                <p className="text-gray-600 text-xs mt-1">Debugging by Lumi 🐱</p>
             </div>
         </section>
     );
