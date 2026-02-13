@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { ShoppingBag } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function Header() {
@@ -206,6 +207,20 @@ export function Header() {
                             </div>
                         </div>
                     </div>
+
+                    {/* Gumroad Store Link */}
+                    <a
+                        href="https://x6c75.gumroad.com/l/file-deduplicator"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={cn(
+                            "flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 bg-white/5 text-white font-medium transition-all duration-300 hover:border-[#FF90E8]/50 hover:bg-[#FF90E8]/10",
+                            scrolled ? "text-xs px-2.5 py-1 ml-4" : "text-sm ml-4"
+                        )}
+                    >
+                        <ShoppingBag className={cn("transition-all duration-300 text-[#FF90E8]", scrolled ? "w-4 h-4" : "w-5 h-5")} />
+                        Store
+                    </a>
                 </nav>
 
                 {/* Mobile Menu Toggle */}
@@ -332,6 +347,20 @@ export function Header() {
                                 <path d="M256 0L0 256l256 256 256-256L256 0zm0 96l160 160-160 160-160-160L256 96z" />
                             </svg>
                             Get Raycast Free
+                        </a>
+                    </div>
+
+                    {/* Store Section */}
+                    <div className="mb-6">
+                        <h3 className="text-xs font-mono text-gray-500 uppercase tracking-wider mb-3 px-4">Store</h3>
+                        <a
+                            href="https://x6c75.gumroad.com/l/file-deduplicator"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors text-gray-300 hover:text-white"
+                        >
+                            <ShoppingBag className="text-[#FF90E8] w-5 h-5" />
+                            File Deduplicator
                         </a>
                     </div>
                 </nav>
