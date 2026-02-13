@@ -2,9 +2,7 @@ import { Hero } from "@/components/sections/hero";
 import { About } from "@/components/sections/about";
 import { Now } from "@/components/sections/now";
 import { Skills } from "@/components/sections/skills";
-import { Timeline } from "@/components/sections/timeline";
 import { Projects } from "@/components/sections/projects";
-import { Testimonials } from "@/components/sections/testimonials";
 import { Activity } from "@/components/sections/activity";
 import { AutomationPlayground } from "@/components/sections/automation-playground";
 import { Contact } from "@/components/sections/contact";
@@ -18,9 +16,7 @@ export default function Home() {
       <About />
       <Now />
       <Skills />
-      <Timeline />
       <Projects />
-      <Testimonials />
       <SectionErrorBoundary>
         <AutomationPlayground />
       </SectionErrorBoundary>
