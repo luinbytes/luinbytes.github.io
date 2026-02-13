@@ -1,5 +1,7 @@
 import { Hero } from "@/components/sections/hero";
 import { About } from "@/components/sections/about";
+import { Now } from "@/components/sections/now";
+import { Skills } from "@/components/sections/skills";
 import { Projects } from "@/components/sections/projects";
 import { Activity } from "@/components/sections/activity";
 import { AutomationPlayground } from "@/components/sections/automation-playground";
@@ -12,6 +14,8 @@ export default function Home() {
       <Hero />
       <div className="h-16" />
       <About />
+      <Now />
+      <Skills />
       <Projects />
       <SectionErrorBoundary>
         <AutomationPlayground />
