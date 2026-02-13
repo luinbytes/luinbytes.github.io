@@ -18,7 +18,7 @@ const KONAMI_DISPLAY = ["↑", "↑", "↓", "↓", "←", "→", "B", "A"];
 
 const TIMEOUT_MS = 5000;
 const D_PAD_TIMEOUT_MS = 10000;
-const SHAKE_THRESHOLD = 12; // Lowered from 18
+const SHAKE_THRESHOLD = 12;
 
 function isMobile(): boolean {
   if (typeof window === "undefined") return false;
@@ -42,7 +42,6 @@ export function KonamiCode() {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [showMobileButton, setShowMobileButton] = useState(false);
   
-  // Use refs for all state accessed in event handlers to avoid stale closures
   const keySequenceRef = useRef<string[]>([]);
   const lastKeyTimeRef = useRef<number>(0);
   const dPadTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -50,63 +49,42 @@ export function KonamiCode() {
   const lastShakeTimeRef = useRef(0);
   const isDPadOpenRef = useRef(false);
   const isModalOpenRef = useRef(false);
-  const listenerAttachedRef = useRef(false);
   const motionListenerAttachedRef = useRef(false);
 
-  // DEBUG: Log when component mounts
-  useEffect(() => {
-    console.log("[KonamiCode] Component mounted");
-  }, []);
-
-  // Keep refs in sync with state
   useEffect(() => {
     isDPadOpenRef.current = isDPadOpen;
-    console.log("[KonamiCode] isDPadOpen changed:", isDPadOpen);
   }, [isDPadOpen]);
 
   useEffect(() => {
     isModalOpenRef.current = isModalOpen;
-    console.log("[KonamiCode] isModalOpen changed:", isModalOpen);
   }, [isModalOpen]);
 
-  // Stable reset function using ref
   const resetSequence = useCallback(() => {
-    console.log("[KonamiCode] Resetting sequence");
     keySequenceRef.current = [];
     lastKeyTimeRef.current = 0;
   }, []);
 
-  // Stable success handler
   const handleSuccess = useCallback(() => {
-    console.log("[KonamiCode] SUCCESS! Opening modal");
     setIsModalOpen(true);
     setIsDPadOpen(false);
     resetSequence();
   }, [resetSequence]);
 
-  // Core key press logic - stable, uses refs for all state
-  const handleKeyPress = useCallback((key: string, source: string) => {
-    console.log(`[KonamiCode] Key pressed from ${source}:`, key);
-    
+  const handleKeyPress = useCallback((key: string) => {
     const currentTime = Date.now();
     const lastTime = lastKeyTimeRef.current;
 
-    // Reset if too much time has passed
     if (currentTime - lastTime > TIMEOUT_MS && keySequenceRef.current.length > 0) {
-      console.log("[KonamiCode] Timeout reset");
       keySequenceRef.current = [];
       lastKeyTimeRef.current = 0;
     }
 
     const nextKey = KONAMI_CODE[keySequenceRef.current.length];
-    console.log("[KonamiCode] Expected:", nextKey, "| Got:", key, "| Progress:", keySequenceRef.current.length);
 
     if (key === nextKey) {
       keySequenceRef.current = [...keySequenceRef.current, key];
       lastKeyTimeRef.current = currentTime;
-      console.log("[KonamiCode] Correct! Progress:", keySequenceRef.current.length, "/", KONAMI_CODE.length);
 
-      // Reset D-PAD timeout on activity (using ref to check current state)
       if (isDPadOpenRef.current && dPadTimeoutRef.current) {
         clearTimeout(dPadTimeoutRef.current);
         dPadTimeoutRef.current = setTimeout(() => {
@@ -116,44 +94,33 @@ export function KonamiCode() {
         }, D_PAD_TIMEOUT_MS);
       }
 
-      // Check if sequence is complete
       if (keySequenceRef.current.length === KONAMI_CODE.length) {
-        console.log("[KonamiCode] Sequence complete!");
         handleSuccess();
       }
     } else {
-      // Wrong key pressed, reset
-      console.log("[KonamiCode] Wrong key, resetting");
       keySequenceRef.current = [];
       lastKeyTimeRef.current = 0;
     }
   }, [handleSuccess]);
 
-  // Keyboard handler - stable, no dependencies on changing state
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    console.log("[KonamiCode] Keyboard event:", event.code, "key:", event.key);
-    handleKeyPress(event.code, "keyboard");
+    handleKeyPress(event.code);
   }, [handleKeyPress]);
 
-  // D-PAD button handler
   const handleDPadPress = useCallback(
     (key: string) => (e: React.TouchEvent | React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
       
-      console.log("[KonamiCode] D-PAD button pressed:", key);
-      
       setPressedButton(key);
       setTimeout(() => setPressedButton(null), 150);
       
-      handleKeyPress(key, "dpad");
+      handleKeyPress(key);
     },
     [handleKeyPress]
   );
 
-  // Manual D-PAD open (for mobile button)
   const openDPad = useCallback(() => {
-    console.log("[KonamiCode] Opening D-PAD manually");
     setIsDPadOpen(true);
     if (dPadTimeoutRef.current) clearTimeout(dPadTimeoutRef.current);
     dPadTimeoutRef.current = setTimeout(() => {
@@ -163,38 +130,27 @@ export function KonamiCode() {
     }, D_PAD_TIMEOUT_MS);
   }, []);
 
-  // Shake detection
   const handleDeviceMotion = useCallback(
     (event: DeviceMotionEvent) => {
       if (!shakeEnabledRef.current || isDPadOpenRef.current || isModalOpenRef.current) return;
 
-      // Try acceleration first, then accelerationIncludingGravity
       let acceleration = event.acceleration;
       if (!acceleration || acceleration.x === null) {
         acceleration = event.accelerationIncludingGravity;
       }
       
-      if (!acceleration) {
-        console.log("[KonamiCode] No acceleration data");
-        return;
-      }
+      if (!acceleration) return;
 
       const { x, y, z } = acceleration;
       const totalAcceleration = Math.sqrt(
         (x || 0) ** 2 + (y || 0) ** 2 + (z || 0) ** 2
       );
 
-      // Log acceleration for debugging (throttled)
-      if (Math.random() < 0.05) {
-        console.log("[KonamiCode] Acceleration:", totalAcceleration.toFixed(2));
-      }
-
       const now = Date.now();
       
       if (now - lastShakeTimeRef.current < 1000) return;
 
       if (totalAcceleration > SHAKE_THRESHOLD) {
-        console.log("[KonamiCode] Shake detected! Opening D-PAD. Acceleration:", totalAcceleration);
         lastShakeTimeRef.current = now;
         setIsDPadOpen(true);
         if (dPadTimeoutRef.current) clearTimeout(dPadTimeoutRef.current);
@@ -213,84 +169,49 @@ export function KonamiCode() {
         typeof (DeviceMotionEvent as any).requestPermission === "function") {
       try {
         const permission = await (DeviceMotionEvent as any).requestPermission();
-        console.log("[KonamiCode] Motion permission:", permission);
         return permission === "granted";
-      } catch (e) {
-        console.log("[KonamiCode] Motion permission error:", e);
+      } catch {
         return false;
       }
     }
     return true;
   }, []);
 
-  // Check device type on mount
   useEffect(() => {
     const mobile = isMobile();
     const reduced = prefersReducedMotion();
-    console.log("[KonamiCode] Device check - Mobile:", mobile, "Reduced motion:", reduced);
     setIsMobileDevice(mobile);
     setReducedMotion(reduced);
-    setShowMobileButton(mobile); // Show button on mobile
+    setShowMobileButton(mobile);
   }, []);
 
-  // Setup keyboard listener - stable, only runs once
   useEffect(() => {
-    if (listenerAttachedRef.current) {
-      console.log("[KonamiCode] Listener already attached, skipping");
-      return;
-    }
-    
-    console.log("[KonamiCode] Attaching keyboard listener");
-    listenerAttachedRef.current = true;
     window.addEventListener("keydown", handleKeyDown);
-    
-    return () => {
-      console.log("[KonamiCode] Removing keyboard listener");
-      window.removeEventListener("keydown", handleKeyDown);
-      listenerAttachedRef.current = false;
-    };
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleKeyDown]);
 
-  // Setup shake detection
   useEffect(() => {
-    console.log("[KonamiCode] Shake setup effect - isMobile:", isMobileDevice, "reducedMotion:", reducedMotion);
-    
-    if (!isMobileDevice || reducedMotion) {
-      console.log("[KonamiCode] Skipping shake setup");
-      return;
-    }
+    if (!isMobileDevice || reducedMotion) return;
 
-    if (motionListenerAttachedRef.current) {
-      console.log("[KonamiCode] Motion listener already attached");
-      return;
-    }
+    if (motionListenerAttachedRef.current) return;
 
     shakeEnabledRef.current = true;
 
     const handleFirstTouch = async () => {
-      console.log("[KonamiCode] First touch detected, requesting permission");
       const granted = await requestMotionPermission();
-      console.log("[KonamiCode] Permission granted:", granted);
       if (granted && !motionListenerAttachedRef.current) {
         window.addEventListener("devicemotion", handleDeviceMotion);
         motionListenerAttachedRef.current = true;
-        console.log("[KonamiCode] Device motion listener attached");
       }
       document.removeEventListener("touchstart", handleFirstTouch);
     };
 
-    // For iOS 13+ we need to wait for a touch to request permission
     if (typeof DeviceMotionEvent !== "undefined" && 
         typeof (DeviceMotionEvent as any).requestPermission === "function") {
-      console.log("[KonamiCode] iOS 13+ device, waiting for touch to request permission");
       document.addEventListener("touchstart", handleFirstTouch, { once: true });
     } else if (typeof DeviceMotionEvent !== "undefined") {
-      // For other devices, attach immediately
-      console.log("[KonamiCode] Non-iOS 13+ device, attaching motion listener immediately");
       window.addEventListener("devicemotion", handleDeviceMotion);
       motionListenerAttachedRef.current = true;
-    } else {
-      console.log("[KonamiCode] DeviceMotionEvent not supported");
     }
 
     return () => {
@@ -304,12 +225,10 @@ export function KonamiCode() {
   }, [isMobileDevice, reducedMotion, handleDeviceMotion, requestMotionPermission]);
 
   const closeModal = useCallback(() => {
-    console.log("[KonamiCode] Closing modal");
     setIsModalOpen(false);
   }, []);
 
   const closeDPad = useCallback(() => {
-    console.log("[KonamiCode] Closing D-PAD");
     setIsDPadOpen(false);
     keySequenceRef.current = [];
     lastKeyTimeRef.current = 0;
@@ -367,23 +286,13 @@ export function KonamiCode() {
     </button>
   );
 
-  console.log("[KonamiCode] Render - isDPadOpen:", isDPadOpen, "isModalOpen:", isModalOpen, "showMobileButton:", showMobileButton);
-
   return (
     <>
-      {/* Debug overlay - always visible during debugging */}
-      <div className="fixed bottom-4 right-4 z-[100] bg-black/90 border border-neon p-2 rounded text-xs text-neon font-mono">
-        <div>Konami: {keySequenceRef.current.length}/{KONAMI_CODE.length}</div>
-        <div>DPad: {isDPadOpen ? "open" : "closed"}</div>
-        <div>Modal: {isModalOpen ? "open" : "closed"}</div>
-        <div>Mobile: {isMobileDevice ? "yes" : "no"}</div>
-      </div>
-
       {/* Mobile D-PAD trigger button - alternative to shake */}
       {showMobileButton && !isDPadOpen && !isModalOpen && (
         <button
           onClick={openDPad}
-          className="fixed bottom-20 right-4 z-40 bg-black/80 border border-neon/60 text-neon p-3 rounded-full shadow-lg hover:border-neon hover:bg-neon/10 transition-all active:scale-95"
+          className="fixed bottom-4 right-4 z-40 bg-black/80 border border-neon/60 text-neon p-3 rounded-full shadow-lg hover:border-neon hover:bg-neon/10 transition-all active:scale-95"
           aria-label="Open Konami Code D-PAD"
         >
           <Gamepad2 className="w-6 h-6" />
