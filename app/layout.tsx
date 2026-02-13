@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { CommandMenu } from "@/components/command-menu";
+import { KonamiCode } from "@/components/easter-eggs/konami-code";
 
 const spaceMono = Space_Mono({
   subsets: ["latin"],
@@ -49,7 +50,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+      {/*
+        If you're reading this, you're either:
+        a) A curious developer (cool)
+        b) Lu debugging something I broke (sorry)
+
+        Either way: Lumi was here ✌️
+      */}
       <body className={`${spaceMono.variable} font-mono bg-black text-white antialiased selection:bg-neon selection:text-black`} suppressHydrationWarning>
+        <KonamiCode />
         <CommandMenu />
         <Header />
         <main className="min-h-screen pt-20">
