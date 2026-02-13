@@ -266,7 +266,6 @@ export function KonamiCode() {
   }) => (
     <button
       onTouchStart={handleDPadPress(keyName)}
-      onClick={handleDPadPress(keyName)}
       className={`
         min-w-[52px] min-h-[52px]
         flex items-center justify-center
