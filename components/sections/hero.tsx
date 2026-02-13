@@ -40,10 +40,6 @@ export function Hero() {
                 <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
                     <Link
                         href="#projects"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
-                        }}
                         className="group px-8 py-4 bg-white text-black hover:bg-neon transition-all duration-300 font-bold rounded-full flex items-center justify-center gap-2"
                     >
                         View Projects
@@ -51,10 +47,6 @@ export function Hero() {
                     </Link>
                     <Link
                         href="#contact"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                        }}
                         className="px-8 py-4 bg-transparent border border-white/20 hover:border-white transition-colors text-white font-bold rounded-full flex items-center justify-center"
                     >
                         Request a Tool

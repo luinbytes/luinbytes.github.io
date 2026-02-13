@@ -26,10 +26,18 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_GB",
-    url: "https://luinbytes.dev",
+    url: "https://luinbytes.github.io",
     title: "Lu | Software Engineer",
-    description: "Self-taught software engineer in the UK.",
+    description: "Self-taught software engineer building AI tools, Raycast extensions, and PC-gaming utilities.",
     siteName: "Luinbytes",
+    images: [
+      {
+        url: "https://luinbytes.github.io/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Lu | Software Engineer",
+      },
+    ],
   },
   keywords: ["Software Engineer", "Raycast Extensions", "Next.js", "Brutalist Design", "TypeScript"],
 };
