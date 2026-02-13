@@ -1,12 +1,29 @@
 "use client";
 
 import { useState } from "react";
-import { projects, Project } from "@/lib/data";
+import { projects, Project, ProjectType } from "@/lib/data";
 import { X, Github, ExternalLink, Terminal } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+type FilterCategory = "All" | "Raycast" | "Web" | "CLI" | "Discord";
+
+const filterMap: Record<FilterCategory, ProjectType[] | null> = {
+    All: null,
+    Raycast: ["Raycast Extension"],
+    Web: ["Web App"],
+    CLI: ["CLI Tool"],
+    Discord: ["Discord Utility"],
+};
+
+const filterButtons: FilterCategory[] = ["All", "Raycast", "Web", "CLI", "Discord"];
+
 export function Projects() {
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+    const [activeFilter, setActiveFilter] = useState<FilterCategory>("All");
+
+    const filteredProjects = activeFilter === "All" 
+        ? projects 
+        : projects.filter(p => filterMap[activeFilter]?.includes(p.type));
 
     return (
         <section id="projects" className="py-24 relative border-t border-white/5">
@@ -21,8 +38,26 @@ export function Projects() {
                     </p>
                 </div>
 
+                {/* Filter Buttons */}
+                <div className="flex flex-wrap gap-3 mb-12">
+                    {filterButtons.map((filter) => (
+                        <button
+                            key={filter}
+                            onClick={() => setActiveFilter(filter)}
+                            className={cn(
+                                "px-4 py-2 text-sm font-mono font-bold uppercase tracking-wider border-2 transition-all duration-200 rounded-full",
+                                activeFilter === filter
+                                    ? "bg-neon text-black border-neon"
+                                    : "bg-transparent text-gray-400 border-white/20 hover:border-neon hover:text-neon"
+                            )}
+                        >
+                            {filter}
+                        </button>
+                    ))}
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {projects.map((project) => (
+                    {filteredProjects.map((project) => (
                         <div
                             key={project.id}
                             onClick={() => setSelectedProject(project)}
