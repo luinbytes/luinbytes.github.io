@@ -86,6 +86,18 @@ export function Contact() {
                                 </div>
                             </a>
                             <a
+                                href="https://www.raycast.com/khlebobul/bed-time-calculator?via=lu"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-3 px-3 py-2 bg-white/5 border border-white/10 rounded-lg hover:border-[#FF6154]/50 hover:bg-[#FF6154]/10 transition-colors group"
+                            >
+                                <span className="text-xl">😴</span>
+                                <div className="flex-1">
+                                    <div className="text-sm font-medium text-white group-hover:text-[#FF6154]">Bed Time Calculator</div>
+                                    <div className="text-xs text-gray-500">Optimal sleep cycles</div>
+                                </div>
+                            </a>
+                            <a
                                 href="https://raycast.com/?via=lu"
                                 target="_blank"
                                 rel="noopener noreferrer"
