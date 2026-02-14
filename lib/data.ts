@@ -145,19 +145,6 @@ export const projects: Project[] = [
         featured: true,
     },
     {
-        id: "sleep-calculator",
-        name: "Sleep Calculator",
-        type: "Raycast Extension",
-        description: "Calculate optimal sleep and wake times based on sleep cycles.",
-        longDescription: "Plan your sleep schedule around natural 90-minute sleep cycles to wake up feeling refreshed instead of groggy.",
-        approach: "Uses sleep science to calculate optimal bedtimes or wake times based on cycle completion.",
-        outcome: "Better sleep quality through cycle-aware scheduling.",
-        techStack: ["TypeScript", "Raycast API"],
-        tags: ["Health", "Productivity", "Sleep"],
-        sourceUrl: "https://github.com/luinbytes/extensions/tree/sleep-calculator-extension",
-        featured: true,
-    },
-    {
         id: "lifx-controller",
         name: "LIFX Controller",
         type: "Raycast Extension",
@@ -181,7 +168,7 @@ export const projects: Project[] = [
         techStack: ["TypeScript", "Raycast API"],
         tags: ["Health", "Productivity", "Sleep"],
         sourceUrl: "https://www.raycast.com/khlebobul/bed-time-calculator",
-        featured: false,
+        featured: true,
     },
     {
         id: "pixel-morph",
