@@ -7,6 +7,7 @@ export function About() {
     const [isExpanded, setIsExpanded] = useState(false);
 
     const milestones = [
+        { year: "Feb 2026", event: "Launched Beam — contractor quoting SaaS, first revenue-focused project" },
         { year: "Jan 2026", event: "Window Walker Raycast extension published to the store!" },
         { year: "Late 2025", event: "First Raycast extension published to the store!" },
         { year: "Mid 2025", event: "Started developing Raycast extensions, maintainer of Iniuria.us AI Helper Bot" },
