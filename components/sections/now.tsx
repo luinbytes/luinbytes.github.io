@@ -2,9 +2,9 @@
 
 // Easy to update data - just change these values
 const currentStatus = {
-    building: "file-deduplicator v3.1 (TUI mode)",
-    learning: "Advanced Go patterns and system programming",
-    obsessed: "Building tools that save 5 seconds in 5 hours",
+    building: "Beam (contractor quoting SaaS), file-deduplicator cloud storage",
+    learning: "SaaS validation, marketing, first revenue",
+    obsessed: "Making money from self-projects (finally)",
     reading: "The Pragmatic Programmer",
 };
 
@@ -34,7 +34,7 @@ export function Now() {
                 </div>
 
                 <p className="mt-12 text-sm text-gray-600">
-                    Last updated: Feb 2025
+                    Last updated: Feb 2026
                 </p>
             </div>
         </section>
