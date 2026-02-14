@@ -28,6 +28,19 @@ export interface ActivityItem {
 
 export const projects: Project[] = [
     {
+        id: "beam",
+        name: "Beam",
+        type: "Web App",
+        description: "Professional quotes in seconds, not hours. A SaaS tool for contractors to create, send, and track quotes via SMS.",
+        longDescription: "Beam helps plumbers, electricians, and contractors create professional quotes in under 60 seconds. Generate branded PDFs, send via SMS, and track when customers view and approve — all from your phone.",
+        approach: "Built with a mobile-first philosophy for tradespeople who work on-site. Clean UI, minimal friction, instant SMS delivery. Validation-first approach — collecting early access signups before full build.",
+        outcome: "In early access. Target: 30+ signups to validate demand before building MVP. First revenue-focused self-project.",
+        techStack: ["TypeScript", "Tailwind CSS", "Formspree", "SMS"],
+        tags: ["SaaS", "Contractors", "B2B", "Early Access"],
+        demoUrl: "https://luinbytes.github.io/beam-landing/",
+        featured: true,
+    },
+    {
         id: "file-deduplicator",
         name: "file-deduplicator",
         type: "CLI Tool",
