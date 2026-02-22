@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Send, Mail, Github, Twitter, Coffee } from "lucide-react";
-import { Footer } from "@/components/layout/footer";
 
 export function Contact() {
     const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
@@ -20,7 +19,7 @@ export function Contact() {
         <section id="contact" className="py-20 relative bg-surface border-t border-white/5">
             <div className="container px-4 mx-auto max-w-4xl">
                 <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-6 text-center">
-                    Let's Build Something
+                    Let&apos;s Build Something
                 </h2>
                 <p className="text-center text-gray-400 mb-16 max-w-xl mx-auto">
                     Got a tedious workflow that needs automating? Or just want to talk about Rust?
