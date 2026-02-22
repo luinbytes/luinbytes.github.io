@@ -31,7 +31,7 @@ export function Hero() {
 
                 <p className="text-lg md:text-2xl text-gray-400 mb-12 max-w-2xl leading-relaxed">
                     Building AI-adjacent tools, Raycast extensions, and PC-gaming utilities.
-                    If it saves me 5 seconds, I'll spend 5 hours automating it.
+                    If it saves me 5 seconds, I&apos;ll spend 5 hours automating it.
                 </p>
                 <p className="text-sm md:text-base text-neon mb-8 max-w-2xl">
                     I now work with Lumi the assistant, powered by Clawdbot!

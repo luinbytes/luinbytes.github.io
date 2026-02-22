@@ -23,7 +23,6 @@ export function About() {
     ];
 
     const INITIAL_SHOW = 4;
-    const visibleMilestones = isExpanded ? milestones : milestones.slice(0, INITIAL_SHOW);
     const hiddenCount = milestones.length - INITIAL_SHOW;
 
     return (
@@ -38,13 +37,13 @@ export function About() {
 
                         <div className="prose prose-invert prose-lg text-gray-400 space-y-6">
                             <p>
-                                I'm a self-taught software engineer who learns by breaking things. My journey didn't start with "Hello World"—it started with the <span className="text-white font-bold">PlayStation 3</span> and <span className="text-white font-bold">Call of Duty: World at War</span>.
+                                I&apos;m a self-taught software engineer who learns by breaking things. My journey didn&apos;t start with &quot;Hello World&quot;—it started with the <span className="text-white font-bold">PlayStation 3</span> and <span className="text-white font-bold">Call of Duty: World at War</span>.
                             </p>
                             <p>
                                 I saw people modifying the game and wanted to do the same. I started with simple save game modding to load config files, then moved onto patches. Eventually, I was soldering an <span className="text-neon">E3 Flasher</span> to my PS3 to downgrade it, install custom firmware, and run my own unsigned code.
                             </p>
                             <p>
-                                That experience—taking hardware apart, understanding how it works, and making it do things it wasn't supposed to—ignited a passion for code that has only grown since. Now I build tools because <span className="text-neon">if something doesn't work how I want it to, I fix it.</span>
+                                That experience—taking hardware apart, understanding how it works, and making it do things it wasn&apos;t supposed to—ignited a passion for code that has only grown since. Now I build tools because <span className="text-neon">if something doesn&apos;t work how I want it to, I fix it.</span>
                             </p>
                         </div>
                     </div>

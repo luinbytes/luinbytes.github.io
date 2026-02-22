@@ -2,14 +2,12 @@
 
 import * as React from "react";
 import { Command } from "cmdk";
-
-import { useRouter } from "next/navigation";
 import { Laptop, User, Folder, Mail, Github, Coffee, Monitor } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import { LucideIcon } from "lucide-react";
 
 export function CommandMenu() {
     const [open, setOpen] = React.useState(false);
-    const router = useRouter();
 
     React.useEffect(() => {
         const down = (e: KeyboardEvent) => {
@@ -89,7 +87,7 @@ export function CommandMenu() {
     );
 }
 
-function Item({ children, icon: Icon, onSelect }: { children: React.ReactNode, icon: any, onSelect: () => void }) {
+function Item({ children, icon: Icon, onSelect }: { children: React.ReactNode, icon: LucideIcon, onSelect: () => void }) {
     return (
         <Command.Item
             onSelect={onSelect}
