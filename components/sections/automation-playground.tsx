@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { Search, Command, Bot, Copy, Clock, Shield, MessageSquare, Users, Mic } from "lucide-react";
+import { useState, useRef } from "react";
+import { Search, Command, Bot, Shield, MessageSquare, Users, Mic } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function AutomationPlayground() {
@@ -50,9 +50,12 @@ function WindowWalkerDemo() {
         w.title.toLowerCase().includes(query.toLowerCase())
     );
 
-    useEffect(() => {
+    // Reset selection when query changes - use derived state pattern
+    const effectiveSelectedIndex = Math.min(selectedIndex, filtered.length - 1);
+    const handleQueryChange = (newQuery: string) => {
+        setQuery(newQuery);
         setSelectedIndex(0);
-    }, [query]);
+    };
 
     return (
         <div className="bg-[#111] border border-white/10 rounded-xl p-6 flex flex-col h-[500px]">
@@ -69,7 +72,7 @@ function WindowWalkerDemo() {
                         type="text"
                         placeholder="Search windows..."
                         value={query}
-                        onChange={(e) => setQuery(e.target.value)}
+                        onChange={(e) => handleQueryChange(e.target.value)}
                         className="bg-transparent text-xl text-white outline-none w-full placeholder-gray-600 font-medium"
                         autoComplete="off"
                     />
@@ -83,16 +86,16 @@ function WindowWalkerDemo() {
                                 key={window.id}
                                 className={cn(
                                     "flex items-center gap-3 px-3 py-3 rounded-lg transition-colors cursor-default relative",
-                                    i === selectedIndex ? "bg-neon/10 text-white" : "text-gray-400"
+                                    i === effectiveSelectedIndex ? "bg-neon/10 text-white" : "text-gray-400"
                                 )}
                                 onMouseEnter={() => setSelectedIndex(i)}
                             >
-                                <div className={cn("text-2xl p-1 rounded-md", i === selectedIndex ? "bg-white/10" : "bg-white/5")}>
+                                <div className={cn("text-2xl p-1 rounded-md", i === effectiveSelectedIndex ? "bg-white/10" : "bg-white/5")}>
                                     {window.icon}
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <div className="flex justify-between items-center gap-2">
-                                        <span className={cn("font-medium truncate", i === selectedIndex ? "text-white" : "text-gray-300")}>
+                                        <span className={cn("font-medium truncate", i === effectiveSelectedIndex ? "text-white" : "text-gray-300")}>
                                             {window.app}
                                         </span>
                                         <span className="text-[10px] bg-white/5 text-gray-500 px-1.5 py-0.5 rounded font-mono">
@@ -101,7 +104,7 @@ function WindowWalkerDemo() {
                                     </div>
                                     <div className="text-xs text-gray-500 truncate mt-0.5">{window.title}</div>
                                 </div>
-                                {i === selectedIndex && (
+                                {i === effectiveSelectedIndex && (
                                     <div className="w-1 h-10 bg-neon rounded-full absolute left-0" />
                                 )}
                             </div>

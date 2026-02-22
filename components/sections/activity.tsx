@@ -1,15 +1,54 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { ActivityCalendar } from "react-activity-calendar";
 import { GitCommit, AlertCircle, RefreshCcw } from "lucide-react";
 import { format } from "date-fns";
 import { fetchWithRetry, fetchGitHub, type ApiError } from "@/lib/api";
 
+// GitHub API types
+interface GitHubEvent {
+    id: string;
+    type: string;
+    repo: { name: string };
+    created_at: string;
+    payload: {
+        commits?: Array<{
+            sha: string;
+            message: string;
+        }>;
+    };
+}
+
+interface GitHubRepo {
+    fork: boolean;
+    language: string | null;
+}
+
+interface ContributionDay {
+    date: string;
+    count: number;
+    level: 0 | 1 | 2 | 3 | 4;
+}
+
+interface ContributionsResponse {
+    contributions: ContributionDay[];
+}
+
+interface CommitItem {
+    id: string;
+    repo: string;
+    message: string;
+    commitCount: number;
+    commitUrl: string;
+    date: string;
+    type: string;
+}
+
 export function Activity() {
-    const [commits, setCommits] = useState<any[]>([]);
-    const [calendarData2026, setCalendarData2026] = useState<any[]>([]);
-    const [calendarData2025, setCalendarData2025] = useState<any[]>([]);
+    const [commits, setCommits] = useState<CommitItem[]>([]);
+    const [calendarData2026, setCalendarData2026] = useState<ContributionDay[]>([]);
+    const [calendarData2025, setCalendarData2025] = useState<ContributionDay[]>([]);
 
     // Quick Stats state
     const [repoCount, setRepoCount] = useState<number>(0);
@@ -20,15 +59,14 @@ export function Activity() {
 
     // Calendar responsive scaling
     const calendarContainerRef = useRef<HTMLDivElement>(null);
-    const [calendarScale, setCalendarScale] = useState<number>(1);
 
     // Error states
     const [eventsError, setEventsError] = useState<ApiError | null>(null);
     const [contributionsError, setContributionsError] = useState<ApiError | null>(null);
     const [reposError, setReposError] = useState<ApiError | null>(null);
 
-    // Language colors mapping
-    const languageColors: Record<string, string> = {
+    // Language colors mapping - memoized to avoid recreation
+    const languageColors = useMemo<Record<string, string>>(() => ({
         TypeScript: '#3178c6',
         JavaScript: '#f1e05a',
         Python: '#3572A5',
@@ -40,10 +78,10 @@ export function Activity() {
         PHP: '#4F5D95',
         CSS: '#563d7c',
         HTML: '#e34c26',
-    };
+    }), []);
 
     // Calculate language breakdown from repos
-    const calculateLanguages = (repos: any[]) => {
+    const calculateLanguages = useCallback((repos: GitHubRepo[]) => {
         const langCount: Record<string, number> = {};
         repos.forEach(repo => {
             if (repo.language) {
@@ -62,10 +100,10 @@ export function Activity() {
             }))
             .sort((a, b) => b.percentage - a.percentage)
             .slice(0, 5);
-    };
+    }, [languageColors]);
 
     // Calculate current streak from contribution data
-    const calculateStreak = (contributions: any[]) => {
+    const calculateStreak = useCallback((contributions: ContributionDay[]) => {
         if (!contributions || contributions.length === 0) return 0;
 
         let streak = 0;
@@ -91,7 +129,7 @@ export function Activity() {
         }
 
         return streak;
-    };
+    }, []);
 
     // Resize observer to scale calendar to fit container
     useEffect(() => {
@@ -101,7 +139,8 @@ export function Activity() {
                 // Calendar native width is approximately 580px (53 weeks × 10px + padding)
                 const calendarNativeWidth = 580;
                 const scale = Math.min(containerWidth / calendarNativeWidth, 1);
-                setCalendarScale(scale);
+                calendarContainerRef.current.style.transform = `scale(${scale})`;
+                calendarContainerRef.current.style.transformOrigin = 'top left';
             }
         };
 
@@ -119,15 +158,15 @@ export function Activity() {
         const fetchData = async () => {
             // Fetch recent events with retry and caching
             try {
-                const data = await fetchGitHub<any[]>("/users/luinbytes/events/public", {
+                const data = await fetchGitHub<GitHubEvent[]>("/users/luinbytes/events/public", {
                     cacheTTL: 5 * 60 * 1000, // 5 minutes cache
                     onRetry: (attempt) => console.log(`Retrying events API (attempt ${attempt})`)
                 });
 
                 const pushEvents = data
-                    .filter((event: any) => event.type === "PushEvent")
+                    .filter((event) => event.type === "PushEvent")
                     .slice(0, 5)
-                    .map((event: any) => {
+                    .map((event) => {
                         const commits = event.payload.commits || [];
                         const commitCount = commits.length;
                         const firstCommit = commits[0];
@@ -156,18 +195,18 @@ export function Activity() {
             // Fetch contributions calendar for 2026 and 2025 with retry and caching
             try {
                 const [data2026, data2025] = await Promise.all([
-                    fetchWithRetry<any>(`https://github-contributions-api.jogruber.de/v4/luinbytes?y=2026`, {
+                    fetchWithRetry<ContributionsResponse>(`https://github-contributions-api.jogruber.de/v4/luinbytes?y=2026`, {
                         cacheTTL: 15 * 60 * 1000,
                         onRetry: (attempt) => console.log(`Retrying 2026 contributions API (attempt ${attempt})`)
                     }),
-                    fetchWithRetry<any>(`https://github-contributions-api.jogruber.de/v4/luinbytes?y=2025`, {
+                    fetchWithRetry<ContributionsResponse>(`https://github-contributions-api.jogruber.de/v4/luinbytes?y=2025`, {
                         cacheTTL: 15 * 60 * 1000,
                         onRetry: (attempt) => console.log(`Retrying 2025 contributions API (attempt ${attempt})`)
                     })
                 ]);
 
                 if (data2026.contributions) {
-                    const formatted = data2026.contributions.map((day: any) => ({
+                    const formatted: ContributionDay[] = data2026.contributions.map((day) => ({
                         date: day.date,
                         count: day.count,
                         level: day.level
@@ -178,12 +217,12 @@ export function Activity() {
                     const streak = calculateStreak(formatted);
                     setCurrentStreak(streak);
 
-                    const thisYearContributions = formatted.reduce((sum: number, day: any) => sum + day.count, 0);
+                    const thisYearContributions = formatted.reduce((sum, day) => sum + day.count, 0);
                     setYearlyCommits(thisYearContributions);
                 }
 
                 if (data2025.contributions) {
-                    const formatted = data2025.contributions.map((day: any) => ({
+                    const formatted: ContributionDay[] = data2025.contributions.map((day) => ({
                         date: day.date,
                         count: day.count,
                         level: day.level
@@ -199,14 +238,14 @@ export function Activity() {
 
             // Fetch GitHub repos for language stats with retry and caching
             try {
-                const repos = await fetchGitHub<any[]>("/users/luinbytes/repos?per_page=100", {
+                const repos = await fetchGitHub<GitHubRepo[]>("/users/luinbytes/repos?per_page=100", {
                     cacheTTL: 30 * 60 * 1000, // 30 minutes cache (repo data changes slowly)
                     onRetry: (attempt) => console.log(`Retrying repos API (attempt ${attempt})`)
                 });
 
                 if (Array.isArray(repos)) {
                     // Filter out forks
-                    const ownRepos = repos.filter((repo: any) => !repo.fork);
+                    const ownRepos = repos.filter((repo) => !repo.fork);
                     setRepoCount(ownRepos.length);
 
                     // Calculate language breakdown
@@ -224,7 +263,7 @@ export function Activity() {
         };
 
         fetchData();
-    }, []);
+    }, [calculateLanguages, calculateStreak]);
 
     return (
         <section id="activity" className="py-24 relative border-t border-white/5">
@@ -241,7 +280,7 @@ export function Activity() {
                         <div className="flex justify-between items-end mb-4">
                             <span className="text-sm text-gray-400 font-medium">2026</span>
                             <span className="text-xs text-gray-500 font-mono">
-                                {calendarData2026.reduce((acc: number, curr: any) => acc + curr.count, 0)} contributions
+                                {calendarData2026.reduce((acc, curr) => acc + curr.count, 0)} contributions
                             </span>
                         </div>
 
@@ -311,7 +350,7 @@ export function Activity() {
                         <div className="flex justify-between items-end mb-4">
                             <span className="text-sm text-gray-400 font-medium">2025</span>
                             <span className="text-xs text-gray-500 font-mono">
-                                {calendarData2025.reduce((acc: number, curr: any) => acc + curr.count, 0)} contributions
+                                {calendarData2025.reduce((acc, curr) => acc + curr.count, 0)} contributions
                             </span>
                         </div>
 
