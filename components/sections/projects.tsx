@@ -26,29 +26,28 @@ export function Projects() {
         : projects.filter(p => filterMap[activeFilter]?.includes(p.type));
 
     return (
-        <section id="projects" className="py-24 relative border-t border-white/5">
-            <div className="container px-4 mx-auto max-w-7xl">
-                <div className="mb-16">
-                    <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-6 flex items-center gap-3">
-                        <Terminal className="w-8 h-8 text-neon" />
-                        Selected Work
+        <section id="projects" className="py-24 relative">
+            <div className="container px-4 md:px-8 mx-auto max-w-7xl">
+                <div className="mb-16 border-l-4 border-accent pl-6">
+                    <h2 className="font-display text-5xl md:text-7xl font-bold tracking-tighter mb-4">
+                        Projects
                     </h2>
-                    <p className="text-xl text-gray-400 max-w-2xl">
-                        A collection of tools I built because I was too lazy to do things the hard way.
+                    <p className="font-mono text-sm text-foreground/60 max-w-2xl">
+                        Tools built to solve real problems. No vaporware.
                     </p>
                 </div>
 
-                {/* Filter Buttons */}
-                <div className="flex flex-wrap gap-3 mb-12">
-                    {filterButtons.map((filter) => (
+                {/* Filter Buttons - Brutalist style */}
+                <div className="flex flex-wrap gap-0 mb-16 border-2 border-foreground/20">
+                    {filterButtons.map((filter, index) => (
                         <button
                             key={filter}
                             onClick={() => setActiveFilter(filter)}
                             className={cn(
-                                "px-4 py-2 text-sm font-mono font-bold uppercase tracking-wider border-2 transition-all duration-200 rounded-full",
+                                "px-6 py-3 text-sm font-mono font-bold uppercase tracking-wider border-r-2 border-foreground/20 transition-colors",
                                 activeFilter === filter
-                                    ? "bg-neon text-black border-neon"
-                                    : "bg-transparent text-gray-400 border-white/20 hover:border-neon hover:text-neon"
+                                    ? "bg-foreground text-surface"
+                                    : "bg-transparent text-foreground hover:bg-foreground/5"
                             )}
                         >
                             {filter}
@@ -56,115 +55,108 @@ export function Projects() {
                     ))}
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {filteredProjects.map((project) => (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-2 border-foreground/20">
+                    {filteredProjects.map((project, index) => (
                         <div
                             key={project.id}
                             onClick={() => setSelectedProject(project)}
-                            className="group relative bg-surface border border-white/10 rounded-xl p-8 hover:border-neon/50 transition-all duration-300 cursor-pointer overflow-hidden flex flex-col h-full"
+                            className={cn(
+                                "group relative bg-surface p-8 cursor-pointer overflow-hidden border-b-2 md:border-b-0 md:border-r-2 border-foreground/20 transition-all",
+                                "hover:bg-surface-alt"
+                            )}
                         >
+                            {/* Number */}
+                            <div className="absolute top-4 left-4 font-display text-6xl font-bold text-foreground/5 group-hover:text-accent/10 transition-colors">
+                                {String(index + 1).padStart(2, '0')}
+                            </div>
+
                             {/* Type Badge */}
-                            <div className="absolute top-8 right-8">
-                                <span className="text-xs font-mono text-neon/80 bg-neon/10 px-2 py-1 rounded-full border border-neon/20">
+                            <div className="absolute top-6 right-6">
+                                <span className="font-mono text-xs uppercase tracking-wider text-accent border border-accent/30 px-2 py-1">
                                     {project.type}
                                 </span>
                             </div>
 
-                            <div className="mt-8 mb-4">
-                                <h3 className="text-2xl font-bold mb-4 group-hover:text-neon transition-colors">
+                            <div className="mt-12 mb-4">
+                                <h3 className="font-display text-2xl font-bold mb-4 group-hover:text-accent transition-colors">
                                     {project.name}
                                 </h3>
-                                <p className="text-gray-400 leading-relaxed mb-8">
+                                <p className="font-body text-foreground/70 leading-relaxed mb-6">
                                     {project.description}
                                 </p>
                             </div>
 
-                            <div className="mt-auto">
-                                <div className="flex flex-wrap gap-2 text-xs font-mono text-gray-500 mb-6">
-                                    {project.techStack.slice(0, 3).map((tech) => (
-                                        <span key={tech} className="bg-white/5 px-2 py-1 rounded">
-                                            {tech}
-                                        </span>
-                                    ))}
-                                </div>
-                                <div className="flex items-center gap-2 text-sm font-bold text-white group-hover:text-neon transition-colors">
-                                    View Details
-                                    <ArrowRightIcon className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                                </div>
+                            <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-foreground/60 group-hover:text-accent transition-colors">
+                                View Project →
                             </div>
                         </div>
                     ))}
                 </div>
             </div>
 
-            {/* Project Detail Modal */}
+            {/* Project Detail Modal - Brutalist style */}
             {selectedProject && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
                     <div
-                        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+                        className="absolute inset-0 bg-foreground/90 backdrop-blur-sm"
                         onClick={() => setSelectedProject(null)}
                     />
-                    <div className="relative bg-[#111] border border-white/10 w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl flex flex-col">
+                    <div className="relative bg-surface border-4 border-foreground w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col">
 
                         {/* Modal Header */}
-                        <div className="sticky top-0 bg-[#111]/95 backdrop-blur-md border-b border-white/10 p-6 md:p-8 flex justify-between items-start z-10">
+                        <div className="sticky top-0 bg-surface border-b-4 border-foreground p-6 md:p-8 flex justify-between items-start z-10">
                             <div>
                                 <div className="flex items-center gap-3 mb-2">
-                                    <span className="text-neon font-mono text-sm border border-neon/20 bg-neon/10 px-2 py-0.5 rounded-full">
+                                    <span className="font-mono text-sm uppercase tracking-wider text-accent border-2 border-accent px-3 py-1">
                                         {selectedProject.type}
                                     </span>
                                     {selectedProject.featured && (
-                                        <span className="text-yellow-400 font-mono text-xs border border-yellow-400/20 bg-yellow-400/10 px-2 py-0.5 rounded-full">
+                                        <span className="font-mono text-xs uppercase tracking-wider text-foreground border-2 border-foreground px-3 py-1">
                                             Featured
                                         </span>
                                     )}
                                 </div>
-                                <h3 className="text-3xl md:text-4xl font-bold tracking-tight text-white mb-2">
+                                <h3 className="font-display text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-2">
                                     {selectedProject.name}
                                 </h3>
-                                <div className="flex flex-wrap gap-2">
-                                    {selectedProject.tags.map(tag => (
-                                        <span key={tag} className="text-xs text-gray-400">#{tag}</span>
-                                    ))}
-                                </div>
                             </div>
                             <button
                                 onClick={() => setSelectedProject(null)}
-                                className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                                className="p-2 border-2 border-foreground hover:bg-foreground hover:text-surface transition-colors"
                             >
-                                <X className="w-6 h-6 text-gray-400" />
+                                <X className="w-6 h-6" />
                             </button>
                         </div>
 
                         {/* Modal Content */}
                         <div className="p-6 md:p-8 space-y-8">
-                            <div>
-                                <h4 className="text-sm font-mono text-gray-500 uppercase tracking-widest mb-3">The Problem</h4>
-                                <p className="text-lg text-gray-300 leading-relaxed">
+                            <div className="border-l-4 border-accent pl-6">
+                                <h4 className="font-mono text-xs uppercase tracking-widest text-foreground/60 mb-3">The Problem</h4>
+                                <p className="font-body text-lg text-foreground leading-relaxed">
                                     {selectedProject.longDescription || selectedProject.description}
                                 </p>
                             </div>
 
                             <div className="grid md:grid-cols-2 gap-8">
-                                <div>
-                                    <h4 className="text-sm font-mono text-gray-500 uppercase tracking-widest mb-3">Approach</h4>
-                                    <p className="text-gray-300 leading-relaxed">
+                                <div className="border-l-4 border-accent-secondary pl-6">
+                                    <h4 className="font-mono text-xs uppercase tracking-widest text-foreground/60 mb-3">Approach</h4>
+                                    <p className="font-body text-foreground/80 leading-relaxed">
                                         {selectedProject.approach || "Optimized for performance and developer ergonomics."}
                                     </p>
                                 </div>
-                                <div>
-                                    <h4 className="text-sm font-mono text-gray-500 uppercase tracking-widest mb-3">Outcome</h4>
-                                    <p className="text-gray-300 leading-relaxed">
+                                <div className="border-l-4 border-accent pl-6">
+                                    <h4 className="font-mono text-xs uppercase tracking-widest text-foreground/60 mb-3">Outcome</h4>
+                                    <p className="font-body text-foreground/80 leading-relaxed">
                                         {selectedProject.outcome || "Improved workflow efficiency."}
                                     </p>
                                 </div>
                             </div>
 
-                            <div className="border-t border-white/10 pt-8 mt-8">
-                                <h4 className="text-sm font-mono text-gray-500 uppercase tracking-widest mb-4">Tech Stack</h4>
+                            <div className="border-t-4 border-foreground pt-8 mt-8">
+                                <h4 className="font-mono text-xs uppercase tracking-widest text-foreground/60 mb-4">Tech Stack</h4>
                                 <div className="flex flex-wrap gap-2">
                                     {selectedProject.techStack.map((tech) => (
-                                        <span key={tech} className="bg-white/5 border border-white/10 px-3 py-1.5 rounded-md text-sm text-gray-300">
+                                        <span key={tech} className="font-mono text-sm border-2 border-foreground/30 px-3 py-1.5 text-foreground">
                                             {tech}
                                         </span>
                                     ))}
@@ -173,13 +165,13 @@ export function Projects() {
                         </div>
 
                         {/* Modal Footer */}
-                        <div className="p-6 md:p-8 bg-white/5 border-t border-white/10 flex flex-wrap gap-4">
+                        <div className="p-6 md:p-8 bg-foreground border-t-4 border-foreground flex flex-wrap gap-4">
                             {selectedProject.sourceUrl && (
                                 <a
                                     href={selectedProject.sourceUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center gap-2 px-6 py-3 bg-white text-black font-bold rounded-lg hover:bg-neon transition-colors"
+                                    className="flex items-center gap-2 px-6 py-3 bg-surface text-foreground font-mono text-sm font-bold uppercase tracking-wider border-2 border-surface hover:bg-accent hover:border-accent hover:text-white transition-colors"
                                 >
                                     <Github className="w-4 h-4" />
                                     View Source
@@ -190,7 +182,7 @@ export function Projects() {
                                     href={selectedProject.purchaseUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center gap-2 px-6 py-3 bg-neon text-black font-bold rounded-lg hover:bg-neon/80 transition-colors"
+                                    className="flex items-center gap-2 px-6 py-3 bg-accent text-white font-mono text-sm font-bold uppercase tracking-wider border-2 border-accent hover:bg-accent-secondary hover:border-accent-secondary transition-colors"
                                 >
                                     <ExternalLink className="w-4 h-4" />
                                     Buy $10
@@ -201,7 +193,7 @@ export function Projects() {
                                     href={selectedProject.demoUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center gap-2 px-6 py-3 bg-transparent border border-white/20 text-white font-bold rounded-lg hover:bg-white/10 transition-colors"
+                                    className="flex items-center gap-2 px-6 py-3 bg-transparent text-white font-mono text-sm font-bold uppercase tracking-wider border-2 border-white hover:bg-white hover:text-foreground transition-colors"
                                 >
                                     <ExternalLink className="w-4 h-4" />
                                     Live Demo

@@ -10,12 +10,15 @@ import { SectionErrorBoundary } from "@/components/error-boundary";
 
 export default function Home() {
   return (
-    <div className="flex flex-col bg-background font-mono selection:bg-neon selection:text-black">
+    <div className="flex flex-col bg-background font-sans">
       <Hero />
-      <div className="h-16" />
+      <div className="border-t-2 border-foreground/10" />
       <About />
+      <div className="border-t-2 border-foreground/10" />
       <Now />
+      <div className="border-t-2 border-foreground/10" />
       <Skills />
+      <div className="border-t-2 border-foreground/10" />
       <Projects />
       <SectionErrorBoundary>
         <AutomationPlayground />
@@ -23,6 +26,7 @@ export default function Home() {
       <SectionErrorBoundary>
         <Activity />
       </SectionErrorBoundary>
+      <div className="border-t-2 border-foreground/10" />
       <Contact />
     </div>
   );
