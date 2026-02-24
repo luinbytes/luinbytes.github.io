@@ -1,19 +1,21 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #0a0a0a;
-  --color-foreground: #ededed;
-  --color-neon: #ff9eb5;
-  --color-neon-hover: #ff7da0;
-  --color-surface: #111111;
-  --color-surface-highlight: #1a1a1a;
-  --color-charcoal: #18181b;
+  --color-background: #09090b;
+  --color-foreground: #fafafa;
+  --color-foreground-muted: #a1a1aa;
+  --color-accent: #8b5cf6;
+  --color-accent-hover: #7c3aed;
+  --color-surface: #18181b;
+  --color-surface-highlight: #27272a;
+  --color-border: #27272a;
 
-  --font-mono: var(--font-mono);
+  --font-display: "Inter", -apple-system, sans-serif;
+  --font-mono: "SF Mono", "Fira Code", monospace;
 }
 
 :root {
-  --background-start-rgb: 10, 10, 10;
+  --background-start-rgb: 9, 9, 11;
   --background-end-rgb: 0, 0, 0;
 }
 
@@ -26,6 +28,30 @@ html, body {
 body {
   color: var(--color-foreground);
   background: linear-gradient(to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+      rgb(var(--background-start-rgb)),
+      rgb(var(--background-end-rgb)));
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-highlight);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-foreground-muted);
+}
+
+/* Selection */
+::selection {
+  background: var(--color-accent);
+  color: white;
 }
