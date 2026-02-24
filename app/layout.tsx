@@ -55,7 +55,7 @@ export default function RootLayout({
         a) A curious developer (cool)
         b) Lu debugging something I broke (sorry)
 
-        Either way: Lumi was here ✌️
+        Either way: Dorabot was here ✌️
       */}
       <body className={`${spaceMono.variable} font-mono bg-black text-white antialiased selection:bg-neon selection:text-black`} suppressHydrationWarning>
         <KonamiCode />

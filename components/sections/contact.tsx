@@ -173,7 +173,7 @@ export function Contact() {
             {/* Footer embedded in contact section for flow */}
             <div className="mt-20 pt-8 border-t border-white/10 text-center font-mono">
                 <p className="text-gray-500 text-sm">&copy; {new Date().getFullYear()} Luinbytes. Built with Next.js & Caffeine.</p>
-                <p className="text-gray-600 text-xs mt-1">Debugging by Lumi 🐱</p>
+                <p className="text-gray-600 text-xs mt-1">Powered by Dorabot 🤖</p>
             </div>
         </section>
     );
