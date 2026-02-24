@@ -31,7 +31,7 @@ export function Hero() {
                                     Available for work
                                 </span>
                             </div>
-                            <div className="font-mono text-xs text-foreground/60">
+                            <div className="font-mono text-xs text-foreground-secondary">
                                 EST. 2024
                             </div>
                         </div>
@@ -45,10 +45,10 @@ export function Hero() {
                         </h1>
 
                         <div className="space-y-6 mb-12">
-                            <p className="font-body text-xl md:text-2xl leading-relaxed text-foreground/80">
+                            <p className="font-body text-xl md:text-2xl leading-relaxed text-foreground">
                                 Self-taught engineer building tools that actually matter.
                             </p>
-                            <p className="font-mono text-sm text-foreground/60 leading-relaxed">
+                            <p className="font-mono text-sm text-foreground-secondary leading-relaxed">
                                 AI automation • Raycast extensions • Gaming utilities
                                 <br />
                                 <span className="text-accent">If it saves 5 seconds, I'll automate it.</span>
@@ -77,13 +77,13 @@ export function Hero() {
                         <div className="md:fixed md:right-8 md:top-32 space-y-6">
                             <div className="border-l-2 border-accent pl-4">
                                 <div className="font-display text-4xl md:text-5xl font-bold">40+</div>
-                                <div className="font-mono text-xs uppercase tracking-wider text-foreground/60">
+                                <div className="font-mono text-xs uppercase tracking-wider text-foreground-secondary">
                                     Public Repos
                                 </div>
                             </div>
                             <div className="border-l-2 border-accent-secondary pl-4">
                                 <div className="font-display text-4xl md:text-5xl font-bold">10K+</div>
-                                <div className="font-mono text-xs uppercase tracking-wider text-foreground/60">
+                                <div className="font-mono text-xs uppercase tracking-wider text-foreground-secondary">
                                     Lines of Code
                                 </div>
                             </div>

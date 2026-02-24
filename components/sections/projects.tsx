@@ -32,7 +32,7 @@ export function Projects() {
                     <h2 className="font-display text-5xl md:text-7xl font-bold tracking-tighter mb-4">
                         Projects
                     </h2>
-                    <p className="font-mono text-sm text-foreground/60 max-w-2xl">
+                    <p className="font-mono text-sm text-foreground-secondary max-w-2xl">
                         Tools built to solve real problems. No vaporware.
                     </p>
                 </div>
@@ -81,12 +81,12 @@ export function Projects() {
                                 <h3 className="font-display text-2xl font-bold mb-4 group-hover:text-accent transition-colors">
                                     {project.name}
                                 </h3>
-                                <p className="font-body text-foreground/70 leading-relaxed mb-6">
+                                <p className="font-body text-foreground-secondary leading-relaxed mb-6">
                                     {project.description}
                                 </p>
                             </div>
 
-                            <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-foreground/60 group-hover:text-accent transition-colors">
+                            <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-foreground-secondary group-hover:text-accent transition-colors">
                                 View Project →
                             </div>
                         </div>
@@ -131,7 +131,7 @@ export function Projects() {
                         {/* Modal Content */}
                         <div className="p-6 md:p-8 space-y-8">
                             <div className="border-l-4 border-accent pl-6">
-                                <h4 className="font-mono text-xs uppercase tracking-widest text-foreground/60 mb-3">The Problem</h4>
+                                <h4 className="font-mono text-xs uppercase tracking-widest text-foreground-secondary mb-3">The Problem</h4>
                                 <p className="font-body text-lg text-foreground leading-relaxed">
                                     {selectedProject.longDescription || selectedProject.description}
                                 </p>
@@ -139,21 +139,21 @@ export function Projects() {
 
                             <div className="grid md:grid-cols-2 gap-8">
                                 <div className="border-l-4 border-accent-secondary pl-6">
-                                    <h4 className="font-mono text-xs uppercase tracking-widest text-foreground/60 mb-3">Approach</h4>
-                                    <p className="font-body text-foreground/80 leading-relaxed">
+                                    <h4 className="font-mono text-xs uppercase tracking-widest text-foreground-secondary mb-3">Approach</h4>
+                                    <p className="font-body text-foreground-secondary leading-relaxed">
                                         {selectedProject.approach || "Optimized for performance and developer ergonomics."}
                                     </p>
                                 </div>
                                 <div className="border-l-4 border-accent pl-6">
-                                    <h4 className="font-mono text-xs uppercase tracking-widest text-foreground/60 mb-3">Outcome</h4>
-                                    <p className="font-body text-foreground/80 leading-relaxed">
+                                    <h4 className="font-mono text-xs uppercase tracking-widest text-foreground-secondary mb-3">Outcome</h4>
+                                    <p className="font-body text-foreground-secondary leading-relaxed">
                                         {selectedProject.outcome || "Improved workflow efficiency."}
                                     </p>
                                 </div>
                             </div>
 
                             <div className="border-t-4 border-foreground pt-8 mt-8">
-                                <h4 className="font-mono text-xs uppercase tracking-widest text-foreground/60 mb-4">Tech Stack</h4>
+                                <h4 className="font-mono text-xs uppercase tracking-widest text-foreground-secondary mb-4">Tech Stack</h4>
                                 <div className="flex flex-wrap gap-2">
                                     {selectedProject.techStack.map((tech) => (
                                         <span key={tech} className="font-mono text-sm border-2 border-foreground/30 px-3 py-1.5 text-foreground">
