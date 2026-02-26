@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 interface Particle {
   x: number;
@@ -13,34 +13,26 @@ interface Particle {
 }
 
 const SPARKLE_CHARS = ["✨", "⭐", "💫", "✧", "★", "♡"];
-const SPAWN_INTERVAL = 80;
-const MAX_PARTICLES = 20;
+const SPAWN_INTERVAL = 60;
+const MAX_PARTICLES = 30;
 
 export function CursorTrail() {
-  const [enabled, setEnabled] = useState(false);
   const particlesRef = useRef<Particle[]>([]);
   const lastSpawnRef = useRef(0);
-  const rafRef = useRef<number>(0);
+  const rafRef = useRef<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-
-  // Check reduced motion preference on mount
-  useEffect(() => {
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!reducedMotion) {
-      setEnabled(true);
-    }
-  }, []);
+  const mountedRef = useRef(false);
 
   useEffect(() => {
-    if (!enabled) return;
+    mountedRef.current = true;
 
     const createParticle = (x: number, y: number): Particle => ({
       x,
       y,
-      size: 12 + Math.random() * 8,
+      size: 14 + Math.random() * 10,
       opacity: 1,
-      velocityX: (Math.random() - 0.5) * 2,
-      velocityY: (Math.random() - 0.5) * 2 - 1,
+      velocityX: (Math.random() - 0.5) * 3,
+      velocityY: (Math.random() - 0.5) * 3 - 1.5,
       char: SPARKLE_CHARS[Math.floor(Math.random() * SPARKLE_CHARS.length)],
     });
 
@@ -55,37 +47,36 @@ export function CursorTrail() {
     };
 
     const animate = () => {
-      if (!containerRef.current) {
-        rafRef.current = requestAnimationFrame(animate);
-        return;
-      }
-
+      if (!mountedRef.current) return;
+      
       // Update particles
       particlesRef.current = particlesRef.current.filter((p) => {
         p.x += p.velocityX;
         p.y += p.velocityY;
-        p.opacity -= 0.025;
-        p.size *= 0.97;
+        p.opacity -= 0.03;
+        p.size *= 0.96;
         return p.opacity > 0;
       });
 
       // Render particles
-      containerRef.current.innerHTML = particlesRef.current
-        .map(
-          (p) => `<span style="
-            position: fixed;
-            left: ${p.x}px;
-            top: ${p.y}px;
-            font-size: ${p.size}px;
-            opacity: ${p.opacity};
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            z-index: 9999;
-            color: #ff9eb5;
-            text-shadow: 0 0 6px rgba(255, 158, 181, 0.6);
-          ">${p.char}</span>`
-        )
-        .join("");
+      if (containerRef.current) {
+        containerRef.current.innerHTML = particlesRef.current
+          .map(
+            (p) => `<span style="
+              position: fixed;
+              left: ${p.x}px;
+              top: ${p.y}px;
+              font-size: ${Math.max(8, p.size)}px;
+              opacity: ${Math.max(0, p.opacity)};
+              pointer-events: none;
+              transform: translate(-50%, -50%);
+              z-index: 9999;
+              color: #ff9eb5;
+              text-shadow: 0 0 8px rgba(255, 158, 181, 0.8);
+            ">${p.char}</span>`
+          )
+          .join("");
+      }
 
       rafRef.current = requestAnimationFrame(animate);
     };
@@ -94,12 +85,22 @@ export function CursorTrail() {
     rafRef.current = requestAnimationFrame(animate);
 
     return () => {
+      mountedRef.current = false;
       window.removeEventListener("mousemove", handleMouseMove);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, [enabled]);
+  }, []);
 
-  if (!enabled) return null;
-
-  return <div ref={containerRef} aria-hidden="true" className="fixed inset-0 pointer-events-none" />;
+  return (
+    <div 
+      ref={containerRef} 
+      aria-hidden="true" 
+      style={{
+        position: "fixed",
+        inset: 0,
+        pointerEvents: "none",
+        zIndex: 9999,
+      }}
+    />
+  );
 }
