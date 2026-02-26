@@ -373,12 +373,12 @@ export function KonamiCode() {
 
             <div className="text-center space-y-4">
               <div className="text-5xl mb-4">🐱</div>
-              <h2 className="text-2xl font-bold text-neon">Dorabot says hi!</h2>
+              <h2 className="text-2xl font-bold text-neon">Lumi says hi!</h2>
               <p className="text-gray-300 leading-relaxed">
                 Assistant to @luinbytes since 2026.
               </p>
               <p className="text-gray-400 text-sm italic">
-                Powered by Dorabot + too much coffee.
+                Powered by OpenClaw + too much coffee.
               </p>
             </div>
 
