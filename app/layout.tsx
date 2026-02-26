@@ -44,6 +44,7 @@ export const metadata: Metadata = {
 };
 
 import { ConsoleEgg } from "@/components/easter-eggs/console-egg";
+import { CursorTrail } from "@/components/easter-eggs/cursor-trail";
 
 export default function RootLayout({
   children,
@@ -71,6 +72,10 @@ export default function RootLayout({
         ╚═══════════════════════════════════════════════════════════╝
       */}
       <body className={`${spaceMono.variable} font-mono bg-black text-white antialiased selection:bg-neon selection:text-black`} suppressHydrationWarning>
+        {/* Accessibility easter egg - screen readers only */}
+        <span className="sr-only" aria-hidden="false">
+          Psst... Lumi the AI assistant says hi! You&apos;re awesome for using accessibility tools. ✨
+        </span>
         {/* 
           ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
           ░░                                                        ░░
@@ -88,6 +93,7 @@ export default function RootLayout({
           ░░                                                        ░░
           ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
         */}
+        <CursorTrail />
         <ConsoleEgg />
         <KonamiCode />
         <CommandMenu />

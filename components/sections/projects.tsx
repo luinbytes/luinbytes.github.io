@@ -63,8 +63,15 @@ export function Projects() {
                             onClick={() => setSelectedProject(project)}
                             className="group relative bg-surface border border-white/10 rounded-xl p-8 hover:border-neon/50 transition-all duration-300 cursor-pointer overflow-hidden flex flex-col h-full"
                         >
-                            {/* Type Badge */}
-                            <div className="absolute top-8 right-8">
+                            <div className="absolute top-8 right-8 flex items-center gap-2">
+                                {project.lumiApproved && (
+                                    <span 
+                                        className="text-xs font-mono text-neon bg-neon/10 px-2 py-1 rounded-full border border-neon/20 flex items-center gap-1"
+                                        title="Lumi helped build this! ✨"
+                                    >
+                                        ✨ Lumi approved
+                                    </span>
+                                )}
                                 <span className="text-xs font-mono text-neon/80 bg-neon/10 px-2 py-1 rounded-full border border-neon/20">
                                     {project.type}
                                 </span>
