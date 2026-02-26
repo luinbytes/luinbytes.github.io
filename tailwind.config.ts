@@ -11,7 +11,7 @@ const config: Config = {
       colors: {
         background: "#0a0a0a",
         foreground: "#ededed",
-        neon: "#ff9eb5", // Pink/Neon
+        neon: "#ff9eb5",
         "neon-hover": "#ff7da0",
         surface: "#111111",
         "surface-highlight": "#1a1a1a",
@@ -30,6 +30,15 @@ const config: Config = {
         "2xl": "16px",
         "3xl": "24px",
         full: "9999px",
+      },
+      keyframes: {
+        "slide-in-from-bottom": {
+          "0%": { transform: "translateY(100%)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+      },
+      animation: {
+        "slide-in-from-bottom-2": "slide-in-from-bottom 0.3s ease-out",
       },
     },
   },

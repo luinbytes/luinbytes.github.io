@@ -5,15 +5,16 @@ export interface Project {
     name: string;
     type: ProjectType;
     description: string;
-    longDescription?: string; // For detail view
-    approach?: string;       // For detail view
-    outcome?: string;        // For detail view
+    longDescription?: string;
+    approach?: string;
+    outcome?: string;
     techStack: string[];
     tags: string[];
-    sourceUrl?: string; // GitHub or similar
+    sourceUrl?: string;
     demoUrl?: string;
-    purchaseUrl?: string; // Gumroad or similar
+    purchaseUrl?: string;
     featured: boolean;
+    lumiApproved?: boolean; // Projects Lumi helped build/polish
 }
 
 export interface ActivityItem {
@@ -129,6 +130,7 @@ export const projects: Project[] = [
         tags: ["Discord", "Bot", "Moderation", "F1", "Gaming"],
         sourceUrl: "https://github.com/luinbytes/bytebot-definitive-edition",
         featured: true,
+        lumiApproved: true, // Fixed session duration bug, ongoing maintenance
     },
     {
         id: "afk-tracker",

@@ -1,55 +1,55 @@
 "use client";
 
 import Link from "next/link";
-import { Home, Terminal } from "lucide-react";
+import { ArrowLeft, Home } from "lucide-react";
 
 export default function NotFound() {
-    return (
-        <div className="min-h-screen flex items-center justify-center bg-background px-4">
-            <div className="text-center max-w-2xl">
-                {/* Big 404 */}
-                <div className="relative mb-8">
-                    <h1 className="text-[12rem] md:text-[16rem] font-bold tracking-tighter text-white/5 leading-none">
-                        404
-                    </h1>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                        <Terminal className="w-24 h-24 md:w-32 md:h-32 text-neon animate-pulse" />
-                    </div>
-                </div>
+  return (
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="text-center max-w-md">
+        <div className="text-8xl mb-6">🤔</div>
+        
+        <h1 className="text-4xl font-bold mb-4">
+          <span className="text-neon">404</span> - Page Not Found
+        </h1>
 
-                {/* Message */}
-                <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white mb-4">
-                    Page Not Found
-                </h2>
-                <p className="text-xl text-gray-400 mb-8 max-w-md mx-auto">
-                    The page you&apos;re looking for doesn&apos;t exist or has been moved.
-                    <span className="block mt-2 text-neon">
-                        Maybe I deleted it. Who knows.
-                    </span>
-                </p>
-
-                {/* Debug-style info */}
-                <div className="bg-surface border border-white/10 rounded-lg p-4 mb-8 text-left font-mono text-sm">
-                    <div className="text-gray-500">
-                        <span className="text-red-400">Error:</span> 404 - Not Found
-                    </div>
-                    <div className="text-gray-500">
-                        <span className="text-yellow-400">Path:</span> {typeof window !== 'undefined' ? window.location.pathname : 'unknown'}
-                    </div>
-                    <div className="text-gray-500">
-                        <span className="text-neon">Hint:</span> Check the URL or go home
-                    </div>
-                </div>
-
-                {/* Back to Home */}
-                <Link
-                    href="/"
-                    className="inline-flex items-center gap-2 px-8 py-4 bg-neon text-black font-bold rounded-full hover:bg-neon/90 transition-colors"
-                >
-                    <Home className="w-4 h-4" />
-                    Back to Home
-                </Link>
-            </div>
+        <div className="bg-white/5 border border-white/10 rounded-lg p-6 mb-8 text-left">
+          <p className="text-gray-300 mb-4">
+            <span className="text-neon font-bold">Lumi:</span> &quot;I swear this page existed... let me check my memory...&quot;
+          </p>
+          <div className="font-mono text-xs text-gray-500 space-y-1">
+            <p>&gt; searching ClawVault...</p>
+            <p className="text-red-400">&gt; ERROR: Memory not found</p>
+            <p>&gt; Lu must have deleted it. Classic.</p>
+          </div>
         </div>
-    );
+
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link
+            href="/"
+            className="bg-white text-black font-bold px-6 py-3 rounded-lg hover:bg-neon transition-colors flex items-center justify-center gap-2"
+          >
+            <Home className="w-4 h-4" />
+            Take Me Home
+          </Link>
+
+          <button
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                window.history.back();
+              }
+            }}
+            className="border border-white/20 text-white font-bold px-6 py-3 rounded-lg hover:border-neon hover:text-neon transition-colors flex items-center justify-center gap-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Go Back
+          </button>
+        </div>
+
+        <p className="text-gray-600 text-xs mt-8 font-mono">
+          p.s. if you report this bug, Lumi might fix it by morning 🌙
+        </p>
+      </div>
+    </div>
+  );
 }
