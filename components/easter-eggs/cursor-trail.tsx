@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Particle {
   x: number;
@@ -13,23 +13,26 @@ interface Particle {
 }
 
 const SPARKLE_CHARS = ["✨", "⭐", "💫", "✧", "★", "♡"];
-const PARTICLE_LIFETIME = 800;
 const SPAWN_INTERVAL = 80;
 const MAX_PARTICLES = 20;
 
-function prefersReducedMotion(): boolean {
-  if (typeof window === "undefined") return false;
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-
 export function CursorTrail() {
+  const [enabled, setEnabled] = useState(false);
   const particlesRef = useRef<Particle[]>([]);
   const lastSpawnRef = useRef(0);
   const rafRef = useRef<number>(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Check reduced motion preference on mount
   useEffect(() => {
-    if (prefersReducedMotion()) return;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reducedMotion) {
+      setEnabled(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!enabled) return;
 
     const createParticle = (x: number, y: number): Particle => ({
       x,
@@ -52,14 +55,17 @@ export function CursorTrail() {
     };
 
     const animate = () => {
-      if (!containerRef.current) return;
+      if (!containerRef.current) {
+        rafRef.current = requestAnimationFrame(animate);
+        return;
+      }
 
       // Update particles
       particlesRef.current = particlesRef.current.filter((p) => {
         p.x += p.velocityX;
         p.y += p.velocityY;
-        p.opacity -= 0.02;
-        p.size *= 0.98;
+        p.opacity -= 0.025;
+        p.size *= 0.97;
         return p.opacity > 0;
       });
 
@@ -76,7 +82,7 @@ export function CursorTrail() {
             transform: translate(-50%, -50%);
             z-index: 9999;
             color: #ff9eb5;
-            text-shadow: 0 0 4px rgba(255, 158, 181, 0.5);
+            text-shadow: 0 0 6px rgba(255, 158, 181, 0.6);
           ">${p.char}</span>`
         )
         .join("");
@@ -91,9 +97,9 @@ export function CursorTrail() {
       window.removeEventListener("mousemove", handleMouseMove);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, []);
+  }, [enabled]);
 
-  if (prefersReducedMotion()) return null;
+  if (!enabled) return null;
 
-  return <div ref={containerRef} aria-hidden="true" />;
+  return <div ref={containerRef} aria-hidden="true" className="fixed inset-0 pointer-events-none" />;
 }
