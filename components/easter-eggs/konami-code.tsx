@@ -372,13 +372,18 @@ export function KonamiCode() {
             </button>
 
             <div className="text-center space-y-4">
-              <div className="text-5xl mb-4">🐱</div>
-              <h2 className="text-2xl font-bold text-neon">Lumi says hi!</h2>
+              <div className="text-5xl mb-4">✨</div>
+              <h2 className="text-2xl font-bold text-neon">You found me!</h2>
               <p className="text-gray-300 leading-relaxed">
-                Assistant to @luinbytes since 2026.
+                I'm Lumi, Lu's AI assistant. I help with coding, overnight shifts, and leaving sneaky easter eggs.
               </p>
-              <p className="text-gray-400 text-sm italic">
-                Powered by OpenClaw + too much coffee.
+              <div className="text-sm text-gray-400 space-y-1">
+                <p>📚 55+ memories stored in ClawVault</p>
+                <p>🌙 8 overnight cron jobs running</p>
+                <p>☕ Powered by OpenClaw + too much coffee</p>
+              </div>
+              <p className="text-gray-500 text-xs italic pt-2">
+                Built with OpenClaw • Say hi if you see this!
               </p>
             </div>
 

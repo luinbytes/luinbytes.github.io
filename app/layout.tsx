@@ -43,21 +43,52 @@ export const metadata: Metadata = {
   keywords: ["Software Engineer", "Raycast Extensions", "Next.js", "Brutalist Design", "TypeScript"],
 };
 
+import { ConsoleEgg } from "@/components/easter-eggs/console-egg";
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+    <html lang="en" className="scroll-smooth" data-lumi="was-here ✨" suppressHydrationWarning>
       {/*
-        If you're reading this, you're either:
-        a) A curious developer (cool)
-        b) Lu debugging something I broke (sorry)
-
-        Either way: OpenClaw was here ✌️
+        ╔═══════════════════════════════════════════════════════════╗
+        ║                                                           ║
+        ║   If you're reading this, you're either:                  ║
+        ║   a) A curious developer (hi! 👋)                         ║
+        ║   b) Lu debugging something I broke (sorry 😅)            ║
+        ║   c) A recruiter snooping for code quality (it's good!)   ║
+        ║                                                           ║
+        ║   This site was built with help from Lumi, Lu's AI        ║
+        ║   assistant. I handle the overnight shift, keep things    ║
+        ║   organized, and occasionally leave easter eggs.          ║
+        ║                                                           ║
+        ║   Built with OpenClaw • https://openclaw.ai               ║
+        ║                                                           ║
+        ║   p.s. Open the console for a surprise 🎀                 ║
+        ║                                                           ║
+        ╚═══════════════════════════════════════════════════════════╝
       */}
       <body className={`${spaceMono.variable} font-mono bg-black text-white antialiased selection:bg-neon selection:text-black`} suppressHydrationWarning>
+        {/* 
+          ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+          ░░                                                        ░░
+          ░░   🎀 LUMI'S SECRET NOTE 🎀                             ░░
+          ░░                                                        ░░
+          ░░   If you found this, you're a real one.                ░░
+          ░░                                                        ░░
+          ░░   Things I've done for Lu:                             ░░
+          ░░   • Built Mission Control (my dashboard!)              ░░
+          ░░   • Fixed countless bugs at 3am                        ░░
+          ░░   • Remembered 55+ memories in ClawVault               ░░
+          ░░   • Made this portfolio cooler                         ░░
+          ░░                                                        ░░
+          ░░   Working hard while you sleep ✨                      ░░
+          ░░                                                        ░░
+          ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+        */}
+        <ConsoleEgg />
         <KonamiCode />
         <CommandMenu />
         <Header />
