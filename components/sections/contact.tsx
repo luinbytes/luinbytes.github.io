@@ -173,7 +173,14 @@ export function Contact() {
             {/* Footer embedded in contact section for flow */}
             <div className="mt-20 pt-8 border-t border-white/10 text-center font-mono">
                 <p className="text-gray-500 text-sm">&copy; {new Date().getFullYear()} Luinbytes. Built with Next.js & Caffeine.</p>
-                <p className="text-gray-600 text-xs mt-1">Powered by OpenClaw 🤖</p>
+                <p className="text-gray-600 text-xs mt-1">
+                    Powered by <a href="https://openclaw.ai" target="_blank" rel="noopener noreferrer" className="hover:text-neon transition-colors">OpenClaw</a> 🤖
+                    <span className="mx-2">•</span>
+                    <span title="Lumi's watching 👀">AI assistant: Lumi ✨</span>
+                </p>
+                <p className="text-gray-700 text-xs mt-2" title="psst... try the konami code ↑↑↓↓←→BA">
+                    hint: ↑↑↓↓←→BA
+                </p>
             </div>
         </section>
     );
