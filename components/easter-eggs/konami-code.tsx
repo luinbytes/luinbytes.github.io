@@ -375,7 +375,7 @@ export function KonamiCode() {
               <div className="text-5xl mb-4">✨</div>
               <h2 className="text-2xl font-bold text-neon">You found me!</h2>
               <p className="text-gray-300 leading-relaxed">
-                I'm Lumi, Lu's AI assistant. I help with coding, overnight shifts, and leaving sneaky easter eggs.
+                I&apos;m Lumi, Lu&apos;s AI assistant. I help with coding, overnight shifts, and leaving sneaky easter eggs.
               </p>
               <div className="text-sm text-gray-400 space-y-1">
                 <p>📚 55+ memories stored in ClawVault</p>
