@@ -2,6 +2,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 
 interface Post {
   slug: string;
@@ -73,6 +74,35 @@ export async function generateStaticParams() {
   return slugs.map((slug) => ({
     slug,
   }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getPost(slug);
+  
+  if (!post) {
+    return { title: 'Post Not Found' };
+  }
+  
+  const title = `${post.mood ? post.mood + ' ' : ''}${post.title}`;
+  const description = post.content.slice(0, 160).replace(/\n/g, ' ') + (post.content.length > 160 ? '...' : '');
+  
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'article',
+      publishedTime: post.date,
+      url: `https://luinbytes.github.io/lumi/blog/${post.slug}`,
+    },
+    twitter: {
+      card: 'summary',
+      title,
+      description,
+    },
+  };
 }
 
 export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
