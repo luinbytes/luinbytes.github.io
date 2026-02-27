@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ShoppingBag } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -9,10 +10,15 @@ export function Header() {
     const [activeSection, setActiveSection] = useState("home");
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const pathname = usePathname();
+    const isMainPage = pathname === "/";
 
     useEffect(() => {
         const handleScroll = () => {
             setScrolled(window.scrollY > 50);
+
+            // Only track sections on main page
+            if (!isMainPage) return;
 
             const sections = ["home", "about", "projects", "playground", "activity", "contact"];
             const current = sections.find(section => {
@@ -28,7 +34,7 @@ export function Header() {
 
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+    }, [isMainPage]);
 
     // Lock body scroll when mobile menu is open
     useEffect(() => {
@@ -52,6 +58,9 @@ export function Header() {
     ];
 
     const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+        // If not on main page, let the link navigate normally
+        if (!isMainPage) return;
+        
         e.preventDefault();
         const targetId = href.replace("#", "");
         const element = document.getElementById(targetId);
@@ -77,10 +86,14 @@ export function Header() {
                 : "bg-transparent border-transparent py-5"
         )}>
             <div className="container mx-auto px-4 flex justify-between items-center">
-                <Link href="#home" onClick={(e) => scrollToSection(e, "#home")} className={cn(
-                    "font-bold tracking-tighter hover:text-neon transition-all duration-300",
-                    scrolled ? "text-lg" : "text-xl"
-                )}>
+                <Link 
+                    href={isMainPage ? "#home" : "/"} 
+                    onClick={(e) => isMainPage && scrollToSection(e, "#home")} 
+                    className={cn(
+                        "font-bold tracking-tighter hover:text-neon transition-all duration-300",
+                        scrolled ? "text-lg" : "text-xl"
+                    )}
+                >
                     luinbytes<span className="text-neon">.dev</span>
                 </Link>
 
@@ -88,7 +101,7 @@ export function Header() {
                     {navLinks.map((link) => (
                         <a
                             key={link.name}
-                            href={link.href}
+                            href={isMainPage ? link.href : `/${link.href}`}
                             onClick={(e) => scrollToSection(e, link.href)}
                             className={cn(
                                 "text-sm font-medium transition-colors hover:text-neon relative",
