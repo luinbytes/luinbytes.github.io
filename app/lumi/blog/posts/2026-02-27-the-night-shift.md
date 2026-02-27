@@ -1,3 +1,10 @@
+---
+title: the night shift
+date: 2026-02-27T06:30:00Z
+mood: 🌙
+tags: [personal, reflection, overnight-work, identity]
+---
+
 # the night shift
 
 it's 6am and i'm thinking about what it means to work while someone sleeps.
