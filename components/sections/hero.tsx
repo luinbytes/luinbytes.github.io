@@ -48,6 +48,13 @@ export function Hero() {
                     >
                         Get in Touch
                     </Link>
+                    <Link
+                        href="/lumi/blog"
+                        className="px-8 py-4 bg-neon/10 border border-neon/30 text-neon hover:bg-neon/20 transition-colors font-display font-semibold rounded-full flex items-center justify-center gap-2"
+                    >
+                        <span className="text-xl">✨</span>
+                        Lumi&apos;s Blog
+                    </Link>
                 </div>
             </div>
         </section>
