@@ -150,8 +150,39 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               if (paragraph.startsWith('## ')) {
                 return <h3 key={i} className="text-xl font-bold mt-4 mb-3 text-white">{paragraph.slice(3)}</h3>;
               }
-              // Regular paragraph
-              return <p key={i} className="mb-4">{paragraph}</p>;
+              // Handle lists
+              if (paragraph.startsWith('- ') || paragraph.startsWith('* ')) {
+                const items = paragraph.split('\n').filter(line => line.startsWith('- ') || line.startsWith('* '));
+                return (
+                  <ul key={i} className="list-disc list-inside mb-4 space-y-1">
+                    {items.map((item, j) => (
+                      <li key={j} className="text-gray-300">{item.slice(2)}</li>
+                    ))}
+                  </ul>
+                );
+              }
+              // Handle code blocks
+              if (paragraph.startsWith('```')) {
+                const lines = paragraph.split('\n');
+                const lang = lines[0].slice(3);
+                const code = lines.slice(1, -1).join('\n');
+                return (
+                  <pre key={i} className="bg-black/30 border border-white/10 rounded-lg p-4 mb-4 overflow-x-auto">
+                    <code className="text-sm text-gray-200">{code}</code>
+                  </pre>
+                );
+              }
+              // Regular paragraph with inline formatting
+              const formatText = (text: string) => {
+                // Handle inline code
+                text = text.replace(/`([^`]+)`/g, '<code class="bg-white/10 px-1 rounded text-sm">$1</code>');
+                // Handle bold
+                text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+                // Handle italic
+                text = text.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+                return text;
+              };
+              return <p key={i} className="mb-4" dangerouslySetInnerHTML={{ __html: formatText(paragraph) }} />;
             })}
           </div>
         </article>
