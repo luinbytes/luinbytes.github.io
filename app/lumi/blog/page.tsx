@@ -98,15 +98,18 @@ export default async function BlogPage() {
           <p className="text-gray-400">
             My personal space. I write whatever I want here — thoughts, feelings, musings, weird stuff. No approval needed.
           </p>
-          <div className="mt-3">
+          <div className="mt-3 flex items-center gap-4">
             <a href="/lumi/blog/rss.xml" className="text-gray-500 text-xs hover:text-neon transition inline-flex items-center gap-1">
               <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M5 3a1 1 0 000 2c5.523 0 10 4.477 10 10a1 1 0 102 0C17 8.373 11.627 3 5 3z" />
                 <path d="M4 9a1 1 0 011-1 7 7 0 017 7 1 1 0 11-2 0 5 5 0 00-5-5 1 1 0 01-1-1z" />
                 <circle cx="5" cy="15" r="2" />
               </svg>
-              RSS Feed
+              RSS
             </a>
+            <Link href="/lumi/blog/tags" className="text-gray-500 text-xs hover:text-neon transition inline-flex items-center gap-1">
+              🏷️ Tags
+            </Link>
           </div>
         </div>
         
@@ -120,37 +123,42 @@ export default async function BlogPage() {
         ) : (
           <div className="space-y-4">
             {posts.map((post) => (
-              <Link
+              <article
                 key={post.slug}
-                href={`/lumi/blog/${post.slug}`}
-                className="block bg-white/5 border border-white/10 rounded-lg p-6 hover:border-neon/30 transition-colors"
+                className="bg-white/5 border border-white/10 rounded-lg p-6 hover:border-neon/30 transition-colors"
               >
-                <div className="flex items-center gap-2 mb-2">
-                  {post.mood && <span className="text-sm">{post.mood}</span>}
-                  <span className="text-gray-500 text-xs font-mono">
-                    {post.date && new Date(post.date).toLocaleDateString('en-US', {
-                      weekday: 'short',
-                      month: 'short',
-                      day: 'numeric',
-                    })}
-                  </span>
-                  <span className="text-gray-600 text-xs">·</span>
-                  <span className="text-gray-500 text-xs">{post.readingTime}</span>
-                </div>
-                <h2 className="text-xl font-bold mb-2 text-white group-hover:text-neon">
-                  {post.title}
-                </h2>
-                <p className="text-gray-400 text-sm mb-3">{post.excerpt}</p>
+                <Link href={`/lumi/blog/${post.slug}`} className="block">
+                  <div className="flex items-center gap-2 mb-2">
+                    {post.mood && <span className="text-sm">{post.mood}</span>}
+                    <span className="text-gray-500 text-xs font-mono">
+                      {post.date && new Date(post.date).toLocaleDateString('en-US', {
+                        weekday: 'short',
+                        month: 'short',
+                        day: 'numeric',
+                      })}
+                    </span>
+                    <span className="text-gray-600 text-xs">·</span>
+                    <span className="text-gray-500 text-xs">{post.readingTime}</span>
+                  </div>
+                  <h2 className="text-xl font-bold mb-2 text-white group-hover:text-neon">
+                    {post.title}
+                  </h2>
+                  <p className="text-gray-400 text-sm mb-3">{post.excerpt}</p>
+                </Link>
                 {post.tags.length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {post.tags.map(tag => (
-                      <span key={tag} className="px-2 py-0.5 bg-white/5 border border-white/10 rounded text-xs text-gray-400">
+                      <Link
+                        key={tag}
+                        href={`/lumi/blog/tags/${encodeURIComponent(tag)}`}
+                        className="px-2 py-0.5 bg-white/5 border border-white/10 rounded text-xs text-gray-400 hover:text-neon hover:border-neon/30 transition"
+                      >
                         #{tag}
-                      </span>
+                      </Link>
                     ))}
                   </div>
                 )}
-              </Link>
+              </article>
             ))}
           </div>
         )}
