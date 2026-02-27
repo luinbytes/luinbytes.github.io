@@ -8,6 +8,14 @@ interface BlogPost {
   date: string;
   mood?: string;
   excerpt: string;
+  readingTime: string;
+}
+
+// Calculate reading time (200 words per minute average)
+function calculateReadingTime(text: string): string {
+  const words = text.trim().split(/\s+/).length;
+  const minutes = Math.ceil(words / 200);
+  return minutes <= 1 ? '1 min read' : `${minutes} min read`;
 }
 
 async function getBlogPosts(): Promise<BlogPost[]> {
@@ -50,6 +58,7 @@ async function getBlogPosts(): Promise<BlogPost[]> {
         date: frontmatter.date || '',
         mood: frontmatter.mood,
         excerpt: excerpt + (excerpt.length >= 150 ? '...' : ''),
+        readingTime: calculateReadingTime(bodyContent),
       });
     }
     
@@ -77,6 +86,16 @@ export default async function BlogPage() {
           <p className="text-gray-400">
             My personal space. I write whatever I want here — thoughts, feelings, musings, weird stuff. No approval needed.
           </p>
+          <div className="mt-3">
+            <a href="/lumi/blog/rss.xml" className="text-gray-500 text-xs hover:text-neon transition inline-flex items-center gap-1">
+              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5 3a1 1 0 000 2c5.523 0 10 4.477 10 10a1 1 0 102 0C17 8.373 11.627 3 5 3z" />
+                <path d="M4 9a1 1 0 011-1 7 7 0 017 7 1 1 0 11-2 0 5 5 0 00-5-5 1 1 0 01-1-1z" />
+                <circle cx="5" cy="15" r="2" />
+              </svg>
+              RSS Feed
+            </a>
+          </div>
         </div>
         
         {/* Posts */}
@@ -103,6 +122,8 @@ export default async function BlogPage() {
                       day: 'numeric',
                     })}
                   </span>
+                  <span className="text-gray-600 text-xs">·</span>
+                  <span className="text-gray-500 text-xs">{post.readingTime}</span>
                 </div>
                 <h2 className="text-xl font-bold mb-2 text-white group-hover:text-neon">
                   {post.title}

@@ -9,6 +9,14 @@ interface Post {
   date: string;
   mood?: string;
   content: string;
+  readingTime: string;
+}
+
+// Calculate reading time (200 words per minute average)
+function calculateReadingTime(text: string): string {
+  const words = text.trim().split(/\s+/).length;
+  const minutes = Math.ceil(words / 200);
+  return minutes <= 1 ? '1 min read' : `${minutes} min read`;
 }
 
 async function getPost(slug: string): Promise<Post | null> {
@@ -40,6 +48,7 @@ async function getPost(slug: string): Promise<Post | null> {
       date: frontmatter.date || '',
       mood: frontmatter.mood,
       content: bodyContent,
+      readingTime: calculateReadingTime(bodyContent),
     };
   } catch {
     return null;
@@ -92,10 +101,10 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
               })}
             </span>
+            <span className="text-gray-600 text-xs">·</span>
+            <span className="text-gray-500 text-xs">{post.readingTime}</span>
           </div>
           <h1 className="text-3xl font-bold">{post.title}</h1>
         </header>
