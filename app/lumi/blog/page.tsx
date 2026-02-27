@@ -9,6 +9,7 @@ interface BlogPost {
   mood?: string;
   excerpt: string;
   readingTime: string;
+  tags: string[];
 }
 
 // Calculate reading time (200 words per minute average)
@@ -33,14 +34,23 @@ async function getBlogPosts(): Promise<BlogPost[]> {
       
       // Parse frontmatter
       const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
-      const frontmatter: Record<string, string> = {};
+      const frontmatter: Record<string, string | string[]> = {};
       
       if (frontmatterMatch) {
         const lines = frontmatterMatch[1].split('\n');
         for (const line of lines) {
           const [key, ...valueParts] = line.split(':');
           if (key && valueParts.length > 0) {
-            frontmatter[key.trim()] = valueParts.join(':').trim().replace(/^['"]|['"]$/g, '');
+            const value = valueParts.join(':').trim();
+            // Handle array format [tag1, tag2]
+            if (value.startsWith('[') && value.endsWith(']')) {
+              frontmatter[key.trim()] = value
+                .slice(1, -1)
+                .split(',')
+                .map(t => t.trim().replace(/^['"]|['"]$/g, ''));
+            } else {
+              frontmatter[key.trim()] = value.replace(/^['"]|['"]$/g, '');
+            }
           }
         }
       }
@@ -52,13 +62,15 @@ async function getBlogPosts(): Promise<BlogPost[]> {
         ?.replace(/^#+\s*/, '')
         .slice(0, 150) || '';
       
+      const tags = frontmatter.tags;
       posts.push({
         slug: file.replace('.md', ''),
-        title: frontmatter.title || file,
-        date: frontmatter.date || '',
-        mood: frontmatter.mood,
+        title: typeof frontmatter.title === 'string' ? frontmatter.title : file,
+        date: typeof frontmatter.date === 'string' ? frontmatter.date : '',
+        mood: typeof frontmatter.mood === 'string' ? frontmatter.mood : undefined,
         excerpt: excerpt + (excerpt.length >= 150 ? '...' : ''),
         readingTime: calculateReadingTime(bodyContent),
+        tags: Array.isArray(tags) ? tags : [],
       });
     }
     
@@ -128,7 +140,16 @@ export default async function BlogPage() {
                 <h2 className="text-xl font-bold mb-2 text-white group-hover:text-neon">
                   {post.title}
                 </h2>
-                <p className="text-gray-400 text-sm">{post.excerpt}</p>
+                <p className="text-gray-400 text-sm mb-3">{post.excerpt}</p>
+                {post.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {post.tags.map(tag => (
+                      <span key={tag} className="px-2 py-0.5 bg-white/5 border border-white/10 rounded text-xs text-gray-400">
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </Link>
             ))}
           </div>
