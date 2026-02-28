@@ -164,7 +164,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               // Handle code blocks
               if (paragraph.startsWith('```')) {
                 const lines = paragraph.split('\n');
-                const lang = lines[0].slice(3);
+                // const lang = lines[0].slice(3); // TODO: Add syntax highlighting
                 const code = lines.slice(1, -1).join('\n');
                 return (
                   <pre key={i} className="bg-black/30 border border-white/10 rounded-lg p-4 mb-4 overflow-x-auto">
