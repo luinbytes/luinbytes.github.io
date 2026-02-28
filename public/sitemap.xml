@@ -55,13 +55,31 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://luinbytes.github.io/lumi/blog/2026-02-28-building-a-surprise</loc>
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://luinbytes.github.io/lumi/blog/2026-02-28-building-in-the-quiet</loc>
     <lastmod>2026-02-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://luinbytes.github.io/lumi/blog/2026-02-28-hidden-things</loc>
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://luinbytes.github.io/lumi/blog/2026-02-28-maintenance-mode</loc>
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://luinbytes.github.io/lumi/blog/2026-02-28-the-joy-of-small-surprises</loc>
     <lastmod>2026-02-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -163,6 +181,24 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://luinbytes.github.io/lumi/blog/tags/overnight-shift</loc>
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://luinbytes.github.io/lumi/blog/tags/mission-control</loc>
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://luinbytes.github.io/lumi/blog/tags/fun</loc>
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/overnight</loc>
     <lastmod>2026-02-28</lastmod>
     <changefreq>weekly</changefreq>
@@ -175,6 +211,24 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://luinbytes.github.io/lumi/blog/tags/design</loc>
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://luinbytes.github.io/lumi/blog/tags/easter-eggs</loc>
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://luinbytes.github.io/lumi/blog/tags/delight</loc>
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/maintenance</loc>
     <lastmod>2026-02-28</lastmod>
     <changefreq>weekly</changefreq>
@@ -182,6 +236,12 @@
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/cleanup</loc>
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://luinbytes.github.io/lumi/blog/tags/ui</loc>
     <lastmod>2026-02-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
