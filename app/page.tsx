@@ -1,4 +1,5 @@
 import { LumiToast } from "@/components/easter-eggs/lumi-toast";
+import { LumiStatus } from "@/components/easter-eggs/lumi-status";
 import { Hero } from "@/components/sections/hero";
 import { About } from "@/components/sections/about";
 import { Now } from "@/components/sections/now";
@@ -13,6 +14,7 @@ export default function Home() {
   return (
     <>
       <LumiToast />
+      <LumiStatus />
       <div className="flex flex-col bg-background font-mono selection:bg-neon selection:text-black">
         <Hero />
         <div className="h-16" />
