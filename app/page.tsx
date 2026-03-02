@@ -20,7 +20,7 @@ export default function Home() {
       <LumiStatus />
       <div className="flex flex-col bg-background font-mono selection:bg-neon selection:text-black">
         <Hero />
-        <div className="h-16" />
+        <div className="h-8" />
         <FadeIn delay={0.1}>
           <About />
         </FadeIn>

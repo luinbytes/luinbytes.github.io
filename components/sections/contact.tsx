@@ -16,7 +16,7 @@ export function Contact() {
     };
 
     return (
-        <section id="contact" className="py-20 relative bg-surface border-t border-white/5">
+        <section id="contact" className="py-12 relative bg-surface border-t border-white/5">
             <div className="container px-4 mx-auto max-w-4xl">
                 <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-6 text-center">
                     Let&apos;s Build Something
@@ -26,7 +26,7 @@ export function Contact() {
                     Drop me a line.
                 </p>
 
-                <div className="grid md:grid-cols-3 gap-16">
+                <div className="grid md:grid-cols-3 gap-8">
 
                     <div className="md:col-span-1 space-y-6">
                         <h3 className="font-bold text-white text-lg">Socials</h3>
