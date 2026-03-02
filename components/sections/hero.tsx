@@ -24,7 +24,7 @@ export function Hero() {
                 <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight leading-[1.1] mb-8">
                     Self-taught engineer <br />
                     making computers <br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon to-purple">
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon via-purple to-neon animate-gradient">
                         do things.
                     </span>
                 </h1>
