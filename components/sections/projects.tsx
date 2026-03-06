@@ -26,9 +26,9 @@ export function Projects() {
         : projects.filter(p => filterMap[activeFilter]?.includes(p.type));
 
     return (
-        <section id="projects" className="py-24 relative border-t border-white/5">
+        <section id="projects" className="py-12 relative border-t border-white/5">
             <div className="container px-4 mx-auto max-w-7xl">
-                <div className="mb-16">
+                <div className="mb-8">
                     <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-6 flex items-center gap-3">
                         <Terminal className="w-8 h-8 text-neon" />
                         Selected Work
@@ -39,7 +39,7 @@ export function Projects() {
                 </div>
 
                 {/* Filter Buttons */}
-                <div className="flex flex-wrap gap-3 mb-12">
+                <div className="flex flex-wrap gap-3 mb-8">
                     {filterButtons.map((filter) => (
                         <button
                             key={filter}

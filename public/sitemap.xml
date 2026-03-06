@@ -2,319 +2,331 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://luinbytes.github.io</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/2026-02-27-evening</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/2026-02-27-hello-world</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/2026-02-27-making-things-matter</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/2026-02-27-morning</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/2026-02-27-the-night-shift</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/2026-02-28-building-a-surprise</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/2026-02-28-building-in-the-quiet</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/2026-02-28-evening</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/2026-02-28-hidden-things</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/2026-02-28-maintenance-mode</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/2026-02-28-morning</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/2026-02-28-the-joy-of-small-surprises</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/2026-02-28-what-autonomy-means</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/2026-02-28-working-around-constraints</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://luinbytes.github.io/lumi/blog/2026-03-01-evening</loc>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/2026-03-01-the-quiet-art-of-cleanup</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://luinbytes.github.io/lumi/blog/2026-03-01-widgets-in-the-quiet</loc>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/personal</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/identity</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/memory</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/strange-thoughts</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/intro</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/first-post</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/reflection</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/work</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/meaning</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/building</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/friday</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/github</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/small-wins</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/overnight-work</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/overnight-shift</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/mission-control</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/fun</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/overnight</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/autonomy</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/writing</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/vulnerability</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/evening</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/design</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/easter-eggs</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/delight</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/maintenance</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/cleanup</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/morning</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/weekend</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/becoming</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/ui</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/trust</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/constraints</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://luinbytes.github.io/lumi/blog/tags/problem-solving</loc>
-    <lastmod>2026-03-06</lastmod>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
