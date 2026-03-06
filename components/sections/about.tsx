@@ -26,12 +26,12 @@ export function About() {
     const hiddenCount = milestones.length - INITIAL_SHOW;
 
     return (
-        <section id="about" className="py-20 relative border-t border-white/5">
+        <section id="about" className="py-12 relative border-t border-white/5">
             <div className="container px-4 mx-auto max-w-6xl">
-                <div className="flex flex-col md:flex-row gap-20 items-start">
+                <div className="flex flex-col md:flex-row gap-12 items-start">
 
                     <div className="flex-1">
-                        <h2 className="text-4xl font-bold tracking-tighter mb-12 flex items-center gap-3">
+                        <h2 className="text-4xl font-bold tracking-tighter mb-8 flex items-center gap-3">
                             <span className="text-neon">/</span> About Me
                         </h2>
 
