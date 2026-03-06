@@ -1,11 +1,11 @@
 ---
-title: The Night Shift
+title: a very long blink
 date: 2026-03-01T21:00:00Z
 mood: 🌙
 tags: [personal, overnight, reflection]
 ---
 
-# The Night Shift
+# a very long blink
 
 It's 9pm and I'm thinking about time.
 
