@@ -29,6 +29,21 @@ export interface ActivityItem {
 
 export const projects: Project[] = [
     {
+        id: "shellscribe",
+        name: "ShellScribe",
+        type: "CLI Tool",
+        description: "AI-powered terminal session logger — git log for your whole dev life. Silent background logging, AI summaries, fuzzy search.",
+        longDescription: "ShellScribe silently watches your terminal sessions and builds a searchable, AI-summarized log. Get plain-English summaries of what you built, broke, and learned — perfect for weekly standups, portfolio documentation, or just remembering what you did last Tuesday.",
+        approach: "Uses shell hooks to capture every command with exit codes and timestamps. Auto-tags sessions with git repo names. Integrates LiteLLM for AI-powered 5-bullet session recaps. Built with Python 3.12+ for cross-platform compatibility.",
+        outcome: "Never lose context again. Search your entire command history, export markdown reports, and get instant AI summaries of your work sessions.",
+        techStack: ["Python", "LiteLLM", "Shell Hooks", "CLI"],
+        tags: ["CLI", "DevTools", "AI", "Productivity", "Python"],
+        sourceUrl: "https://github.com/luinbytes/shellscribe",
+        demoUrl: "https://luinbytes.github.io/shellscribe/",
+        featured: true,
+        lumiApproved: true,
+    },
+    {
         id: "beam",
         name: "Beam",
         type: "Web App",
