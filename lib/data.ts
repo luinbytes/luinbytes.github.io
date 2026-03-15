@@ -29,6 +29,21 @@ export interface ActivityItem {
 
 export const projects: Project[] = [
     {
+        id: "wterm",
+        name: "wterm",
+        type: "CLI Tool",
+        description: "A Warp-inspired terminal emulator. Fast, modern, AI-ready. Built with Go + Bubble Tea.",
+        longDescription: "wterm is a modern terminal emulator inspired by Warp. Features a beautiful Tokyo Night theme, command block grouping, AI integration (BYOK), and persistent history. Single binary, zero dependencies.",
+        approach: "Built with Go and the Bubble Tea TUI framework. Uses Lip Gloss for styling with a Tokyo Night-inspired color palette. PTY integration for real shell execution. NLP parser with 39 patterns for command understanding.",
+        outcome: "In active development. Goal: feature parity with modern terminals like Warp, Alacritty, and Kitty. Focusing on AI integration and developer productivity.",
+        techStack: ["Go", "Bubble Tea", "Lip Gloss", "PTY", "NLP"],
+        tags: ["Terminal", "CLI", "Go", "TUI", "AI", "Developer Tools"],
+        sourceUrl: "https://github.com/luinbytes/wterm",
+        demoUrl: "https://luinbytes.github.io/wterm/",
+        featured: true,
+        lumiApproved: true,
+    },
+    {
         id: "shellscribe",
         name: "ShellScribe",
         type: "CLI Tool",
