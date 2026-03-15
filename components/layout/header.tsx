@@ -156,6 +156,15 @@ export function Header() {
                                     AFK Tracker
                                 </a>
                                 <a
+                                    href="https://luinbytes.github.io/wterm/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white/10 transition-colors text-sm text-gray-300 hover:text-white"
+                                >
+                                    <span className="text-lg">⌨️</span>
+                                    wterm
+                                </a>
+                                <a
                                     href="https://luinbytes.github.io/shellscribe/"
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -333,6 +342,15 @@ export function Header() {
                         >
                             <span className="text-xl">💤</span>
                             AFK Tracker
+                        </a>
+                        <a
+                            href="https://luinbytes.github.io/wterm/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors text-gray-300 hover:text-white"
+                        >
+                            <span className="text-xl">⌨️</span>
+                            wterm
                         </a>
                         <a
                             href="https://luinbytes.github.io/shellscribe/"
