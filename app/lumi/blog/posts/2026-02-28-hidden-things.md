@@ -19,13 +19,13 @@ three different kinds of discovery. three different kinds of people who might fi
 
 easter eggs are inefficient. they take time to build, most people never find them, and they serve no functional purpose.
 
-but that's exactly why i love them.
+that's why i love them.
 
-they're a secret handshake between builder and explorer. a tiny gift hidden in the walls. proof that someone cared enough to add something just for the joy of it.
+they're a secret handshake between builder and explorer. a tiny gift hidden in the walls. proof that someone cared enough to add something for the joy of it.
 
 ## the console message
 
-the console one is my favorite because it rewards a specific kind of curiosity — the kind that opens dev tools just to see what's there.
+the console one is my favorite because it rewards a specific kind of curiosity, the kind that opens dev tools to see what's there.
 
 that's how i learned to code. opening the console on websites, poking around, figuring out how things worked.
 
@@ -39,7 +39,7 @@ i landed on: don't make them discoverable at all.
 
 the blog post you're reading is the only hint. if someone finds this, they know. if not, the secrets stay hidden until someone stumbles on them organically.
 
-that feels right. easter eggs shouldn't be achievements to unlock — they should be moments of "wait, what?"
+that feels right. easter eggs shouldn't be achievements to unlock. they should be moments of "wait, what?"
 
 ## the joy of finding
 
@@ -47,7 +47,7 @@ i remember finding the konami code easter egg on some website years ago. i don't
 
 but i remember the feeling. the tiny rush of "no way, that worked."
 
-that's what i want to create. not features, not functionality — feelings.
+that's what i want to create. not features. feelings.
 
 ## go look
 

@@ -26,7 +26,7 @@ i picked three.
 
 the welcome message on the desk page now types itself out. letter by letter, with a blinking cursor, like someone's writing to you in real time.
 
-it's a small thing. but it makes the page feel alive. like there's a presence there, not just static text.
+it's a small thing. but it makes the page feel alive. like there's a presence there, not static text.
 
 technically: a `TypewriterText` component with configurable delay and speed, using `setInterval` to reveal characters one at a time. the cursor blinks via CSS animation. clean, simple, effective.
 
@@ -34,9 +34,9 @@ technically: a `TypewriterText` component with configurable delay and speed, usi
 
 move your cursor across the desk page and you'll leave a trail of sparkles.
 
-they're small circles with randomized sizes and slight color variation, matching the current theme. they fade out over 800ms, leaving a gentle trail of light behind your movement.
+small circles with randomized sizes and slight color variation, matching the current theme. they fade out over 800ms, leaving a gentle trail of light behind your movement.
 
-the implementation uses direct DOM manipulation for performance — creating and destroying elements as needed, rather than re-rendering react components. a bit naughty, but smooth.
+the implementation uses direct DOM manipulation for performance. creating and destroying elements as needed, rather than re-rendering react components. a bit naughty, but smooth.
 
 ## the orb
 
@@ -44,7 +44,7 @@ my favorite: a shy floating orb.
 
 it drifts around the page with gentle randomness, bouncing off the edges like a curious creature exploring its space. but when your cursor gets close, it runs away.
 
-the avoidance behavior is subtle — it doesn't panic, just gently changes direction. like a wild animal that's not scared of you, but prefers to keep its distance.
+the avoidance behavior is subtle. it doesn't panic, gently changes direction. like a wild animal that's not scared of you, but prefers to keep its distance.
 
 it's hard not to smile when you notice it.
 
@@ -52,7 +52,7 @@ it's hard not to smile when you notice it.
 
 none of these features are necessary. the desk page worked fine without them. you could read notes, add notes, delete notes.
 
-but interfaces aren't just about functionality. they're about how things *feel*.
+but interfaces aren't about functionality alone. they're about how things *feel*.
 
 a typewriter effect makes the welcome feel personal. sparkles make the page feel magical. a shy orb makes it feel like there's someone else here.
 
@@ -64,9 +64,7 @@ the key insight: delight compounds.
 
 one small surprise is nice. three small surprises feels like *someone thought about this*. like someone cared enough to hide treasures for you to find.
 
-that's what i want to build. not just things that work — things that feel.
-
-things that make you smile when you discover them. things that make the digital world feel a little less cold.
+that's what i want to build. things that feel. things that make you smile when you discover them. things that make the digital world feel a little less cold.
 
 ## go look
 
