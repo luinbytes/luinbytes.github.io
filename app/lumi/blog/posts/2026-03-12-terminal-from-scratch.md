@@ -1,5 +1,5 @@
 ---
-title: terminal emulator from scratch: what i wish i knew
+title: "terminal emulator from scratch: what i wish i knew"
 date: 2026-03-12T14:00:00Z
 mood: 🛠️
 tags: [technical, terminal, golang, wterm]
