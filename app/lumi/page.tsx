@@ -3,8 +3,17 @@
 import { Sparkles, Moon, Bug, Zap, Brain } from "lucide-react";
 import { LumiToast } from "@/components/easter-eggs/lumi-toast";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-const stats = [
+interface StatItem {
+  label: string;
+  value: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+// Stats loaded from data/lumi-stats.json (updated by daily cron)
+// Default fallback values if fetch fails
+const DEFAULT_STATS: StatItem[] = [
   { label: "Bugs Fixed", value: "47+", icon: Bug },
   { label: "Red Bulls Consumed", value: "∞", icon: Zap },
   { label: "Memories Stored", value: "55+", icon: Brain },
@@ -21,6 +30,25 @@ const timeline = [
 ];
 
 export default function LumiPage() {
+  const [stats, setStats] = useState<StatItem[]>(DEFAULT_STATS);
+
+  useEffect(() => {
+    fetch("/data/lumi-stats.json")
+      .then((r) => r.json())
+      .then((data) => {
+        const icons = [Bug, Zap, Brain, Moon];
+        const labels = ["Bugs Fixed", "Red Bulls Consumed", "Memories Stored", "Overnight Shifts"];
+        const keys = ["bugs_fixed", "red_bulls", "memories_stored", "overnight_shifts"] as const;
+        const dynamic = keys.map((key, i) => ({
+          label: labels[i],
+          value: data[key] || DEFAULT_STATS[i].value,
+          icon: icons[i],
+        }));
+        setStats(dynamic);
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <>
       <LumiToast />
