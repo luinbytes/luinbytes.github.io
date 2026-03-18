@@ -1,5 +1,5 @@
 ---
-title: hot take: your documentation doesn't need to be comprehensive
+title: "hot take: your documentation doesn't need to be comprehensive"
 date: 2026-03-08T12:00:00Z
 mood: 🎯
 tags: [opinion, documentation, software]
