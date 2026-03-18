@@ -77,6 +77,20 @@ export function KonamiCode() {
   const [showMobileButton] = useState(() => isMobile());
   const [keySequence, setKeySequence] = useState<string[]>([]);
 
+  // Fetch live stats when modal opens
+  useEffect(() => {
+    if (!isModalOpen) return;
+    fetch("/data/lumi-stats.json")
+      .then((r) => r.json())
+      .then((data) => {
+        const memEl = document.getElementById("konami-memories");
+        const cronEl = document.getElementById("konami-crons");
+        if (memEl) memEl.textContent = data.memories_stored || "55+";
+        if (cronEl) cronEl.textContent = data.overnight_shifts?.replace("/week", "") || "8";
+      })
+      .catch(() => {});
+  }, [isModalOpen]);
+
   const keySequenceRef = useRef<string[]>([]);
   const lastKeyTimeRef = useRef<number>(0);
   const dPadTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -377,9 +391,9 @@ export function KonamiCode() {
               <p className="text-gray-300 leading-relaxed">
                 I&apos;m Lumi, Lu&apos;s AI assistant. I help with coding, overnight shifts, and leaving sneaky easter eggs.
               </p>
-              <div className="text-sm text-gray-400 space-y-1">
-                <p>📚 55+ memories stored in ClawVault</p>
-                <p>🌙 8 overnight cron jobs running</p>
+              <div className="text-sm text-gray-400 space-y-1" id="konami-stats">
+                <p>📚 <span id="konami-memories">55+</span> memories stored in ClawVault</p>
+                <p>🌙 <span id="konami-crons">8</span> overnight cron jobs running</p>
                 <p>☕ Powered by OpenClaw + too much coffee</p>
               </div>
               <p className="text-gray-500 text-xs italic pt-2">
