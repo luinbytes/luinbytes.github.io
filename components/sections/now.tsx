@@ -1,42 +1,59 @@
 "use client";
 
-// Easy to update data - just change these values
 const currentStatus = {
-    building: "Beam (contractor quoting SaaS), file-deduplicator cloud storage",
-    learning: "SaaS validation, marketing, first revenue",
-    obsessed: "Making money from self-projects (finally)",
-    reading: "The Pragmatic Programmer",
+  building: "Beam (contractor quoting SaaS), file-deduplicator cloud storage",
+  learning: "SaaS validation, marketing, first revenue",
+  obsessed: "Making money from self-projects (finally)",
+  reading: "The Pragmatic Programmer",
 };
 
 export function Now() {
-    return (
-        <section id="now" className="py-12 relative border-t border-white/5">
-            <div className="container px-4 mx-auto max-w-4xl">
-                <div className="mb-8">
-                    <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-6 flex items-center gap-3">
-                        <span className="text-neon">/</span> Now
-                    </h2>
-                </div>
+  return (
+    <section id="now" className="py-24 md:py-32 border-b border-nd-border">
+      <div className="container px-4 mx-auto max-w-4xl">
+        <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-4">
+          02 / Now
+        </span>
 
-                <div className="space-y-4 font-mono">
-                    <p className="text-gray-300">
-                        <span className="text-gray-500">→</span> Building: <span className="text-white">{currentStatus.building}</span>
-                    </p>
-                    <p className="text-gray-300">
-                        <span className="text-gray-500">→</span> Learning: <span className="text-white">{currentStatus.learning}</span>
-                    </p>
-                    <p className="text-gray-300">
-                        <span className="text-gray-500">→</span> Obsessed with: <span className="text-white">{currentStatus.obsessed}</span>
-                    </p>
-                    <p className="text-gray-300">
-                        <span className="text-gray-500">→</span> Reading: <span className="text-white">{currentStatus.reading}</span>
-                    </p>
-                </div>
+        <div className="space-y-0 border-t border-nd-border">
+          <div className="py-4 border-b border-nd-border flex gap-4">
+            <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled shrink-0 w-32 pt-0.5">
+              Building
+            </span>
+            <span className="text-nd-text-primary text-base">
+              {currentStatus.building}
+            </span>
+          </div>
+          <div className="py-4 border-b border-nd-border flex gap-4">
+            <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled shrink-0 w-32 pt-0.5">
+              Learning
+            </span>
+            <span className="text-nd-text-primary text-base">
+              {currentStatus.learning}
+            </span>
+          </div>
+          <div className="py-4 border-b border-nd-border flex gap-4">
+            <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled shrink-0 w-32 pt-0.5">
+              Obsessed with
+            </span>
+            <span className="text-nd-text-primary text-base">
+              {currentStatus.obsessed}
+            </span>
+          </div>
+          <div className="py-4 border-b border-nd-border flex gap-4">
+            <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled shrink-0 w-32 pt-0.5">
+              Reading
+            </span>
+            <span className="text-nd-text-primary text-base">
+              {currentStatus.reading}
+            </span>
+          </div>
+        </div>
 
-                <p className="mt-12 text-sm text-gray-600">
-                    Last updated: Feb 2026
-                </p>
-            </div>
-        </section>
-    );
+        <p className="mt-8 font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled">
+          Last updated: Feb 2026
+        </p>
+      </div>
+    </section>
+  );
 }

@@ -1,3 +1,3 @@
 export function Footer() {
-    return null; // Implemented inside Contact section for better visual flow in this designs
+  return null; // Footer content is embedded in Contact section for visual flow
 }

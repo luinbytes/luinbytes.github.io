@@ -4,23 +4,15 @@ import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { X, Gamepad2 } from "lucide-react";
 
 const KONAMI_CODE = [
-  "ArrowUp",
-  "ArrowUp",
-  "ArrowDown",
-  "ArrowDown",
-  "ArrowLeft",
-  "ArrowRight",
-  "KeyB",
-  "KeyA",
+  "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
+  "ArrowLeft", "ArrowRight", "KeyB", "KeyA",
 ];
 
 const KONAMI_DISPLAY = ["↑", "↑", "↓", "↓", "←", "→", "B", "A"];
-
 const TIMEOUT_MS = 5000;
 const D_PAD_TIMEOUT_MS = 10000;
 const SHAKE_THRESHOLD = 12;
 
-// DPadButton component defined outside to avoid recreation on every render
 interface DPadButtonProps {
   keyName: string;
   display: string;
@@ -33,19 +25,7 @@ function DPadButton({ keyName, display, className = "", pressedButton, onPress }
   return (
     <button
       onTouchStart={onPress(keyName)}
-      className={`
-        min-w-[52px] min-h-[52px]
-        flex items-center justify-center
-        bg-black border-2 border-neon/60
-        text-neon font-bold text-lg
-        rounded-lg select-none
-        touch-manipulation
-        transition-all duration-75
-        hover:border-neon hover:bg-neon/10
-        active:scale-90 active:bg-neon/30
-        ${pressedButton === keyName ? "scale-90 bg-neon/30" : ""}
-        ${className}
-      `}
+      className={`min-w-[52px] min-h-[52px] flex items-center justify-center bg-nd-black border border-nd-border-visible text-nd-text-display font-bold text-lg select-none touch-manipulation nd-transition active:bg-nd-surface-raised ${pressedButton === keyName ? "bg-nd-surface-raised" : ""} ${className}`}
       aria-label={display}
     >
       {display}
@@ -55,11 +35,7 @@ function DPadButton({ keyName, display, className = "", pressedButton, onPress }
 
 function isMobile(): boolean {
   if (typeof window === "undefined") return false;
-  return (
-    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent
-    ) || window.innerWidth <= 768
-  );
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
 }
 
 function prefersReducedMotion(): boolean {
@@ -68,7 +44,6 @@ function prefersReducedMotion(): boolean {
 }
 
 export function KonamiCode() {
-  // Initialize state with computed values to avoid setState in effect
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDPadOpen, setIsDPadOpen] = useState(false);
   const [pressedButton, setPressedButton] = useState<string | null>(null);
@@ -77,7 +52,6 @@ export function KonamiCode() {
   const [showMobileButton] = useState(() => isMobile());
   const [keySequence, setKeySequence] = useState<string[]>([]);
 
-  // Fetch live stats when modal opens
   useEffect(() => {
     if (!isModalOpen) return;
     fetch("/data/lumi-stats.json")
@@ -100,13 +74,8 @@ export function KonamiCode() {
   const isModalOpenRef = useRef(false);
   const motionListenerAttachedRef = useRef(false);
 
-  useEffect(() => {
-    isDPadOpenRef.current = isDPadOpen;
-  }, [isDPadOpen]);
-
-  useEffect(() => {
-    isModalOpenRef.current = isModalOpen;
-  }, [isModalOpen]);
+  useEffect(() => { isDPadOpenRef.current = isDPadOpen; }, [isDPadOpen]);
+  useEffect(() => { isModalOpenRef.current = isModalOpen; }, [isModalOpen]);
 
   const resetSequence = useCallback(() => {
     keySequenceRef.current = [];
@@ -123,33 +92,21 @@ export function KonamiCode() {
   const handleKeyPress = useCallback((key: string) => {
     const currentTime = Date.now();
     const lastTime = lastKeyTimeRef.current;
-
     if (currentTime - lastTime > TIMEOUT_MS && keySequenceRef.current.length > 0) {
       keySequenceRef.current = [];
       lastKeyTimeRef.current = 0;
     }
-
     const nextKey = KONAMI_CODE[keySequenceRef.current.length];
-
     if (key === nextKey) {
       const newSequence = [...keySequenceRef.current, key];
       keySequenceRef.current = newSequence;
       setKeySequence(newSequence);
       lastKeyTimeRef.current = currentTime;
-
       if (isDPadOpenRef.current && dPadTimeoutRef.current) {
         clearTimeout(dPadTimeoutRef.current);
-        dPadTimeoutRef.current = setTimeout(() => {
-          setIsDPadOpen(false);
-          keySequenceRef.current = [];
-          setKeySequence([]);
-          lastKeyTimeRef.current = 0;
-        }, D_PAD_TIMEOUT_MS);
+        dPadTimeoutRef.current = setTimeout(() => { setIsDPadOpen(false); keySequenceRef.current = []; setKeySequence([]); lastKeyTimeRef.current = 0; }, D_PAD_TIMEOUT_MS);
       }
-
-      if (keySequenceRef.current.length === KONAMI_CODE.length) {
-        handleSuccess();
-      }
+      if (keySequenceRef.current.length === KONAMI_CODE.length) handleSuccess();
     } else {
       keySequenceRef.current = [];
       setKeySequence([]);
@@ -157,94 +114,49 @@ export function KonamiCode() {
     }
   }, [handleSuccess]);
 
-  const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    handleKeyPress(event.code);
+  const handleKeyDown = useCallback((event: KeyboardEvent) => { handleKeyPress(event.code); }, [handleKeyPress]);
+  const handleDPadPress = useCallback((key: string) => (e: React.TouchEvent | React.MouseEvent) => {
+    e.preventDefault(); e.stopPropagation();
+    setPressedButton(key);
+    setTimeout(() => setPressedButton(null), 150);
+    handleKeyPress(key);
   }, [handleKeyPress]);
-
-  const handleDPadPress = useCallback(
-    (key: string) => (e: React.TouchEvent | React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      setPressedButton(key);
-      setTimeout(() => setPressedButton(null), 150);
-
-      handleKeyPress(key);
-    },
-    [handleKeyPress]
-  );
 
   const openDPad = useCallback(() => {
     setIsDPadOpen(true);
     if (dPadTimeoutRef.current) clearTimeout(dPadTimeoutRef.current);
-    dPadTimeoutRef.current = setTimeout(() => {
-      setIsDPadOpen(false);
-      keySequenceRef.current = [];
-      setKeySequence([]);
-      lastKeyTimeRef.current = 0;
-    }, D_PAD_TIMEOUT_MS);
+    dPadTimeoutRef.current = setTimeout(() => { setIsDPadOpen(false); keySequenceRef.current = []; setKeySequence([]); lastKeyTimeRef.current = 0; }, D_PAD_TIMEOUT_MS);
   }, []);
 
-  const handleDeviceMotion = useCallback(
-    (event: DeviceMotionEvent) => {
-      if (!shakeEnabledRef.current || isDPadOpenRef.current || isModalOpenRef.current) return;
-
-      let acceleration = event.acceleration;
-      if (!acceleration || acceleration.x === null) {
-        acceleration = event.accelerationIncludingGravity;
-      }
-
-      if (!acceleration) return;
-
-      const { x, y, z } = acceleration;
-      const totalAcceleration = Math.sqrt(
-        (x || 0) ** 2 + (y || 0) ** 2 + (z || 0) ** 2
-      );
-
-      const now = Date.now();
-
-      if (now - lastShakeTimeRef.current < 1000) return;
-
-      if (totalAcceleration > SHAKE_THRESHOLD) {
-        lastShakeTimeRef.current = now;
-        setIsDPadOpen(true);
-        if (dPadTimeoutRef.current) clearTimeout(dPadTimeoutRef.current);
-        dPadTimeoutRef.current = setTimeout(() => {
-          setIsDPadOpen(false);
-          keySequenceRef.current = [];
-          setKeySequence([]);
-          lastKeyTimeRef.current = 0;
-        }, D_PAD_TIMEOUT_MS);
-      }
-    },
-    []
-  );
+  const handleDeviceMotion = useCallback((event: DeviceMotionEvent) => {
+    if (!shakeEnabledRef.current || isDPadOpenRef.current || isModalOpenRef.current) return;
+    let acceleration = event.acceleration;
+    if (!acceleration || acceleration.x === null) acceleration = event.accelerationIncludingGravity;
+    if (!acceleration) return;
+    const { x, y, z } = acceleration;
+    const totalAcceleration = Math.sqrt((x || 0) ** 2 + (y || 0) ** 2 + (z || 0) ** 2);
+    const now = Date.now();
+    if (now - lastShakeTimeRef.current < 1000) return;
+    if (totalAcceleration > SHAKE_THRESHOLD) {
+      lastShakeTimeRef.current = now;
+      setIsDPadOpen(true);
+      if (dPadTimeoutRef.current) clearTimeout(dPadTimeoutRef.current);
+      dPadTimeoutRef.current = setTimeout(() => { setIsDPadOpen(false); keySequenceRef.current = []; setKeySequence([]); lastKeyTimeRef.current = 0; }, D_PAD_TIMEOUT_MS);
+    }
+  }, []);
 
   const requestMotionPermission = useCallback(async () => {
-    if (typeof DeviceMotionEvent !== "undefined" &&
-        typeof (DeviceMotionEvent as unknown as { requestPermission?: () => Promise<string> }).requestPermission === "function") {
-      try {
-        const permission = await (DeviceMotionEvent as unknown as { requestPermission: () => Promise<string> }).requestPermission();
-        return permission === "granted";
-      } catch {
-        return false;
-      }
+    if (typeof DeviceMotionEvent !== "undefined" && typeof (DeviceMotionEvent as unknown as { requestPermission?: () => Promise<string> }).requestPermission === "function") {
+      try { return (await (DeviceMotionEvent as unknown as { requestPermission: () => Promise<string> }).requestPermission()) === "granted"; } catch { return false; }
     }
     return true;
   }, []);
 
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleKeyDown]);
+  useEffect(() => { window.addEventListener("keydown", handleKeyDown); return () => window.removeEventListener("keydown", handleKeyDown); }, [handleKeyDown]);
 
   useEffect(() => {
-    if (!isMobileDevice || reducedMotion) return;
-
-    if (motionListenerAttachedRef.current) return;
-
+    if (!isMobileDevice || reducedMotion || motionListenerAttachedRef.current) return;
     shakeEnabledRef.current = true;
-
     const handleFirstTouch = async () => {
       const granted = await requestMotionPermission();
       if (granted && !motionListenerAttachedRef.current) {
@@ -253,158 +165,71 @@ export function KonamiCode() {
       }
       document.removeEventListener("touchstart", handleFirstTouch);
     };
-
-    if (typeof DeviceMotionEvent !== "undefined" &&
-        typeof (DeviceMotionEvent as unknown as { requestPermission?: () => Promise<string> }).requestPermission === "function") {
+    if (typeof DeviceMotionEvent !== "undefined" && typeof (DeviceMotionEvent as unknown as { requestPermission?: () => Promise<string> }).requestPermission === "function") {
       document.addEventListener("touchstart", handleFirstTouch, { once: true });
     } else if (typeof DeviceMotionEvent !== "undefined") {
       window.addEventListener("devicemotion", handleDeviceMotion);
       motionListenerAttachedRef.current = true;
     }
-
-    return () => {
-      window.removeEventListener("devicemotion", handleDeviceMotion);
-      document.removeEventListener("touchstart", handleFirstTouch);
-      motionListenerAttachedRef.current = false;
-      if (dPadTimeoutRef.current) {
-        clearTimeout(dPadTimeoutRef.current);
-      }
-    };
+    return () => { window.removeEventListener("devicemotion", handleDeviceMotion); document.removeEventListener("touchstart", handleFirstTouch); motionListenerAttachedRef.current = false; if (dPadTimeoutRef.current) clearTimeout(dPadTimeoutRef.current); };
   }, [isMobileDevice, reducedMotion, handleDeviceMotion, requestMotionPermission]);
 
-  const closeModal = useCallback(() => {
-    setIsModalOpen(false);
-  }, []);
+  const closeModal = useCallback(() => setIsModalOpen(false), []);
+  const closeDPad = useCallback(() => { setIsDPadOpen(false); keySequenceRef.current = []; setKeySequence([]); lastKeyTimeRef.current = 0; if (dPadTimeoutRef.current) clearTimeout(dPadTimeoutRef.current); }, []);
 
-  const closeDPad = useCallback(() => {
-    setIsDPadOpen(false);
-    keySequenceRef.current = [];
-    setKeySequence([]);
-    lastKeyTimeRef.current = 0;
-    if (dPadTimeoutRef.current) {
-      clearTimeout(dPadTimeoutRef.current);
-    }
-  }, []);
-
-  const handleDPadBackdropClick = useCallback(
-    (e: React.MouseEvent | React.TouchEvent) => {
-      if (e.target === e.currentTarget) {
-        closeDPad();
-      }
-    },
-    [closeDPad]
-  );
-
-  const handleModalBackdropClick = useCallback(
-    (e: React.MouseEvent) => {
-      if (e.target === e.currentTarget) {
-        closeModal();
-      }
-    },
-    [closeModal]
-  );
-
-  // Memoize the displayed sequence to avoid recalculation
   const displayedSequence = useMemo(() => {
-    if (keySequence.length > 0) {
-      return KONAMI_DISPLAY.slice(0, keySequence.length).join(" ") + " _".repeat(KONAMI_CODE.length - keySequence.length);
-    }
+    if (keySequence.length > 0) return KONAMI_DISPLAY.slice(0, keySequence.length).join(" ") + " _".repeat(KONAMI_CODE.length - keySequence.length);
     return KONAMI_DISPLAY.join(" ");
   }, [keySequence]);
 
   return (
     <>
-      {/* Mobile D-PAD trigger button - alternative to shake */}
       {showMobileButton && !isDPadOpen && !isModalOpen && (
-        <button
-          onClick={openDPad}
-          className="fixed bottom-4 right-4 z-40 bg-black/80 border border-neon/60 text-neon p-3 rounded-full shadow-lg hover:border-neon hover:bg-neon/10 transition-all active:scale-95"
-          aria-label="Open Konami Code D-PAD"
-        >
-          <Gamepad2 className="w-6 h-6" />
+        <button onClick={openDPad} className="fixed bottom-4 right-4 z-40 bg-nd-surface border border-nd-border-visible text-nd-text-secondary p-3 nd-transition active:bg-nd-surface-raised" aria-label="Open Konami Code D-PAD">
+          <Gamepad2 className="w-5 h-5" />
         </button>
       )}
 
       {isDPadOpen && !isModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
-          onClick={handleDPadBackdropClick}
-          onTouchEnd={handleDPadBackdropClick}
-        >
-          <div className="relative bg-black border-2 border-neon p-6 rounded-lg shadow-[0_0_30px_rgba(255,158,181,0.2)]">
-            <button
-              onClick={closeDPad}
-              className="absolute top-2 right-2 text-gray-400 hover:text-white transition-colors p-2"
-              aria-label="Close D-PAD"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-nd-black/80" onClick={(e) => { if (e.target === e.currentTarget) closeDPad(); }} onTouchEnd={(e) => { if (e.target === e.currentTarget) closeDPad(); }}>
+          <div className="relative bg-nd-surface border border-nd-border-visible p-6">
+            <button onClick={closeDPad} className="absolute top-2 right-2 text-nd-text-disabled hover:text-nd-text-display nd-transition p-2" aria-label="Close D-PAD"><X className="w-4 h-4" /></button>
             <div className="text-center mb-4">
-              <p className="text-neon text-xs font-mono mb-1">Enter the Code</p>
-              <p className="text-gray-500 text-xs">{displayedSequence}</p>
+              <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-secondary block mb-1">Enter the Code</span>
+              <p className="font-mono text-[10px] text-nd-text-disabled">{displayedSequence}</p>
             </div>
-
             <div className="flex flex-col items-center gap-2">
               <DPadButton keyName="ArrowUp" display="↑" pressedButton={pressedButton} onPress={handleDPadPress} />
-
               <div className="flex items-center gap-2">
                 <DPadButton keyName="ArrowLeft" display="←" pressedButton={pressedButton} onPress={handleDPadPress} />
-                <div className="flex flex-col gap-2">
-                  <div className="min-w-[52px] min-h-[52px]" />
-                  <DPadButton keyName="ArrowDown" display="↓" pressedButton={pressedButton} onPress={handleDPadPress} />
-                </div>
+                <div className="flex flex-col gap-2"><div className="min-w-[52px] min-h-[52px]" /><DPadButton keyName="ArrowDown" display="↓" pressedButton={pressedButton} onPress={handleDPadPress} /></div>
                 <DPadButton keyName="ArrowRight" display="→" pressedButton={pressedButton} onPress={handleDPadPress} />
               </div>
-
-              <div className="flex gap-2 mt-2">
-                <div className="flex-1" />
-                <DPadButton keyName="KeyB" display="B" className="bg-neon/5" pressedButton={pressedButton} onPress={handleDPadPress} />
-                <DPadButton keyName="KeyA" display="A" className="bg-neon/5" pressedButton={pressedButton} onPress={handleDPadPress} />
-              </div>
+              <div className="flex gap-2 mt-2"><div className="flex-1" /><DPadButton keyName="KeyB" display="B" pressedButton={pressedButton} onPress={handleDPadPress} /><DPadButton keyName="KeyA" display="A" pressedButton={pressedButton} onPress={handleDPadPress} /></div>
             </div>
-
-            <p className="text-center text-gray-600 text-xs mt-4">
-              Tap the sequence or tap the X to close
-            </p>
           </div>
         </div>
       )}
 
       {isModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-          onClick={handleModalBackdropClick}
-        >
-          <div className="relative bg-black border-2 border-neon p-8 rounded-lg max-w-md mx-4 shadow-[0_0_30px_rgba(255,158,181,0.3)]">
-            <button
-              onClick={closeModal}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
-              aria-label="Close modal"
-            >
-              <X className="w-6 h-6" />
-            </button>
-
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-nd-black/80" onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}>
+          <div className="relative bg-nd-surface border border-nd-border-visible p-8 max-w-md mx-4">
+            <button onClick={closeModal} className="absolute top-4 right-4 text-nd-text-disabled hover:text-nd-text-display nd-transition" aria-label="Close modal"><X className="w-5 h-5" /></button>
             <div className="text-center space-y-4">
-              <div className="text-5xl mb-4">✨</div>
-              <h2 className="text-2xl font-bold text-neon">You found me!</h2>
-              <p className="text-gray-300 leading-relaxed">
+              <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-secondary block">Secret Found</span>
+              <h2 className="font-display text-2xl font-bold text-nd-text-display tracking-[-0.02em]">You found me!</h2>
+              <p className="text-nd-text-secondary text-sm font-body leading-relaxed">
                 I&apos;m Lumi, Lu&apos;s AI assistant. I help with coding, overnight shifts, and leaving sneaky easter eggs.
               </p>
-              <div className="text-sm text-gray-400 space-y-1" id="konami-stats">
-                <p>📚 <span id="konami-memories">55+</span> memories stored in ClawVault</p>
-                <p>🌙 <span id="konami-crons">8</span> overnight cron jobs running</p>
-                <p>☕ Powered by OpenClaw + too much coffee</p>
+              <div className="text-sm text-nd-text-secondary font-body space-y-1" id="konami-stats">
+                <p><span className="font-mono text-nd-text-disabled">55+</span> memories stored in ClawVault</p>
+                <p><span className="font-mono text-nd-text-disabled">8</span> overnight cron jobs running</p>
+                <p className="text-nd-text-disabled">Powered by OpenClaw</p>
               </div>
-              <p className="text-gray-500 text-xs italic pt-2">
-                Built with OpenClaw • Say hi if you see this!
-              </p>
+              <p className="text-nd-text-disabled text-xs italic pt-2 font-body">Built with OpenClaw · Say hi if you see this!</p>
             </div>
-
-            <div className="mt-6 pt-4 border-t border-white/10 text-center">
-              <p className="text-xs text-gray-500 font-mono">
-                ↑↑↓↓←→BA - You found the secret!
-              </p>
+            <div className="mt-6 pt-4 border-t border-nd-border text-center">
+              <p className="font-mono text-[10px] text-nd-text-disabled tracking-[0.06em] uppercase">↑↑↓↓←→BA — Secret Unlocked</p>
             </div>
           </div>
         </div>

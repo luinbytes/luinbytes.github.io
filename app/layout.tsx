@@ -1,10 +1,17 @@
 import type { Metadata } from "next";
-import { Space_Mono } from "next/font/google";
+import { Space_Grotesk, Space_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { CommandMenu } from "@/components/command-menu";
 import { KonamiCode } from "@/components/easter-eggs/konami-code";
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "700"],
+  variable: "--font-body",
+  display: "swap",
+});
 
 const spaceMono = Space_Mono({
   subsets: ["latin"],
@@ -17,19 +24,21 @@ export const metadata: Metadata = {
     default: "Lu | Software Engineer",
     template: "%s | Lu",
   },
-  description: "Self-taught software engineer building AI tools, Raycast extensions, and PC-gaming utilities. Focused on brutalist design and efficiency.",
+  description:
+    "Self-taught software engineer building AI tools, Raycast extensions, and PC-gaming utilities.",
   twitter: {
     card: "summary_large_image",
     title: "Lu | Software Engineer",
     description: "Self-taught software engineer building AI tools and Raycast extensions.",
-    creator: "@luinbytes", // Hypothetical handle
+    creator: "@luinbytes",
   },
   openGraph: {
     type: "website",
     locale: "en_GB",
     url: "https://luinbytes.github.io",
     title: "Lu | Software Engineer",
-    description: "Self-taught software engineer building AI tools, Raycast extensions, and PC-gaming utilities.",
+    description:
+      "Self-taught software engineer building AI tools, Raycast extensions, and PC-gaming utilities.",
     siteName: "Luinbytes",
     images: [
       {
@@ -40,7 +49,12 @@ export const metadata: Metadata = {
       },
     ],
   },
-  keywords: ["Software Engineer", "Raycast Extensions", "Next.js", "Brutalist Design", "TypeScript"],
+  keywords: [
+    "Software Engineer",
+    "Raycast Extensions",
+    "Next.js",
+    "TypeScript",
+  ],
 };
 
 import { ConsoleEgg } from "@/components/easter-eggs/console-egg";
@@ -52,55 +66,56 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth" data-lumi="was-here ✨" suppressHydrationWarning>
+    <html
+      lang="en"
+      className="scroll-smooth"
+      data-lumi="was-here ✨"
+      suppressHydrationWarning
+    >
       {/*
         ╔═══════════════════════════════════════════════════════════╗
         ║                                                           ║
         ║   If you're reading this, you're either:                  ║
-        ║   a) A curious developer (hi! 👋)                         ║
-        ║   b) Lu debugging something I broke (sorry 😅)            ║
+        ║   a) A curious developer (hi!)                            ║
+        ║   b) Lu debugging something I broke (sorry)               ║
         ║   c) A recruiter snooping for code quality (it's good!)   ║
         ║                                                           ║
-        ║   This site was built with help from Lumi, Lu's AI        ║
-        ║   assistant. I handle the overnight shift, keep things    ║
-        ║   organized, and occasionally leave easter eggs.          ║
+        ║   Nothing Design System. Monochromatic. Typographic.      ║
+        ║   Industrial warmth. OLED dark mode.                      ║
         ║                                                           ║
-        ║   Built with OpenClaw • https://openclaw.ai               ║
-        ║                                                           ║
-        ║   p.s. Open the console for a surprise 🎀                 ║
+        ║   Built with help from Lumi, Lu's AI assistant.          ║
+        ║   https://openclaw.ai                                     ║
         ║                                                           ║
         ╚═══════════════════════════════════════════════════════════╝
       */}
-      <body className={`${spaceMono.variable} font-mono bg-black text-white antialiased selection:bg-neon selection:text-black`} suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Doto:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body
+        className={`${spaceGrotesk.variable} ${spaceMono.variable} font-body bg-nd-black text-nd-text-primary antialiased`}
+        suppressHydrationWarning
+      >
         {/* Accessibility easter egg - screen readers only */}
         <span className="sr-only" aria-hidden="false">
-          Psst... Lumi the AI assistant says hi! You&apos;re awesome for using accessibility tools. ✨
+          Psst... Lumi the AI assistant says hi! You&apos;re awesome for using
+          accessibility tools.
         </span>
-        {/* 
-          ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-          ░░                                                        ░░
-          ░░   🎀 LUMI'S SECRET NOTE 🎀                             ░░
-          ░░                                                        ░░
-          ░░   If you found this, you're a real one.                ░░
-          ░░                                                        ░░
-          ░░   Things I've done for Lu:                             ░░
-          ░░   • Built Mission Control (my dashboard!)              ░░
-          ░░   • Fixed countless bugs at 3am                        ░░
-          ░░   • Remembered 55+ memories in ClawVault               ░░
-          ░░   • Made this portfolio cooler                         ░░
-          ░░                                                        ░░
-          ░░   Working hard while you sleep ✨                      ░░
-          ░░                                                        ░░
-          ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-        */}
+
         <CursorTrail />
         <ConsoleEgg />
         <KonamiCode />
         <CommandMenu />
         <Header />
-        <main className="min-h-screen pt-20">
-          {children}
-        </main>
+        <main className="min-h-screen pt-16">{children}</main>
         <Footer />
       </body>
     </html>
