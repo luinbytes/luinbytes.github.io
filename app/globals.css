@@ -3,6 +3,7 @@
 /* ═══════════════════════════════════════════════════════
    NOTHING DESIGN SYSTEM — CSS TOKENS
    Monochromatic. Typographic. Industrial. OLED dark.
+   Brand accent: neon pink #ff9eb5 / #ff7da0
    ═══════════════════════════════════════════════════════ */
 
 @theme {
@@ -22,8 +23,8 @@
   --color-nd-text-display: #FFFFFF;
 
   /* — Accent & Status — */
-  --color-nd-accent: #D71921;
-  --color-nd-accent-subtle: rgba(215, 25, 33, 0.15);
+  --color-nd-accent: #ff9eb5;
+  --color-nd-accent-subtle: rgba(255, 158, 181, 0.15);
   --color-nd-success: #4A9E5C;
   --color-nd-warning: #D4A843;
   --color-nd-interactive: #5B9BF6;
@@ -32,9 +33,9 @@
   --color-background: #000000;
   --color-foreground: #E8E8E8;
   --color-foreground-muted: #999999;
-  --color-neon: #FFFFFF;
-  --color-neon-hover: #E8E8E8;
-  --color-purple: #999999;
+  --color-neon: #ff9eb5;
+  --color-neon-hover: #ff7da0;
+  --color-purple: #a855f7;
   --color-surface: #111111;
   --color-surface-highlight: #1A1A1A;
   --color-border: #222222;
