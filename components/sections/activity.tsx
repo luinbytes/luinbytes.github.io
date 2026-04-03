@@ -160,7 +160,7 @@ export function Activity() {
       updateScale(calendarContainerRef2025);
     });
 
-    const els = [calendarContainerRef2026.current, calendarContainerRef2025.current].filter(Boolean);
+    const els = [calendarContainerRef2026.current, calendarContainerRef2025.current].filter((el): el is HTMLDivElement => el !== null);
     els.forEach(el => resizeObserver.observe(el));
 
     return () => {
