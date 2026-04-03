@@ -132,26 +132,41 @@ export function Activity() {
     return streak;
   }, []);
 
+  const calendarContainerRef2026 = useRef<HTMLDivElement>(null);
+  const calendarContainerRef2025 = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    const updateScale = () => {
-      if (calendarContainerRef.current) {
-        const containerWidth = calendarContainerRef.current.offsetWidth;
-        const calendarNativeWidth = 580;
+    const updateScale = (ref: React.RefObject<HTMLDivElement | null>) => {
+      if (ref.current) {
+        const containerWidth = ref.current.parentElement?.offsetWidth || ref.current.offsetWidth;
+        const calendarNativeWidth = 720;
         const scale = Math.min(containerWidth / calendarNativeWidth, 1);
-        calendarContainerRef.current.style.transform = `scale(${scale})`;
-        calendarContainerRef.current.style.transformOrigin = "top left";
+        if (scale < 1) {
+          ref.current.style.transform = `scale(${scale})`;
+          ref.current.style.transformOrigin = "top left";
+          ref.current.style.height = `${ref.current.scrollHeight * scale}px`;
+        } else {
+          ref.current.style.transform = "";
+          ref.current.style.height = "";
+        }
       }
     };
 
-    updateScale();
+    updateScale(calendarContainerRef2026);
+    updateScale(calendarContainerRef2025);
 
-    const resizeObserver = new ResizeObserver(updateScale);
-    if (calendarContainerRef.current) {
-      resizeObserver.observe(calendarContainerRef.current);
-    }
+    const resizeObserver = new ResizeObserver(() => {
+      updateScale(calendarContainerRef2026);
+      updateScale(calendarContainerRef2025);
+    });
 
-    return () => resizeObserver.disconnect();
-  }, [calendarData2026]);
+    const els = [calendarContainerRef2026.current, calendarContainerRef2025.current].filter(Boolean);
+    els.forEach(el => resizeObserver.observe(el));
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [calendarData2026, calendarData2025]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -330,9 +345,8 @@ export function Activity() {
               </div>
             ) : calendarData2026.length > 0 ? (
               <div
-                ref={calendarContainerRef}
-                className="w-full overflow-x-auto"
-                style={{ scrollbarWidth: "thin", scrollbarColor: "#333333 #111111" }}
+                ref={calendarContainerRef2026}
+                className="w-full"
               >
                 <ActivityCalendar
                   data={calendarData2026}
@@ -366,8 +380,8 @@ export function Activity() {
 
             {calendarData2025.length > 0 ? (
               <div
-                className="w-full overflow-x-auto"
-                style={{ scrollbarWidth: "thin", scrollbarColor: "#333333 #111111" }}
+                ref={calendarContainerRef2025}
+                className="w-full"
               >
                 <ActivityCalendar
                   data={calendarData2025}
