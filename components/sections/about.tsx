@@ -43,27 +43,26 @@ export function About() {
 
             <div className="space-y-5 text-nd-text-secondary text-base leading-relaxed">
               <p>
-                I&apos;m a self-taught software engineer who learns by breaking things. My
-                journey didn&apos;t start with &quot;Hello World&quot;—it started with the{" "}
-                <span className="text-nd-text-display font-medium">PlayStation 3</span> and{" "}
+                I soldered an{" "}
+                <span className="text-nd-accent">E3 Flasher</span> to a{" "}
+                <span className="text-nd-text-display font-medium">PlayStation 3</span> in
+                2013 to downgrade the firmware and run unsigned code. Before that, I was
+                editing{" "}
                 <span className="text-nd-text-display font-medium">
                   Call of Duty: World at War
-                </span>
-                .
+                </span>{" "}
+                config files and save games. Seeing other people mod the game made me want
+                to figure out how.
               </p>
               <p>
-                I saw people modifying the game and wanted to do the same. I started
-                with simple save game modding to load config files, then moved onto
-                patches. Eventually, I was soldering an{" "}
-                <span className="text-nd-accent">E3 Flasher</span> to my PS3 to
-                downgrade it, install custom firmware, and run my own unsigned code.
+                The PS3 work meant taking the console apart, reading through firmware
+                dumps, and writing patches to make the hardware do things Sony didn&apos;t
+                intend. I liked it enough to keep going.
               </p>
               <p>
-                That experience—taking hardware apart, understanding how it works, and
-                making it do things it wasn&apos;t supposed to—ignited a passion for
-                code that has only grown since. Now I build tools because{" "}
+                I build tools now.{" "}
                 <span className="text-nd-text-display font-medium">
-                  if something doesn&apos;t work how I want it to, I fix it.
+                  If something works in a way that annoys me, I rewrite it.
                 </span>
               </p>
             </div>
