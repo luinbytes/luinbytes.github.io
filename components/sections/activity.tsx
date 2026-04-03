@@ -8,537 +8,585 @@ import { fetchWithRetry, fetchGitHub, type ApiError } from "@/lib/api";
 
 // GitHub API types
 interface GitHubEvent {
-    id: string;
-    type: string;
-    repo: { name: string };
-    created_at: string;
-    payload: {
-        commits?: Array<{
-            sha: string;
-            message: string;
-        }>;
-    };
+  id: string;
+  type: string;
+  repo: { name: string };
+  created_at: string;
+  payload: {
+    commits?: Array<{
+      sha: string;
+      message: string;
+    }>;
+  };
 }
 
 interface GitHubRepo {
-    fork: boolean;
-    language: string | null;
+  fork: boolean;
+  language: string | null;
 }
 
 interface ContributionDay {
-    date: string;
-    count: number;
-    level: 0 | 1 | 2 | 3 | 4;
+  date: string;
+  count: number;
+  level: 0 | 1 | 2 | 3 | 4;
 }
 
 interface ContributionsResponse {
-    contributions: ContributionDay[];
+  contributions: ContributionDay[];
 }
 
 interface CommitItem {
-    id: string;
-    repo: string;
-    message: string;
-    commitCount: number;
-    commitUrl: string;
-    date: string;
-    type: string;
+  id: string;
+  repo: string;
+  message: string;
+  commitCount: number;
+  commitUrl: string;
+  date: string;
+  type: string;
 }
 
 export function Activity() {
-    const [commits, setCommits] = useState<CommitItem[]>([]);
-    const [calendarData2026, setCalendarData2026] = useState<ContributionDay[]>([]);
-    const [calendarData2025, setCalendarData2025] = useState<ContributionDay[]>([]);
+  const [commits, setCommits] = useState<CommitItem[]>([]);
+  const [calendarData2026, setCalendarData2026] = useState<ContributionDay[]>([]);
+  const [calendarData2025, setCalendarData2025] = useState<ContributionDay[]>([]);
 
-    // Quick Stats state
-    const [repoCount, setRepoCount] = useState<number>(0);
-    const [languages, setLanguages] = useState<{ name: string; percentage: number; color: string }[]>([]);
-    const [currentStreak, setCurrentStreak] = useState<number>(0);
-    const [yearlyCommits, setYearlyCommits] = useState<number>(0);
-    const [statsLoaded, setStatsLoaded] = useState<boolean>(false);
+  const [repoCount, setRepoCount] = useState<number>(0);
+  const [languages, setLanguages] = useState<{ name: string; percentage: number; color: string }[]>([]);
+  const [currentStreak, setCurrentStreak] = useState<number>(0);
+  const [yearlyCommits, setYearlyCommits] = useState<number>(0);
+  const [statsLoaded, setStatsLoaded] = useState<boolean>(false);
 
-    // Calendar responsive scaling
-    const calendarContainerRef = useRef<HTMLDivElement>(null);
+  const calendarContainerRef = useRef<HTMLDivElement>(null);
 
-    // Error states
-    const [eventsError, setEventsError] = useState<ApiError | null>(null);
-    const [contributionsError, setContributionsError] = useState<ApiError | null>(null);
-    const [reposError, setReposError] = useState<ApiError | null>(null);
+  const [eventsError, setEventsError] = useState<ApiError | null>(null);
+  const [contributionsError, setContributionsError] = useState<ApiError | null>(null);
+  const [reposError, setReposError] = useState<ApiError | null>(null);
 
-    // Language colors mapping - memoized to avoid recreation
-    const languageColors = useMemo<Record<string, string>>(() => ({
-        TypeScript: '#3178c6',
-        JavaScript: '#f1e05a',
-        Python: '#3572A5',
-        Rust: '#dea584',
-        'C#': '#178600',
-        Java: '#b07219',
-        Go: '#00ADD8',
-        Ruby: '#701516',
-        PHP: '#4F5D95',
-        CSS: '#563d7c',
-        HTML: '#e34c26',
-    }), []);
+  const languageColors = useMemo<Record<string, string>>(
+    () => ({
+      TypeScript: "#E8E8E8",
+      JavaScript: "#999999",
+      Python: "#666666",
+      Rust: "#FFFFFF",
+      "C#": "#999999",
+      Java: "#999999",
+      Go: "#E8E8E8",
+      Ruby: "#999999",
+      PHP: "#666666",
+      CSS: "#999999",
+      HTML: "#E8E8E8",
+    }),
+    []
+  );
 
-    // Calculate language breakdown from repos
-    const calculateLanguages = useCallback((repos: GitHubRepo[]) => {
-        const langCount: Record<string, number> = {};
-        repos.forEach(repo => {
-            if (repo.language) {
-                langCount[repo.language] = (langCount[repo.language] || 0) + 1;
-            }
-        });
+  const calculateLanguages = useCallback(
+    (repos: GitHubRepo[]) => {
+      const langCount: Record<string, number> = {};
+      repos.forEach((repo) => {
+        if (repo.language) {
+          langCount[repo.language] = (langCount[repo.language] || 0) + 1;
+        }
+      });
 
-        const total = Object.values(langCount).reduce((a, b) => a + b, 0);
-        if (total === 0) return [];
+      const total = Object.values(langCount).reduce((a, b) => a + b, 0);
+      if (total === 0) return [];
 
-        return Object.entries(langCount)
-            .map(([lang, count]) => ({
-                name: lang,
-                percentage: Math.round((count / total) * 100),
-                color: languageColors[lang] || '#6e7681'
-            }))
-            .sort((a, b) => b.percentage - a.percentage)
-            .slice(0, 5);
-    }, [languageColors]);
+      return Object.entries(langCount)
+        .map(([lang, count]) => ({
+          name: lang,
+          percentage: Math.round((count / total) * 100),
+          color: languageColors[lang] || "#666666",
+        }))
+        .sort((a, b) => b.percentage - a.percentage)
+        .slice(0, 5);
+    },
+    [languageColors]
+  );
 
-    // Calculate current streak from contribution data
-    const calculateStreak = useCallback((contributions: ContributionDay[]) => {
-        if (!contributions || contributions.length === 0) return 0;
+  const calculateStreak = useCallback((contributions: ContributionDay[]) => {
+    if (!contributions || contributions.length === 0) return 0;
 
-        let streak = 0;
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+    let streak = 0;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-        // Sort by date descending
-        const sorted = [...contributions].sort((a, b) =>
-            new Date(b.date).getTime() - new Date(a.date).getTime()
+    const sorted = [...contributions].sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+
+    for (const day of sorted) {
+      const dayDate = new Date(day.date);
+      dayDate.setHours(0, 0, 0, 0);
+
+      const daysDiff = Math.floor(
+        (today.getTime() - dayDate.getTime()) / (1000 * 60 * 60 * 24)
+      );
+
+      if (daysDiff === streak && day.count > 0) {
+        streak++;
+      } else if (daysDiff > streak) {
+        break;
+      }
+    }
+
+    return streak;
+  }, []);
+
+  const calendarContainerRef2026 = useRef<HTMLDivElement>(null);
+  const calendarContainerRef2025 = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const updateScale = (ref: React.RefObject<HTMLDivElement | null>) => {
+      if (ref.current) {
+        const containerWidth = ref.current.parentElement?.offsetWidth || ref.current.offsetWidth;
+        const calendarNativeWidth = 720;
+        const scale = Math.min(containerWidth / calendarNativeWidth, 1);
+        if (scale < 1) {
+          ref.current.style.transform = `scale(${scale})`;
+          ref.current.style.transformOrigin = "top left";
+          ref.current.style.height = `${ref.current.scrollHeight * scale}px`;
+        } else {
+          ref.current.style.transform = "";
+          ref.current.style.height = "";
+        }
+      }
+    };
+
+    updateScale(calendarContainerRef2026);
+    updateScale(calendarContainerRef2025);
+
+    const resizeObserver = new ResizeObserver(() => {
+      updateScale(calendarContainerRef2026);
+      updateScale(calendarContainerRef2025);
+    });
+
+    const els = [calendarContainerRef2026.current, calendarContainerRef2025.current].filter(Boolean);
+    els.forEach(el => resizeObserver.observe(el));
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [calendarData2026, calendarData2025]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchGitHub<GitHubEvent[]>(
+          "/users/luinbytes/events/public",
+          {
+            cacheTTL: 5 * 60 * 1000,
+            onRetry: (attempt) =>
+              console.log(`Retrying events API (attempt ${attempt})`),
+          }
         );
 
-        for (const day of sorted) {
-            const dayDate = new Date(day.date);
-            dayDate.setHours(0, 0, 0, 0);
+        const pushEvents = data
+          .filter((event) => event.type === "PushEvent")
+          .slice(0, 5)
+          .map((event) => {
+            const commits = event.payload.commits || [];
+            const commitCount = commits.length;
+            const firstCommit = commits[0];
+            const commitMessage =
+              firstCommit?.message?.split("\n")[0] || "Pushed updates";
+            const commitUrl = firstCommit?.sha
+              ? `https://github.com/${event.repo.name}/commit/${firstCommit.sha}`
+              : `https://github.com/${event.repo.name}`;
 
-            const daysDiff = Math.floor((today.getTime() - dayDate.getTime()) / (1000 * 60 * 60 * 24));
+            return {
+              id: event.id,
+              repo: event.repo.name,
+              message: commitMessage,
+              commitCount,
+              commitUrl,
+              date: format(new Date(event.created_at), "MMM d, yyyy"),
+              type: "contribution",
+            };
+          });
+        setCommits(pushEvents);
+        setEventsError(null);
+      } catch (err) {
+        console.error("Failed to fetch events:", err);
+        setEventsError(err as ApiError);
+      }
 
-            if (daysDiff === streak && day.count > 0) {
-                streak++;
-            } else if (daysDiff > streak) {
-                break;
+      try {
+        const [data2026, data2025] = await Promise.all([
+          fetchWithRetry<ContributionsResponse>(
+            `https://github-contributions-api.jogruber.de/v4/luinbytes?y=2026`,
+            {
+              cacheTTL: 15 * 60 * 1000,
+              onRetry: (attempt) =>
+                console.log(
+                  `Retrying 2026 contributions API (attempt ${attempt})`
+                ),
             }
+          ),
+          fetchWithRetry<ContributionsResponse>(
+            `https://github-contributions-api.jogruber.de/v4/luinbytes?y=2025`,
+            {
+              cacheTTL: 15 * 60 * 1000,
+              onRetry: (attempt) =>
+                console.log(
+                  `Retrying 2025 contributions API (attempt ${attempt})`
+                ),
+            }
+          ),
+        ]);
+
+        if (data2026.contributions) {
+          const formatted: ContributionDay[] = data2026.contributions.map(
+            (day) => ({
+              date: day.date,
+              count: day.count,
+              level: day.level,
+            })
+          );
+          setCalendarData2026(formatted);
+
+          const streak = calculateStreak(formatted);
+          setCurrentStreak(streak);
+
+          const thisYearContributions = formatted.reduce(
+            (sum, day) => sum + day.count,
+            0
+          );
+          setYearlyCommits(thisYearContributions);
         }
 
-        return streak;
-    }, []);
-
-    // Resize observer to scale calendar to fit container
-    useEffect(() => {
-        const updateScale = () => {
-            if (calendarContainerRef.current) {
-                const containerWidth = calendarContainerRef.current.offsetWidth;
-                // Calendar native width is approximately 580px (53 weeks × 10px + padding)
-                const calendarNativeWidth = 580;
-                const scale = Math.min(containerWidth / calendarNativeWidth, 1);
-                calendarContainerRef.current.style.transform = `scale(${scale})`;
-                calendarContainerRef.current.style.transformOrigin = 'top left';
-            }
-        };
-
-        updateScale();
-
-        const resizeObserver = new ResizeObserver(updateScale);
-        if (calendarContainerRef.current) {
-            resizeObserver.observe(calendarContainerRef.current);
+        if (data2025.contributions) {
+          const formatted: ContributionDay[] = data2025.contributions.map(
+            (day) => ({
+              date: day.date,
+              count: day.count,
+              level: day.level,
+            })
+          );
+          setCalendarData2025(formatted);
         }
 
-        return () => resizeObserver.disconnect();
-    }, [calendarData2026]);
+        setContributionsError(null);
+      } catch (err) {
+        console.error("Failed to fetch contributions:", err);
+        setContributionsError(err as ApiError);
+      }
 
-    useEffect(() => {
-        const fetchData = async () => {
-            // Fetch recent events with retry and caching
-            try {
-                const data = await fetchGitHub<GitHubEvent[]>("/users/luinbytes/events/public", {
-                    cacheTTL: 5 * 60 * 1000, // 5 minutes cache
-                    onRetry: (attempt) => console.log(`Retrying events API (attempt ${attempt})`)
-                });
+      try {
+        const repos = await fetchGitHub<GitHubRepo[]>(
+          "/users/luinbytes/repos?per_page=100",
+          {
+            cacheTTL: 30 * 60 * 1000,
+            onRetry: (attempt) =>
+              console.log(`Retrying repos API (attempt ${attempt})`),
+          }
+        );
 
-                const pushEvents = data
-                    .filter((event) => event.type === "PushEvent")
-                    .slice(0, 5)
-                    .map((event) => {
-                        const commits = event.payload.commits || [];
-                        const commitCount = commits.length;
-                        const firstCommit = commits[0];
-                        const commitMessage = firstCommit?.message?.split('\n')[0] || "Pushed updates"; // First line only
-                        const commitUrl = firstCommit?.sha
-                            ? `https://github.com/${event.repo.name}/commit/${firstCommit.sha}`
-                            : `https://github.com/${event.repo.name}`;
+        if (Array.isArray(repos)) {
+          const ownRepos = repos.filter((repo) => !repo.fork);
+          setRepoCount(ownRepos.length);
 
-                        return {
-                            id: event.id,
-                            repo: event.repo.name,
-                            message: commitMessage,
-                            commitCount,
-                            commitUrl,
-                            date: format(new Date(event.created_at), "MMM d, yyyy"),
-                            type: "contribution"
-                        };
-                    });
-                setCommits(pushEvents);
-                setEventsError(null);
-            } catch (err) {
-                console.error("Failed to fetch events:", err);
-                setEventsError(err as ApiError);
-            }
+          const langs = calculateLanguages(ownRepos);
+          setLanguages(langs);
 
-            // Fetch contributions calendar for 2026 and 2025 with retry and caching
-            try {
-                const [data2026, data2025] = await Promise.all([
-                    fetchWithRetry<ContributionsResponse>(`https://github-contributions-api.jogruber.de/v4/luinbytes?y=2026`, {
-                        cacheTTL: 15 * 60 * 1000,
-                        onRetry: (attempt) => console.log(`Retrying 2026 contributions API (attempt ${attempt})`)
-                    }),
-                    fetchWithRetry<ContributionsResponse>(`https://github-contributions-api.jogruber.de/v4/luinbytes?y=2025`, {
-                        cacheTTL: 15 * 60 * 1000,
-                        onRetry: (attempt) => console.log(`Retrying 2025 contributions API (attempt ${attempt})`)
-                    })
-                ]);
+          setStatsLoaded(true);
+        }
+        setReposError(null);
+      } catch (err) {
+        console.error("Failed to fetch repos:", err);
+        setReposError(err as ApiError);
+        setStatsLoaded(true);
+      }
+    };
 
-                if (data2026.contributions) {
-                    const formatted: ContributionDay[] = data2026.contributions.map((day) => ({
-                        date: day.date,
-                        count: day.count,
-                        level: day.level
-                    }));
-                    setCalendarData2026(formatted);
+    fetchData();
+  }, [calculateLanguages, calculateStreak]);
 
-                    // Calculate streak from 2026 data
-                    const streak = calculateStreak(formatted);
-                    setCurrentStreak(streak);
+  // Nothing-style monochrome contribution theme
+  const monoTheme = {
+    light: ["#F5F5F5", "#D0D0D0", "#A0A0A0", "#606060", "#1A1A1A"],
+    dark: ["#111111", "#333333", "#666666", "#999999", "#FFFFFF"],
+  };
 
-                    const thisYearContributions = formatted.reduce((sum, day) => sum + day.count, 0);
-                    setYearlyCommits(thisYearContributions);
-                }
+  return (
+    <section id="activity" className="py-24 md:py-32 border-b border-nd-border">
+      <div className="container px-4 mx-auto max-w-6xl grid lg:grid-cols-2 gap-16">
+        {/* Left Column: Contributions */}
+        <div>
+          <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-4">
+            06 / Activity
+          </span>
 
-                if (data2025.contributions) {
-                    const formatted: ContributionDay[] = data2025.contributions.map((day) => ({
-                        date: day.date,
-                        count: day.count,
-                        level: day.level
-                    }));
-                    setCalendarData2025(formatted);
-                }
-
-                setContributionsError(null);
-            } catch (err) {
-                console.error("Failed to fetch contributions:", err);
-                setContributionsError(err as ApiError);
-            }
-
-            // Fetch GitHub repos for language stats with retry and caching
-            try {
-                const repos = await fetchGitHub<GitHubRepo[]>("/users/luinbytes/repos?per_page=100", {
-                    cacheTTL: 30 * 60 * 1000, // 30 minutes cache (repo data changes slowly)
-                    onRetry: (attempt) => console.log(`Retrying repos API (attempt ${attempt})`)
-                });
-
-                if (Array.isArray(repos)) {
-                    // Filter out forks
-                    const ownRepos = repos.filter((repo) => !repo.fork);
-                    setRepoCount(ownRepos.length);
-
-                    // Calculate language breakdown
-                    const langs = calculateLanguages(ownRepos);
-                    setLanguages(langs);
-
-                    setStatsLoaded(true);
-                }
-                setReposError(null);
-            } catch (err) {
-                console.error("Failed to fetch repos:", err);
-                setReposError(err as ApiError);
-                setStatsLoaded(true); // Show UI even if this fails
-            }
-        };
-
-        fetchData();
-    }, [calculateLanguages, calculateStreak]);
-
-    return (
-        <section id="activity" className="py-12 relative border-t border-white/5">
-            <div className="container px-4 mx-auto max-w-6xl grid lg:grid-cols-2 gap-12">
-
-                {/* Left Column: Contributions & Graph */}
-                <div>
-                    <h2 className="text-3xl font-bold tracking-tighter mb-8 flex items-center gap-3">
-                        Activity
-                    </h2>
-
-                    {/* 2026 Contributions */}
-                    <div className="bg-surface border border-white/10 p-6 rounded-xl mb-4">
-                        <div className="flex justify-between items-end mb-4">
-                            <span className="text-sm text-gray-400 font-medium">2026</span>
-                            <span className="text-xs text-gray-500 font-mono">
-                                {calendarData2026.reduce((acc, curr) => acc + curr.count, 0)} contributions
-                            </span>
-                        </div>
-
-                        {contributionsError ? (
-                            <div className="h-[100px] flex flex-col items-center justify-center gap-3 text-center px-4">
-                                <div className="flex items-center gap-2 text-red-400">
-                                    <AlertCircle className="w-5 h-5" />
-                                    <span className="font-medium">Failed to load contributions</span>
-                                </div>
-                                <button
-                                    onClick={() => window.location.reload()}
-                                    className="flex items-center gap-2 text-xs text-neon hover:underline mt-2"
-                                >
-                                    <RefreshCcw className="w-3 h-3" />
-                                    Retry
-                                </button>
-                            </div>
-                        ) : calendarData2026.length > 0 ? (
-                            <div
-                                ref={calendarContainerRef}
-                                className="w-full overflow-x-auto custom-scrollbar"
-                                style={{
-                                    scrollbarWidth: 'thin',
-                                    scrollbarColor: '#ff9eb5 #1a1a1a'
-                                }}
-                            >
-                                <style jsx>{`
-                                    .custom-scrollbar::-webkit-scrollbar {
-                                        height: 6px;
-                                    }
-                                    .custom-scrollbar::-webkit-scrollbar-track {
-                                        background: #1a1a1a;
-                                        border-radius: 3px;
-                                    }
-                                    .custom-scrollbar::-webkit-scrollbar-thumb {
-                                        background: linear-gradient(90deg, #794a63, #ff9eb5);
-                                        border-radius: 3px;
-                                    }
-                                    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                                        background: linear-gradient(90deg, #b3688a, #ff9eb5);
-                                    }
-                                `}</style>
-                                <ActivityCalendar
-                                    data={calendarData2026}
-                                    theme={{
-                                        light: ['#1a1a1a', '#0e4429', '#006d32', '#26a641', '#39d353'],
-                                        dark: ['#1a1a1a', '#3f2e3e', '#794a63', '#b3688a', '#ff9eb5'],
-                                    }}
-                                    labels={{
-                                        totalCount: '{{count}} contributions in {{year}}',
-                                    }}
-                                    colorScheme="dark"
-                                    blockSize={8}
-                                    blockMargin={2}
-                                    fontSize={10}
-                                />
-                            </div>
-                        ) : (
-                            <div className="h-[100px] flex items-center justify-center text-gray-500 text-sm animate-pulse">
-                                Loading 2026 data...
-                            </div>
-                        )}
-                    </div>
-
-                    {/* 2025 Contributions */}
-                    <div className="bg-surface border border-white/10 p-6 rounded-xl mb-8">
-                        <div className="flex justify-between items-end mb-4">
-                            <span className="text-sm text-gray-400 font-medium">2025</span>
-                            <span className="text-xs text-gray-500 font-mono">
-                                {calendarData2025.reduce((acc, curr) => acc + curr.count, 0)} contributions
-                            </span>
-                        </div>
-
-                        {calendarData2025.length > 0 ? (
-                            <div
-                                className="w-full overflow-x-auto custom-scrollbar"
-                                style={{
-                                    scrollbarWidth: 'thin',
-                                    scrollbarColor: '#ff9eb5 #1a1a1a'
-                                }}
-                            >
-                                <ActivityCalendar
-                                    data={calendarData2025}
-                                    theme={{
-                                        light: ['#1a1a1a', '#0e4429', '#006d32', '#26a641', '#39d353'],
-                                        dark: ['#1a1a1a', '#3f2e3e', '#794a63', '#b3688a', '#ff9eb5'],
-                                    }}
-                                    labels={{
-                                        totalCount: '{{count}} contributions in {{year}}',
-                                    }}
-                                    colorScheme="dark"
-                                    blockSize={8}
-                                    blockMargin={2}
-                                    fontSize={10}
-                                />
-                            </div>
-                        ) : (
-                            <div className="h-[100px] flex items-center justify-center text-gray-500 text-sm animate-pulse">
-                                Loading 2025 data...
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="space-y-6">
-                        <h3 className="text-xl font-bold text-white mb-4">Recent Public Commits</h3>
-                        {eventsError ? (
-                            <div className="bg-red-500/5 border border-red-500/20 rounded-xl p-6 text-center">
-                                <div className="flex items-center justify-center gap-2 text-red-400 mb-3">
-                                    <AlertCircle className="w-5 h-5" />
-                                    <span className="font-medium">Failed to load recent commits</span>
-                                </div>
-                                <p className="text-xs text-gray-500 mb-4">
-                                    {eventsError.isRateLimit
-                                        ? "GitHub API rate limit reached. Using cached data if available."
-                                        : eventsError.message}
-                                </p>
-                                <button
-                                    onClick={() => window.location.reload()}
-                                    className="flex items-center gap-2 text-xs text-neon hover:underline mx-auto"
-                                >
-                                    <RefreshCcw className="w-3 h-3" />
-                                    Retry
-                                </button>
-                            </div>
-                        ) : commits.length > 0 ? commits.map((item) => (
-                            <a
-                                key={item.id}
-                                href={item.commitUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex gap-4 group cursor-pointer"
-                            >
-                                <div className="mt-1 w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover:border-neon/50 transition-colors shrink-0">
-                                    <GitCommit className="w-4 h-4 text-neon" />
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                    <h4 className="text-white font-medium group-hover:text-neon transition-colors truncate">
-                                        {item.message}
-                                    </h4>
-                                    <div className="flex items-center gap-2 mt-1">
-                                        <span className="text-sm text-gray-400 truncate">{item.repo.replace('luinbytes/', '')}</span>
-                                        {item.commitCount > 1 && (
-                                            <span className="text-[10px] bg-neon/10 text-neon px-1.5 py-0.5 rounded font-mono">
-                                                +{item.commitCount - 1} more
-                                            </span>
-                                        )}
-                                    </div>
-                                    <span className="text-xs text-gray-500 font-mono mt-1 block">{item.date}</span>
-                                </div>
-                            </a>
-                        )) : (
-                            <div className="text-gray-500 text-sm italic py-4">
-                                No recent public commits found. I might be working on private repos.
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* Right Column: Quick Dev Stats */}
-                <div>
-                    <h2 className="text-3xl font-bold tracking-tighter mb-8 flex items-center gap-3">
-                        Quick Stats <span className="text-sm font-normal text-gray-500 font-mono self-end mb-1">/ live</span>
-                    </h2>
-
-                    {reposError ? (
-                        <div className="bg-surface border border-white/10 rounded-xl p-8 h-[400px] flex flex-col items-center justify-center gap-4">
-                            <div className="flex items-center gap-2 text-red-400">
-                                <AlertCircle className="w-6 h-6" />
-                                <span className="font-bold text-lg">Failed to load stats</span>
-                            </div>
-                            <p className="text-sm text-gray-500 text-center max-w-md">
-                                {reposError.isRateLimit
-                                    ? "GitHub API rate limit reached. Stats will refresh when the limit resets."
-                                    : reposError.message}
-                            </p>
-                            <button
-                                onClick={() => window.location.reload()}
-                                className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm text-neon transition-colors"
-                            >
-                                <RefreshCcw className="w-4 h-4" />
-                                Retry
-                            </button>
-                        </div>
-                    ) : !statsLoaded ? (
-                        <div className="bg-surface border border-white/10 rounded-xl p-8 h-[400px] flex items-center justify-center">
-                            <div className="text-gray-500 text-sm animate-pulse">Loading GitHub stats...</div>
-                        </div>
-                    ) : (
-                        <>
-                            {/* Stats Cards Grid */}
-                            <div className="grid grid-cols-2 gap-4 mb-6">
-                                <div className="bg-surface border border-white/10 rounded-xl p-6 hover:border-neon/30 transition-colors">
-                                    <div className="text-4xl font-bold text-neon mb-2 font-mono">{repoCount}</div>
-                                    <div className="text-sm text-gray-400 uppercase tracking-wide">Public Repos</div>
-                                </div>
-                                <div className="bg-surface border border-white/10 rounded-xl p-6 hover:border-neon/30 transition-colors">
-                                    <div className="text-4xl font-bold text-neon mb-2 font-mono">{yearlyCommits}</div>
-                                    <div className="text-sm text-gray-400 uppercase tracking-wide">This Year</div>
-                                </div>
-                            </div>
-
-                            {/* Language Breakdown */}
-                            <div className="bg-surface border border-white/10 rounded-xl p-6 mb-6">
-                                <h3 className="text-lg font-bold text-white mb-4">Top Languages</h3>
-                                <div className="space-y-3">
-                                    {languages.map((lang, index) => (
-                                        <div key={index}>
-                                            <div className="flex justify-between items-center mb-1.5">
-                                                <div className="flex items-center gap-2">
-                                                    <div
-                                                        className="w-3 h-3 rounded-full"
-                                                        style={{ backgroundColor: lang.color }}
-                                                    />
-                                                    <span className="text-sm text-gray-300 font-medium">{lang.name}</span>
-                                                </div>
-                                                <span className="text-sm text-gray-500 font-mono">{lang.percentage}%</span>
-                                            </div>
-                                            <div className="h-2 bg-[#1a1a1a] rounded-full overflow-hidden">
-                                                <div
-                                                    className="h-full rounded-full transition-all duration-500"
-                                                    style={{
-                                                        width: `${lang.percentage}%`,
-                                                        backgroundColor: lang.color
-                                                    }}
-                                                />
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Streak Display */}
-                            {currentStreak > 0 && (
-                                <div className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-xl p-4 mb-6">
-                                    <div className="flex items-center gap-3">
-                                        <span className="text-3xl">🔥</span>
-                                        <div>
-                                            <div className="text-xl font-bold text-white font-mono">{currentStreak} day streak</div>
-                                            <div className="text-xs text-gray-400">Keep the momentum going!</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            <div className="p-6 border border-white/10 rounded-xl bg-gradient-to-br from-neon/5 to-purple-500/5">
-                                <h3 className="font-bold text-white mb-2">Real-time data.</h3>
-                                <p className="text-gray-400 text-sm mb-4">
-                                    These stats are pulled live from the GitHub API.
-                                </p>
-                                <a href="https://github.com/luinbytes" target="_blank" className="text-neon hover:underline text-sm font-bold">
-                                    Visit GitHub Profile &rarr;
-                                </a>
-                            </div>
-                        </>
-                    )}
-                </div>
-
+          {/* 2026 Contributions */}
+          <div className="bg-nd-surface border border-nd-border p-6 mb-4">
+            <div className="flex justify-between items-end mb-4">
+              <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-secondary">
+                2026
+              </span>
+              <span className="font-mono text-[10px] text-nd-text-disabled">
+                {calendarData2026.reduce((acc, curr) => acc + curr.count, 0)} contributions
+              </span>
             </div>
-        </section>
-    );
+
+            {contributionsError ? (
+              <div className="h-[100px] flex flex-col items-center justify-center gap-3 text-center px-4">
+                <div className="flex items-center gap-2 text-nd-accent">
+                  <AlertCircle className="w-4 h-4" />
+                  <span className="font-mono text-[11px] tracking-[0.06em] uppercase">
+                    Failed to load
+                  </span>
+                </div>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="flex items-center gap-1.5 font-mono text-[10px] text-nd-interactive nd-transition"
+                >
+                  <RefreshCcw className="w-3 h-3" />
+                  Retry
+                </button>
+              </div>
+            ) : calendarData2026.length > 0 ? (
+              <div
+                ref={calendarContainerRef2026}
+                className="w-full"
+              >
+                <ActivityCalendar
+                  data={calendarData2026}
+                  theme={monoTheme}
+                  labels={{
+                    totalCount: "{{count}} contributions in {{year}}",
+                  }}
+                  colorScheme="dark"
+                  blockSize={8}
+                  blockMargin={2}
+                  fontSize={10}
+                />
+              </div>
+            ) : (
+              <div className="h-[100px] flex items-center justify-center font-mono text-[11px] text-nd-text-disabled tracking-[0.08em] uppercase">
+                [LOADING...]
+              </div>
+            )}
+          </div>
+
+          {/* 2025 Contributions */}
+          <div className="bg-nd-surface border border-nd-border p-6 mb-10">
+            <div className="flex justify-between items-end mb-4">
+              <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-secondary">
+                2025
+              </span>
+              <span className="font-mono text-[10px] text-nd-text-disabled">
+                {calendarData2025.reduce((acc, curr) => acc + curr.count, 0)} contributions
+              </span>
+            </div>
+
+            {calendarData2025.length > 0 ? (
+              <div
+                ref={calendarContainerRef2025}
+                className="w-full"
+              >
+                <ActivityCalendar
+                  data={calendarData2025}
+                  theme={monoTheme}
+                  labels={{
+                    totalCount: "{{count}} contributions in {{year}}",
+                  }}
+                  colorScheme="dark"
+                  blockSize={8}
+                  blockMargin={2}
+                  fontSize={10}
+                />
+              </div>
+            ) : (
+              <div className="h-[100px] flex items-center justify-center font-mono text-[11px] text-nd-text-disabled tracking-[0.08em] uppercase">
+                [LOADING...]
+              </div>
+            )}
+          </div>
+
+          {/* Recent Commits */}
+          <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-4">
+            Recent Public Commits
+          </span>
+          {eventsError ? (
+            <div className="border border-nd-accent/30 p-6 text-center">
+              <div className="flex items-center justify-center gap-2 text-nd-accent mb-2">
+                <AlertCircle className="w-4 h-4" />
+                <span className="font-mono text-[11px] tracking-[0.06em] uppercase">
+                  Failed to load commits
+                </span>
+              </div>
+              <button
+                onClick={() => window.location.reload()}
+                className="flex items-center gap-1.5 font-mono text-[10px] text-nd-interactive nd-transition mx-auto"
+              >
+                <RefreshCcw className="w-3 h-3" />
+                Retry
+              </button>
+            </div>
+          ) : commits.length > 0 ? (
+            <div className="border-t border-nd-border">
+              {commits.map((item) => (
+                <a
+                  key={item.id}
+                  href={item.commitUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex gap-4 group cursor-pointer py-3 border-b border-nd-border nd-transition hover:bg-nd-surface"
+                >
+                  <div className="mt-0.5 w-7 h-7 bg-nd-surface border border-nd-border flex items-center justify-center shrink-0 group-hover:border-nd-border-visible">
+                    <GitCommit className="w-3 h-3 text-nd-text-secondary" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h4 className="text-nd-text-primary text-sm font-medium group-hover:text-nd-text-display nd-transition truncate">
+                      {item.message}
+                    </h4>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="font-mono text-[11px] text-nd-text-secondary truncate">
+                        {item.repo.replace("luinbytes/", "")}
+                      </span>
+                      {item.commitCount > 1 && (
+                        <span className="font-mono text-[10px] text-nd-text-disabled border border-nd-border px-1 py-0.5">
+                          +{item.commitCount - 1} more
+                        </span>
+                      )}
+                    </div>
+                    <span className="font-mono text-[10px] text-nd-text-disabled mt-1 block">
+                      {item.date}
+                    </span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <p className="font-mono text-[11px] text-nd-text-disabled tracking-[0.06em] uppercase py-4">
+              No recent public commits found.
+            </p>
+          )}
+        </div>
+
+        {/* Right Column: Quick Stats */}
+        <div>
+          <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-4">
+            Quick Stats / Live
+          </span>
+
+          {reposError ? (
+            <div className="bg-nd-surface border border-nd-border p-8 h-[300px] flex flex-col items-center justify-center gap-4">
+              <div className="flex items-center gap-2 text-nd-accent">
+                <AlertCircle className="w-5 h-5" />
+                <span className="font-mono text-[11px] tracking-[0.06em] uppercase">
+                  Failed to load stats
+                </span>
+              </div>
+              <button
+                onClick={() => window.location.reload()}
+                className="flex items-center gap-1.5 px-4 py-2 border border-nd-border font-mono text-[11px] text-nd-interactive nd-transition"
+              >
+                <RefreshCcw className="w-3 h-3" />
+                Retry
+              </button>
+            </div>
+          ) : !statsLoaded ? (
+            <div className="bg-nd-surface border border-nd-border p-8 h-[300px] flex items-center justify-center">
+              <span className="font-mono text-[11px] text-nd-text-disabled tracking-[0.08em] uppercase">
+                [LOADING...]
+              </span>
+            </div>
+          ) : (
+            <>
+              {/* Hero stat cards */}
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="bg-nd-surface border border-nd-border p-6 nd-transition hover:border-nd-border-visible">
+                  <div className="font-display text-4xl font-bold text-nd-text-display mb-1 tracking-[-0.02em]">
+                    {repoCount}
+                  </div>
+                  <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled">
+                    Public Repos
+                  </span>
+                </div>
+                <div className="bg-nd-surface border border-nd-border p-6 nd-transition hover:border-nd-border-visible">
+                  <div className="font-display text-4xl font-bold text-nd-text-display mb-1 tracking-[-0.02em]">
+                    {yearlyCommits}
+                  </div>
+                  <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled">
+                    This Year
+                  </span>
+                </div>
+              </div>
+
+              {/* Language Breakdown — segmented progress bars */}
+              <div className="bg-nd-surface border border-nd-border p-6 mb-4">
+                <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-4">
+                  Top Languages
+                </span>
+                <div className="space-y-4">
+                  {languages.map((lang, index) => (
+                    <div key={index}>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm text-nd-text-secondary font-body">
+                          {lang.name}
+                        </span>
+                        <span className="font-mono text-[11px] text-nd-text-disabled">
+                          {lang.percentage}%
+                        </span>
+                      </div>
+                      {/* Segmented progress bar */}
+                      <div className="flex gap-[2px] h-1.5">
+                        {Array.from({ length: 20 }).map((_, i) => (
+                          <div
+                            key={i}
+                            className="flex-1"
+                            style={{
+                              background:
+                                i / 20 < lang.percentage / 100
+                                  ? "var(--color-nd-text-display)"
+                                  : "var(--color-nd-border)",
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Streak */}
+              {currentStreak > 0 && (
+                <div className="bg-nd-surface border border-nd-accent/30 p-4 mb-4">
+                  <div className="flex items-center gap-3">
+                    <span className="font-display text-3xl font-bold text-nd-accent tracking-[-0.02em]">
+                      {currentStreak}
+                    </span>
+                    <div>
+                      <div className="text-sm text-nd-text-display font-medium font-body">
+                        day streak
+                      </div>
+                      <div className="font-mono text-[10px] text-nd-text-disabled tracking-[0.06em] uppercase">
+                        Keep the momentum going
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="p-6 border border-nd-border">
+                <span className="text-nd-text-display text-sm font-medium font-body block mb-2">
+                  Real-time data.
+                </span>
+                <p className="text-nd-text-secondary text-sm mb-4 font-body">
+                  These stats are pulled live from the GitHub API.
+                </p>
+                <a
+                  href="https://github.com/luinbytes"
+                  target="_blank"
+                  className="font-mono text-[11px] tracking-[0.06em] uppercase text-nd-interactive nd-transition"
+                >
+                  Visit GitHub Profile →
+                </a>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </section>
+  );
 }

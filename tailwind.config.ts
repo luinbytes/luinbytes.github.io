@@ -9,17 +9,34 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#0a0a0a",
-        foreground: "#ededed",
+        background: "#000000",
+        foreground: "#E8E8E8",
         neon: "#ff9eb5",
         "neon-hover": "#ff7da0",
         surface: "#111111",
-        "surface-highlight": "#1a1a1a",
-        border: "#333333",
-        charcoal: "#18181b",
+        "surface-highlight": "#1A1A1A",
+        border: "#222222",
+        "border-visible": "#333333",
+        charcoal: "#111111",
+        // Nothing design system tokens
+        "nd-black": "#000000",
+        "nd-surface": "#111111",
+        "nd-surface-raised": "#1A1A1A",
+        "nd-border": "#222222",
+        "nd-border-visible": "#333333",
+        "nd-text-disabled": "#666666",
+        "nd-text-secondary": "#999999",
+        "nd-text-primary": "#E8E8E8",
+        "nd-text-display": "#FFFFFF",
+        "nd-accent": "#ff9eb5",
+        "nd-success": "#4A9E5C",
+        "nd-warning": "#D4A843",
+        "nd-interactive": "#5B9BF6",
       },
       fontFamily: {
-        mono: ["var(--font-mono)", "monospace"],
+        display: ['"Doto"', '"Space Mono"', 'monospace'],
+        body: ['"Space Grotesk"', '"DM Sans"', 'system-ui', 'sans-serif'],
+        mono: ['"Space Mono"', '"JetBrains Mono"', 'monospace'],
       },
       borderRadius: {
         DEFAULT: "4px",
@@ -31,14 +48,9 @@ const config: Config = {
         "3xl": "24px",
         full: "9999px",
       },
-      keyframes: {
-        "slide-in-from-bottom": {
-          "0%": { transform: "translateY(100%)", opacity: "0" },
-          "100%": { transform: "translateY(0)", opacity: "1" },
-        },
-      },
-      animation: {
-        "slide-in-from-bottom-2": "slide-in-from-bottom 0.3s ease-out",
+      letterSpacing: {
+        'label': '0.08em',
+        'label-tight': '0.06em',
       },
     },
   },

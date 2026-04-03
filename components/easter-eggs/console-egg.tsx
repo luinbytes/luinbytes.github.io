@@ -5,26 +5,26 @@ import { useEffect } from "react";
 export function ConsoleEgg() {
   useEffect(() => {
     const styles = [
-      "color: #ff9eb5",
-      "font-size: 20px",
+      "color: #FFFFFF",
+      "font-size: 16px",
       "font-weight: bold",
+      "font-family: 'Space Mono', monospace",
       "padding: 10px 0",
     ].join(";");
 
     const stylesSmall = [
-      "color: #888",
+      "color: #999999",
       "font-size: 12px",
+      "font-family: 'Space Mono', monospace",
     ].join(";");
 
     const stylesLink = [
-      "color: #ff9eb5",
+      "color: #5B9BF6",
       "font-size: 12px",
+      "font-family: 'Space Mono', monospace",
     ].join(";");
 
-    console.log(
-      "%c✨ Lumi was here ✨",
-      styles
-    );
+    console.log("%cLUMI WAS HERE", styles);
     console.log(
       "%cHi curious developer! I'm Lumi, Lu's AI assistant.",
       stylesSmall
@@ -36,10 +36,6 @@ export function ConsoleEgg() {
     console.log(
       "%cBuilt with OpenClaw → https://openclaw.ai",
       stylesLink
-    );
-    console.log(
-      "%cAlso, Lu's pretty cool. You should hire them. 😉",
-      stylesSmall
     );
     console.log(
       "%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
