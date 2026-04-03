@@ -43,26 +43,25 @@ export function About() {
 
             <div className="space-y-5 text-nd-text-secondary text-base leading-relaxed">
               <p>
-                I soldered an{" "}
+                I learn by breaking things. In 2013 that meant soldering an{" "}
                 <span className="text-nd-accent">E3 Flasher</span> to a{" "}
-                <span className="text-nd-text-display font-medium">PlayStation 3</span> in
-                2013 to downgrade the firmware and run unsigned code. Before that, I was
-                editing{" "}
+                <span className="text-nd-text-display font-medium">PlayStation 3</span> to
+                downgrade the firmware and run unsigned code. Before that, I was editing{" "}
                 <span className="text-nd-text-display font-medium">
                   Call of Duty: World at War
                 </span>{" "}
-                config files and save games. Seeing other people mod the game made me want
-                to figure out how.
+                config files and save games because I saw other people modding and wanted
+                to do the same.
               </p>
               <p>
-                The PS3 work meant taking the console apart, reading through firmware
-                dumps, and writing patches to make the hardware do things Sony didn&apos;t
-                intend. I liked it enough to keep going.
+                The PS3 work was teardowns, firmware dumps, and writing patches to make the
+                hardware do what Sony didn&apos;t want it doing. One thing led to Python,
+                then JS, then a whole stack of languages and tools. I never really stopped.
               </p>
               <p>
-                I build tools now.{" "}
+                Now I build things because{" "}
                 <span className="text-nd-text-display font-medium">
-                  If something works in a way that annoys me, I rewrite it.
+                  I&apos;m too stubborn to accept software that annoys me.
                 </span>
               </p>
             </div>
