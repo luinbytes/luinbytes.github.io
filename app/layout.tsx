@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Space_Mono } from "next/font/google";
+import { Space_Grotesk, Space_Mono, Doto } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
@@ -17,6 +17,14 @@ const spaceMono = Space_Mono({
   subsets: ["latin"],
   weight: ["400", "700"],
   variable: "--font-mono",
+  display: "swap",
+});
+
+const doto = Doto({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-display",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -88,20 +96,9 @@ export default function RootLayout({
         ║                                                           ║
         ╚═══════════════════════════════════════════════════════════╝
       */}
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Doto:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+      <head></head>
       <body
-        className={`${spaceGrotesk.variable} ${spaceMono.variable} font-body bg-nd-black text-nd-text-primary antialiased`}
+        className={`${spaceGrotesk.variable} ${spaceMono.variable} ${doto.variable} font-body bg-nd-black text-nd-text-primary antialiased`}
         suppressHydrationWarning
       >
         {/* Accessibility easter egg - screen readers only */}

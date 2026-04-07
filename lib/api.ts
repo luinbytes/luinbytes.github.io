@@ -259,19 +259,31 @@ export const fetchWithRetry = async <T>(
             // Make the request with timeout
             const response = await fetchWithTimeout(url, timeout);
 
-            // Handle rate limiting with Retry-After header
-            if (response.status === 403 || response.status === 429) {
+            // Handle rate limiting (429) with retry
+            if (response.status === 429) {
                 const retryAfter = response.headers.get('Retry-After');
                 retryAfterMs = parseRetryAfter(retryAfter);
 
-                // Try to use cached data if available for rate limits
                 const cached = getCache<T>(cacheKey);
                 if (cached) {
                     console.warn('Rate limited, using cached data');
                     return cached;
                 }
 
-                throw new Error(`Rate limit exceeded (${response.status})`);
+                throw new Error(`Rate limit exceeded (429)`);
+            }
+
+            // Handle forbidden (403) — don't retry, it won't help
+            if (response.status === 403) {
+                const cached = getCache<T>(cacheKey);
+                if (cached) {
+                    console.warn('Forbidden, using cached data');
+                    return cached;
+                }
+
+                const err = new Error('GitHub API rate limit reached. Try again later.');
+                (err as Error & { status: number }).status = 403;
+                throw err;
             }
 
             // Handle other HTTP errors

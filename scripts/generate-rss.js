@@ -7,6 +7,7 @@ const path = require('path');
 const projectRoot = path.join(__dirname, '..');
 const postsDir = path.join(projectRoot, 'app/lumi/blog/posts');
 const outputPath = path.join(projectRoot, 'public/lumi/blog/rss.xml');
+// Keep in sync with site.config.ts
 const siteUrl = 'https://luinbytes.github.io';
 
 function parseFrontmatter(content) {

@@ -163,7 +163,7 @@ export default async function PostPage({
 
         {/* Post content */}
         <article className="py-8">
-          <div className="text-nd-text-secondary text-base leading-relaxed font-body whitespace-pre-wrap">
+          <div className="text-nd-text-secondary text-base leading-relaxed font-body">
             {post.content.split("\n\n").map((paragraph, i) => {
               if (paragraph.startsWith("# ")) {
                 return (
@@ -217,7 +217,14 @@ export default async function PostPage({
                   </pre>
                 );
               }
+              const escapeHtml = (str: string) =>
+                str
+                  .replace(/&/g, "&amp;")
+                  .replace(/</g, "&lt;")
+                  .replace(/>/g, "&gt;")
+                  .replace(/"/g, "&quot;");
               const formatText = (text: string) => {
+                text = escapeHtml(text);
                 text = text.replace(
                   /`([^`]+)`/g,
                   '<code class="bg-nd-surface-raised px-1.5 py-0.5 font-mono text-sm text-nd-text-display">$1</code>'

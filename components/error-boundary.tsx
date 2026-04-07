@@ -56,25 +56,25 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
             // Default fallback UI
             return (
-                <div className="min-h-screen flex items-center justify-center bg-background p-4">
-                    <div className="max-w-md w-full bg-surface border border-white/10 rounded-xl p-8 text-center">
+                <div className="min-h-screen flex items-center justify-center bg-nd-black p-4">
+                    <div className="max-w-md w-full bg-nd-surface border border-nd-border-visible p-8 text-center">
                         <div className="flex justify-center mb-6">
-                            <div className="p-4 bg-red-500/10 rounded-full">
-                                <AlertTriangle className="w-8 h-8 text-red-500" />
+                            <div className="p-4 bg-nd-accent/10 rounded-full">
+                                <AlertTriangle className="w-8 h-8 text-nd-accent" />
                             </div>
                         </div>
 
-                        <h2 className="text-2xl font-bold text-white mb-4">
+                        <h2 className="text-2xl font-bold text-nd-text-display mb-4">
                             Something went wrong
                         </h2>
 
-                        <p className="text-gray-400 mb-6">
+                        <p className="text-nd-text-secondary mb-6">
                             We encountered an unexpected error. This has been logged and we&apos;ll look into it.
                         </p>
 
                         {this.state.error && process.env.NODE_ENV === 'development' && (
-                            <div className="mb-6 p-4 bg-black/50 rounded-lg text-left">
-                                <p className="text-xs font-mono text-red-400 break-all">
+                            <div className="mb-6 p-4 bg-nd-black/50 text-left">
+                                <p className="text-xs font-mono text-nd-accent break-all">
                                     {this.state.error.message}
                                 </p>
                             </div>
@@ -82,7 +82,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
                         <button
                             onClick={this.handleReset}
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-neon hover:bg-neon-hover text-black font-bold rounded-lg transition-colors"
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-nd-accent hover:opacity-80 text-nd-black font-bold nd-transition"
                         >
                             <RefreshCcw className="w-4 h-4" />
                             Reload Page
@@ -126,13 +126,13 @@ export class SectionErrorBoundary extends Component<ErrorBoundaryProps, ErrorBou
             return (
                 <div className="py-16 px-4">
                     <div className="container mx-auto max-w-2xl">
-                        <div className="bg-surface border border-red-500/20 rounded-xl p-6 text-center">
-                            <AlertTriangle className="w-6 h-6 text-red-500 mx-auto mb-3" />
-                            <p className="text-gray-400 text-sm">
+                        <div className="bg-nd-surface border border-nd-accent/20 p-6 text-center">
+                            <AlertTriangle className="w-6 h-6 text-nd-accent mx-auto mb-3" />
+                            <p className="text-nd-text-secondary text-sm">
                                 This section failed to load. Please try refreshing the page.
                             </p>
                             {this.state.error && process.env.NODE_ENV === 'development' && (
-                                <p className="text-xs font-mono text-red-400 mt-2">
+                                <p className="text-xs font-mono text-nd-accent mt-2">
                                     {this.state.error.message}
                                 </p>
                             )}

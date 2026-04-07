@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { ActivityCalendar } from "react-activity-calendar";
 import { GitCommit, AlertCircle, RefreshCcw } from "lucide-react";
 import { format } from "date-fns";
-import { fetchWithRetry, fetchGitHub, type ApiError } from "@/lib/api";
+import { fetchWithRetry, fetchGitHub, clearCache, type ApiError } from "@/lib/api";
 
 // GitHub API types
 interface GitHubEvent {
@@ -55,8 +55,6 @@ export function Activity() {
   const [currentStreak, setCurrentStreak] = useState<number>(0);
   const [yearlyCommits, setYearlyCommits] = useState<number>(0);
   const [statsLoaded, setStatsLoaded] = useState<boolean>(false);
-
-  const calendarContainerRef = useRef<HTMLDivElement>(null);
 
   const [eventsError, setEventsError] = useState<ApiError | null>(null);
   const [contributionsError, setContributionsError] = useState<ApiError | null>(null);
@@ -142,9 +140,13 @@ export function Activity() {
         const calendarNativeWidth = 720;
         const scale = Math.min(containerWidth / calendarNativeWidth, 1);
         if (scale < 1) {
+          // Read scrollHeight before applying transform to get the unscaled value
+          ref.current.style.transform = "";
+          ref.current.style.height = "";
+          const unscaledHeight = ref.current.scrollHeight;
           ref.current.style.transform = `scale(${scale})`;
           ref.current.style.transformOrigin = "top left";
-          ref.current.style.height = `${ref.current.scrollHeight * scale}px`;
+          ref.current.style.height = `${unscaledHeight * scale}px`;
         } else {
           ref.current.style.transform = "";
           ref.current.style.height = "";
@@ -168,9 +170,14 @@ export function Activity() {
     };
   }, [calendarData2026, calendarData2025]);
 
+  const retryEventsRef = useRef<() => void>(() => {});
+  const retryContributionsRef = useRef<() => void>(() => {});
+  const retryReposRef = useRef<() => void>(() => {});
+
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchEvents = async () => {
       try {
+        clearCache("https://api.github.com/users/luinbytes/events/public");
         const data = await fetchGitHub<GitHubEvent[]>(
           "/users/luinbytes/events/public",
           {
@@ -209,13 +216,17 @@ export function Activity() {
         console.error("Failed to fetch events:", err);
         setEventsError(err as ApiError);
       }
+    };
 
+    const fetchContributions = async () => {
       try {
+        clearCache("https://github-contributions-api.jogruber.de/v4/luinbytes?y=2026");
+        clearCache("https://github-contributions-api.jogruber.de/v4/luinbytes?y=2025");
         const [data2026, data2025] = await Promise.all([
           fetchWithRetry<ContributionsResponse>(
             `https://github-contributions-api.jogruber.de/v4/luinbytes?y=2026`,
             {
-              cacheTTL: 15 * 60 * 1000,
+              cacheTTL: 30 * 60 * 1000,
               onRetry: (attempt) =>
                 console.log(
                   `Retrying 2026 contributions API (attempt ${attempt})`
@@ -225,7 +236,7 @@ export function Activity() {
           fetchWithRetry<ContributionsResponse>(
             `https://github-contributions-api.jogruber.de/v4/luinbytes?y=2025`,
             {
-              cacheTTL: 15 * 60 * 1000,
+              cacheTTL: 30 * 60 * 1000,
               onRetry: (attempt) =>
                 console.log(
                   `Retrying 2025 contributions API (attempt ${attempt})`
@@ -270,8 +281,11 @@ export function Activity() {
         console.error("Failed to fetch contributions:", err);
         setContributionsError(err as ApiError);
       }
+    };
 
+    const fetchRepos = async () => {
       try {
+        clearCache("https://api.github.com/users/luinbytes/repos?per_page=100");
         const repos = await fetchGitHub<GitHubRepo[]>(
           "/users/luinbytes/repos?per_page=100",
           {
@@ -298,7 +312,13 @@ export function Activity() {
       }
     };
 
-    fetchData();
+    retryEventsRef.current = fetchEvents;
+    retryContributionsRef.current = fetchContributions;
+    retryReposRef.current = fetchRepos;
+
+    fetchEvents();
+    fetchContributions();
+    fetchRepos();
   }, [calculateLanguages, calculateStreak]);
 
   // Nothing-style monochrome contribution theme
@@ -336,7 +356,7 @@ export function Activity() {
                   </span>
                 </div>
                 <button
-                  onClick={() => window.location.reload()}
+                  onClick={() => retryContributionsRef.current()}
                   className="flex items-center gap-1.5 font-mono text-[10px] text-nd-interactive nd-transition"
                 >
                   <RefreshCcw className="w-3 h-3" />
@@ -415,7 +435,7 @@ export function Activity() {
                 </span>
               </div>
               <button
-                onClick={() => window.location.reload()}
+                onClick={() => retryEventsRef.current()}
                 className="flex items-center gap-1.5 font-mono text-[10px] text-nd-interactive nd-transition mx-auto"
               >
                 <RefreshCcw className="w-3 h-3" />
@@ -478,7 +498,7 @@ export function Activity() {
                 </span>
               </div>
               <button
-                onClick={() => window.location.reload()}
+                onClick={() => retryReposRef.current()}
                 className="flex items-center gap-1.5 px-4 py-2 border border-nd-border font-mono text-[11px] text-nd-interactive nd-transition"
               >
                 <RefreshCcw className="w-3 h-3" />

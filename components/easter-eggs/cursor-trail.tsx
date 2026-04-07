@@ -18,7 +18,7 @@ export function CursorTrail() {
   const particlesRef = useRef<Particle[]>([]);
   const lastSpawnRef = useRef(0);
   const rafRef = useRef<number | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const mountedRef = useRef(false);
 
   useEffect(() => {
@@ -41,8 +41,19 @@ export function CursorTrail() {
       particlesRef.current.push(createParticle(e.clientX, e.clientY));
     };
 
+    const handleResize = () => {
+      const canvas = canvasRef.current;
+      if (canvas) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+    };
+
     const animate = () => {
       if (!mountedRef.current) return;
+      const canvas = canvasRef.current;
+      const ctx = canvas?.getContext("2d");
+
       particlesRef.current = particlesRef.current.filter((p) => {
         p.x += p.velocityX;
         p.y += p.velocityY;
@@ -51,41 +62,37 @@ export function CursorTrail() {
         return p.opacity > 0;
       });
 
-      if (containerRef.current) {
-        containerRef.current.innerHTML = particlesRef.current
-          .map(
-            (p) => `<span style="
-              position: fixed;
-              left: ${p.x}px;
-              top: ${p.y}px;
-              width: ${Math.max(1, p.size)}px;
-              height: ${Math.max(1, p.size)}px;
-              background: #FFFFFF;
-              opacity: ${Math.max(0, p.opacity)};
-              pointer-events: none;
-              transform: translate(-50%, -50%);
-              z-index: 9999;
-            "></span>`
-          )
-          .join("");
+      if (ctx && canvas) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (const p of particlesRef.current) {
+          ctx.globalAlpha = Math.max(0, p.opacity);
+          ctx.fillStyle = "#FFFFFF";
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, Math.max(0.5, p.size / 2), 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
       }
 
       rafRef.current = requestAnimationFrame(animate);
     };
 
+    handleResize();
     window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("resize", handleResize);
     rafRef.current = requestAnimationFrame(animate);
 
     return () => {
       mountedRef.current = false;
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("resize", handleResize);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
   return (
-    <div
-      ref={containerRef}
+    <canvas
+      ref={canvasRef}
       aria-hidden="true"
       style={{
         position: "fixed",

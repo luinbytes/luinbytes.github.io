@@ -1,19 +1,6 @@
-"use client";
-
-import { useState } from "react";
 import { Github, Twitter, Mail, Coffee } from "lucide-react";
 
 export function Contact() {
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus("submitting");
-    setTimeout(() => {
-      setStatus("success");
-    }, 1500);
-  };
-
   return (
     <section id="contact" className="py-24 md:py-32 border-b border-nd-border">
       <div className="container px-4 mx-auto max-w-4xl">
@@ -132,86 +119,24 @@ export function Contact() {
             </div>
           </div>
 
-          {/* Contact Form — Nothing inputs */}
+          {/* Get in Touch */}
           <div className="md:col-span-2">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-secondary block mb-2"
-                  >
-                    Name
-                  </label>
-                  <input
-                    required
-                    type="text"
-                    id="name"
-                    className="w-full bg-transparent border-b border-nd-border-visible py-3 text-nd-text-display outline-none nd-transition focus:border-nd-text-display font-mono text-sm"
-                    placeholder="John Doe"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-secondary block mb-2"
-                  >
-                    Email
-                  </label>
-                  <input
-                    required
-                    type="email"
-                    id="email"
-                    className="w-full bg-transparent border-b border-nd-border-visible py-3 text-nd-text-display outline-none nd-transition focus:border-nd-text-display font-mono text-sm"
-                    placeholder="john@example.com"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="reason"
-                  className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-secondary block mb-2"
-                >
-                  Reason
-                </label>
-                <select
-                  id="reason"
-                  className="w-full bg-transparent border-b border-nd-border-visible py-3 text-nd-text-display outline-none nd-transition focus:border-nd-text-display font-mono text-sm"
-                >
-                  <option className="bg-nd-surface">Collaboration</option>
-                  <option className="bg-nd-surface">Job Opportunity</option>
-                  <option className="bg-nd-surface">Custom Tool Request</option>
-                  <option className="bg-nd-surface">Just Saying Hi</option>
-                </select>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="message"
-                  className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-secondary block mb-2"
-                >
-                  Message
-                </label>
-                <textarea
-                  required
-                  id="message"
-                  rows={5}
-                  className="w-full bg-transparent border-b border-nd-border-visible py-3 text-nd-text-display outline-none nd-transition focus:border-nd-text-display font-mono text-sm resize-none"
-                  placeholder="I need a bot that..."
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={status === "submitting" || status === "success"}
-                className="w-full bg-nd-text-display text-nd-black font-mono text-[13px] font-bold tracking-[0.06em] uppercase py-4 rounded-full nd-transition hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed min-h-[44px]"
+            <div className="border border-nd-border p-8 md:p-12">
+              <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-6">
+                Get in Touch
+              </span>
+              <p className="text-nd-text-secondary text-base font-body mb-8 max-w-md">
+                Interested in working together, have a project idea, or just want to say hi?
+                Send me an email and I&apos;ll get back to you.
+              </p>
+              <a
+                href="mailto:0x6c75@protonmail.com"
+                className="inline-flex items-center gap-3 bg-nd-text-display text-nd-black font-mono text-[13px] font-bold tracking-[0.06em] uppercase py-4 px-8 rounded-full nd-transition hover:opacity-80 min-h-[44px]"
               >
-                {status === "idle" && "SEND MESSAGE"}
-                {status === "submitting" && "[SENDING...]"}
-                {status === "success" && "[SENT]"}
-              </button>
-            </form>
+                <Mail className="w-4 h-4" />
+                Send Email
+              </a>
+            </div>
           </div>
         </div>
 

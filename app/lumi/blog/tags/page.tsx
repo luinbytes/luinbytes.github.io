@@ -112,7 +112,7 @@ export default async function TagsPage() {
               <div key={tag} className="bg-nd-surface border border-nd-border p-6">
                 <div className="flex items-center gap-2 mb-4">
                   <Link
-                    href={`/lumi/blog/tags/${encodeURIComponent(tag)}`}
+                    href={`/lumi/blog/tags/${tag}`}
                     className="font-mono text-sm tracking-[0.06em] uppercase text-nd-interactive nd-transition"
                   >
                     #{tag}

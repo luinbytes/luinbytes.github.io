@@ -118,7 +118,7 @@ export const projects: Project[] = [
         type: "Raycast Extension",
         description: "Quick actions for Discord: check messages and more.",
         longDescription: "Seamless integration with Discord to manage your presence and servers from command line.",
-        approach: "Uses discord.js-selfbot-v13@v3.7 to control the local client.",
+        approach: "Integrates with Discord via RPC for quick desktop actions.",
         outcome: "Faster context switching for power users.",
         techStack: ["TypeScript", "Discord RPC"],
         tags: ["Discord", "Social", "Tools"],
