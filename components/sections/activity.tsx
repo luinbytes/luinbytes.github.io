@@ -135,22 +135,26 @@ export function Activity() {
 
   useEffect(() => {
     const updateScale = (ref: React.RefObject<HTMLDivElement | null>) => {
-      if (ref.current) {
-        const containerWidth = ref.current.parentElement?.offsetWidth || ref.current.offsetWidth;
-        const calendarNativeWidth = 720;
-        const scale = Math.min(containerWidth / calendarNativeWidth, 1);
-        if (scale < 1) {
-          // Read scrollHeight before applying transform to get the unscaled value
-          ref.current.style.transform = "";
-          ref.current.style.height = "";
-          const unscaledHeight = ref.current.scrollHeight;
-          ref.current.style.transform = `scale(${scale})`;
-          ref.current.style.transformOrigin = "top left";
-          ref.current.style.height = `${unscaledHeight * scale}px`;
-        } else {
-          ref.current.style.transform = "";
-          ref.current.style.height = "";
-        }
+      if (!ref.current) return;
+      const wrapper = ref.current.parentElement;
+      if (!wrapper) return;
+
+      const containerWidth = wrapper.offsetWidth;
+      const calendarNativeWidth = 720;
+      const scale = Math.min(containerWidth / calendarNativeWidth, 1);
+
+      if (scale < 1) {
+        // Reset to measure natural height
+        ref.current.style.transform = "none";
+        const naturalHeight = ref.current.offsetHeight;
+
+        ref.current.style.transform = `scale(${scale})`;
+        ref.current.style.transformOrigin = "top left";
+        // Wrapper height compensates for the scaled-down inner element
+        wrapper.style.height = `${naturalHeight * scale}px`;
+      } else {
+        ref.current.style.transform = "";
+        wrapper.style.height = "";
       }
     };
 
@@ -162,8 +166,8 @@ export function Activity() {
       updateScale(calendarContainerRef2025);
     });
 
-    const els = [calendarContainerRef2026.current, calendarContainerRef2025.current].filter((el): el is HTMLDivElement => el !== null);
-    els.forEach(el => resizeObserver.observe(el));
+    const parents = [calendarContainerRef2026.current?.parentElement, calendarContainerRef2025.current?.parentElement].filter((el): el is HTMLDivElement => el !== null);
+    parents.forEach(el => resizeObserver.observe(el));
 
     return () => {
       resizeObserver.disconnect();
@@ -364,21 +368,23 @@ export function Activity() {
                 </button>
               </div>
             ) : calendarData2026.length > 0 ? (
-              <div
-                ref={calendarContainerRef2026}
-                className="w-full"
-              >
-                <ActivityCalendar
-                  data={calendarData2026}
-                  theme={monoTheme}
-                  labels={{
-                    totalCount: "{{count}} contributions in {{year}}",
-                  }}
-                  colorScheme="dark"
-                  blockSize={8}
-                  blockMargin={2}
-                  fontSize={10}
-                />
+              <div className="w-full overflow-hidden">
+                <div
+                  ref={calendarContainerRef2026}
+                  className="w-full"
+                >
+                  <ActivityCalendar
+                    data={calendarData2026}
+                    theme={monoTheme}
+                    labels={{
+                      totalCount: "{{count}} contributions in {{year}}",
+                    }}
+                    colorScheme="dark"
+                    blockSize={8}
+                    blockMargin={2}
+                    fontSize={10}
+                  />
+                </div>
               </div>
             ) : (
               <div className="h-[100px] flex items-center justify-center font-mono text-[11px] text-nd-text-disabled tracking-[0.08em] uppercase">
@@ -399,21 +405,23 @@ export function Activity() {
             </div>
 
             {calendarData2025.length > 0 ? (
-              <div
-                ref={calendarContainerRef2025}
-                className="w-full"
-              >
-                <ActivityCalendar
-                  data={calendarData2025}
-                  theme={monoTheme}
-                  labels={{
-                    totalCount: "{{count}} contributions in {{year}}",
-                  }}
-                  colorScheme="dark"
-                  blockSize={8}
-                  blockMargin={2}
-                  fontSize={10}
-                />
+              <div className="w-full overflow-hidden">
+                <div
+                  ref={calendarContainerRef2025}
+                  className="w-full"
+                >
+                  <ActivityCalendar
+                    data={calendarData2025}
+                    theme={monoTheme}
+                    labels={{
+                      totalCount: "{{count}} contributions in {{year}}",
+                    }}
+                    colorScheme="dark"
+                    blockSize={8}
+                    blockMargin={2}
+                    fontSize={10}
+                  />
+                </div>
               </div>
             ) : (
               <div className="h-[100px] flex items-center justify-center font-mono text-[11px] text-nd-text-disabled tracking-[0.08em] uppercase">
