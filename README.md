@@ -2,7 +2,7 @@
 
 My portfolio site. Built with Next.js, Tailwind, and too much caffeine.
 
-🚀 Built with help from [Lumi](https://github.com/luinbytes) (AI assistant powered by OpenClaw)
+🚀 Built with help from [Lumi](https://github.com/luinbytes) (AI assistant powered by Hermes)
 
 ## What's Inside
 
