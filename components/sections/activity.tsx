@@ -130,51 +130,7 @@ export function Activity() {
     return streak;
   }, []);
 
-  const calendarContainerRef2026 = useRef<HTMLDivElement>(null);
-  const calendarContainerRef2025 = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const updateScale = (ref: React.RefObject<HTMLDivElement | null>) => {
-      if (!ref.current) return;
-      const wrapper = ref.current.parentElement;
-      if (!wrapper) return;
-
-      const containerWidth = wrapper.offsetWidth;
-      const calendarNativeWidth = 720;
-      const scale = Math.min(containerWidth / calendarNativeWidth, 1);
-
-      if (scale < 1) {
-        // Reset to measure natural height
-        ref.current.style.transform = "none";
-        const naturalHeight = ref.current.offsetHeight;
-
-        ref.current.style.transform = `scale(${scale})`;
-        ref.current.style.transformOrigin = "top left";
-        // Wrapper height compensates for the scaled-down inner element
-        wrapper.style.height = `${naturalHeight * scale}px`;
-      } else {
-        ref.current.style.transform = "";
-        wrapper.style.height = "";
-      }
-    };
-
-    updateScale(calendarContainerRef2026);
-    updateScale(calendarContainerRef2025);
-
-    const resizeObserver = new ResizeObserver(() => {
-      updateScale(calendarContainerRef2026);
-      updateScale(calendarContainerRef2025);
-    });
-
-    const parents = [calendarContainerRef2026.current?.parentElement, calendarContainerRef2025.current?.parentElement].filter((el): el is HTMLElement => el != null);
-    if (parents.length > 0) {
-      parents.forEach(el => resizeObserver.observe(el));
-    }
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, [calendarData2026, calendarData2025]);
+  // No JS scaling — calendars scroll horizontally on narrow screens
 
   const retryEventsRef = useRef<() => void>(() => {});
   const retryContributionsRef = useRef<() => void>(() => {});
@@ -370,23 +326,18 @@ export function Activity() {
                 </button>
               </div>
             ) : calendarData2026.length > 0 ? (
-              <div className="w-full overflow-hidden">
-                <div
-                  ref={calendarContainerRef2026}
-                  className="w-full"
-                >
-                  <ActivityCalendar
-                    data={calendarData2026}
-                    theme={monoTheme}
-                    labels={{
-                      totalCount: "{{count}} contributions in {{year}}",
-                    }}
-                    colorScheme="dark"
-                    blockSize={8}
-                    blockMargin={2}
-                    fontSize={10}
-                  />
-                </div>
+              <div className="w-full overflow-x-auto">
+                <ActivityCalendar
+                  data={calendarData2026}
+                  theme={monoTheme}
+                  labels={{
+                    totalCount: "{{count}} contributions in {{year}}",
+                  }}
+                  colorScheme="dark"
+                  blockSize={8}
+                  blockMargin={2}
+                  fontSize={10}
+                />
               </div>
             ) : (
               <div className="h-[100px] flex items-center justify-center font-mono text-[11px] text-nd-text-disabled tracking-[0.08em] uppercase">
@@ -407,23 +358,18 @@ export function Activity() {
             </div>
 
             {calendarData2025.length > 0 ? (
-              <div className="w-full overflow-hidden">
-                <div
-                  ref={calendarContainerRef2025}
-                  className="w-full"
-                >
-                  <ActivityCalendar
-                    data={calendarData2025}
-                    theme={monoTheme}
-                    labels={{
-                      totalCount: "{{count}} contributions in {{year}}",
-                    }}
-                    colorScheme="dark"
-                    blockSize={8}
-                    blockMargin={2}
-                    fontSize={10}
-                  />
-                </div>
+              <div className="w-full overflow-x-auto">
+                <ActivityCalendar
+                  data={calendarData2025}
+                  theme={monoTheme}
+                  labels={{
+                    totalCount: "{{count}} contributions in {{year}}",
+                  }}
+                  colorScheme="dark"
+                  blockSize={8}
+                  blockMargin={2}
+                  fontSize={10}
+                />
               </div>
             ) : (
               <div className="h-[100px] flex items-center justify-center font-mono text-[11px] text-nd-text-disabled tracking-[0.08em] uppercase">
