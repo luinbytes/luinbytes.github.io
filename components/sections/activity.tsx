@@ -166,8 +166,10 @@ export function Activity() {
       updateScale(calendarContainerRef2025);
     });
 
-    const parents = [calendarContainerRef2026.current?.parentElement, calendarContainerRef2025.current?.parentElement].filter((el): el is HTMLDivElement => el !== null);
-    parents.forEach(el => resizeObserver.observe(el));
+    const parents = [calendarContainerRef2026.current?.parentElement, calendarContainerRef2025.current?.parentElement].filter((el): el is Element => el != null);
+    if (parents.length > 0) {
+      parents.forEach(el => resizeObserver.observe(el));
+    }
 
     return () => {
       resizeObserver.disconnect();
