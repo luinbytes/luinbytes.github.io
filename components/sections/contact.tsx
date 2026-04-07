@@ -148,12 +148,12 @@ export function Contact() {
           <p className="text-nd-text-disabled tracking-[0.06em] mt-1 opacity-60">
             Powered by{" "}
             <a
-              href="https://openclaw.ai"
+              href="https://hermes.al"
               target="_blank"
               rel="noopener noreferrer"
               className="text-nd-interactive nd-transition"
             >
-              OpenClaw
+              Hermes
             </a>{" "}
             · AI assistant: Lumi
           </p>

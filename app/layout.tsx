@@ -92,7 +92,7 @@ export default function RootLayout({
         ║   Industrial warmth. OLED dark mode.                      ║
         ║                                                           ║
         ║   Built with help from Lumi, Lu's AI assistant.          ║
-        ║   https://openclaw.ai                                     ║
+        ║   https://hermes.al                                        ║
         ║                                                           ║
         ╚═══════════════════════════════════════════════════════════╝
       */}

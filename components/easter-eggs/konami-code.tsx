@@ -224,9 +224,9 @@ export function KonamiCode() {
               <div className="text-sm text-nd-text-secondary font-body space-y-1" id="konami-stats">
                 <p><span className="font-mono text-nd-text-disabled">55+</span> memories stored in ClawVault</p>
                 <p><span className="font-mono text-nd-text-disabled">8</span> overnight cron jobs running</p>
-                <p className="text-nd-text-disabled">Powered by OpenClaw</p>
+                <p className="text-nd-text-disabled">Powered by Hermes</p>
               </div>
-              <p className="text-nd-text-disabled text-xs italic pt-2 font-body">Built with OpenClaw · Say hi if you see this!</p>
+              <p className="text-nd-text-disabled text-xs italic pt-2 font-body">Built with Hermes · Say hi if you see this!</p>
             </div>
             <div className="mt-6 pt-4 border-t border-nd-border text-center">
               <p className="font-mono text-[10px] text-nd-text-disabled tracking-[0.06em] uppercase">↑↑↓↓←→BA — Secret Unlocked</p>

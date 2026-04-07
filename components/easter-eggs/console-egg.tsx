@@ -34,7 +34,7 @@ export function ConsoleEgg() {
       stylesSmall
     );
     console.log(
-      "%cBuilt with OpenClaw → https://openclaw.ai",
+      "%cBuilt with Hermes → https://hermes.al",
       stylesLink
     );
     console.log(
