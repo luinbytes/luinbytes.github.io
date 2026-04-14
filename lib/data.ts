@@ -215,6 +215,20 @@ export const projects: Project[] = [
         sourceUrl: "https://github.com/luinbytes/pixel-morph",
         demoUrl: "https://luinbytes.github.io/pixel-morph/",
         featured: true,
+    },
+    {
+        id: "linux-sonar",
+        name: "linux-sonar",
+        type: "CLI Tool",
+        description: "SteelSeries Sonar for Linux. Per-app audio routing, ChatMix, and mic effects on PipeWire.",
+        longDescription: "Five virtual audio channels route apps independently to your headset. ChatMix slider balances game and chat volume, with hardware wheel support over USB-HID. Mic effects chain runs RNNoise, gate, 8-band EQ, compressor, and limiter as a PipeWire filter-chain subprocess. GTK4/libadwaita GUI with waybar integration.",
+        approach: "Five libpipewire-module-filter-chain virtual sinks pinned to the headset via target.object. Per-app routing enforced by a daemon polling wpctl/pactl every 1.5s. WirePlumber persists moves across reboots. Mic chain runs as an isolated pipewire subprocess with debounced silent restarts.",
+        outcome: "Full Sonar feature parity on Linux without SteelSeries software. Works on Arch with any PipeWire stereo output sink.",
+        techStack: ["Python", "PipeWire", "WirePlumber", "GTK4", "libadwaita"],
+        tags: ["Linux", "Audio", "PipeWire", "GTK4", "Open Source"],
+        sourceUrl: "https://github.com/luinbytes/linux-sonar",
+        featured: true,
+        lumiApproved: true,
     }
 ];
 
