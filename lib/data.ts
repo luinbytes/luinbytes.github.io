@@ -58,7 +58,6 @@ export const projects: Project[] = [
         featured: true,
         lumiApproved: true,
     },
-,
     {
         id: "file-deduplicator",
         name: "file-deduplicator",
@@ -100,7 +99,6 @@ export const projects: Project[] = [
         sourceUrl: "https://github.com/luinbytes/extensions/tree/window-walker-extension",
         featured: true,
     },
-,
     {
         id: "fastuploader",
         name: "FastUploader",
@@ -178,7 +176,6 @@ export const projects: Project[] = [
         sourceUrl: "https://www.raycast.com/khlebobul/bed-time-calculator",
         featured: true,
     },
-,
     {
         id: "linux-sonar",
         name: "linux-sonar",
