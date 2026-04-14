@@ -148,7 +148,7 @@ export function Contact() {
           <p className="text-nd-text-disabled tracking-[0.06em] mt-1 opacity-60">
             Powered by{" "}
             <a
-              href="https://hermes.al"
+              href="https://hermes-agent.nousresearch.com/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-nd-interactive nd-transition"
