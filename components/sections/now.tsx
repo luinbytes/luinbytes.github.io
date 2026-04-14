@@ -1,7 +1,7 @@
 "use client";
 
 const currentStatus = {
-  building: "Beam (contractor quoting SaaS), file-deduplicator cloud storage",
+  building: "file-deduplicator cloud storage, linux-sonar",
   learning: "SaaS validation, marketing, first revenue",
   obsessed: "Making money from self-projects (finally)",
   reading: "The Pragmatic Programmer",

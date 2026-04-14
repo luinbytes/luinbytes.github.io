@@ -15,13 +15,7 @@ export const PROJECTS: Project[] = [
     description: "Manage your ASF bots directly from Raycast.",
     link: "https://github.com/luinbytes/archisteamfarm-raycast",
   },
-  {
-    name: "discord-utilities-raycast",
-    role: "extension",
-    tech: "TypeScript, Discord API",
-    description: "Multi-tool for Discord power users.",
-    link: "https://github.com/luinbytes/discord-utilities-raycast",
-  },
+
   {
     name: "raycast-discord",
     role: "extension",
