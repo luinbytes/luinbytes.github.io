@@ -155,7 +155,7 @@ export function SuperHackerGolfPage() {
           </div>
 
           <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-nd-text-display leading-[1.0] tracking-[-0.03em] mb-6">
-            SuperHackerGolf
+            SuperHackerGolf<span className="text-nd-accent">.</span>
           </h1>
 
           <p className="text-nd-text-secondary text-base md:text-lg max-w-2xl leading-relaxed mb-10">
