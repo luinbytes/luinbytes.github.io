@@ -1,4 +1,4 @@
-export type ProjectType = "Raycast Extension" | "Discord Utility" | "Steam Tool" | "Automation" | "Web App" | "Python Utility" | "CLI Tool";
+export type ProjectType = "Raycast Extension" | "Discord Utility" | "Steam Tool" | "Automation" | "Web App" | "Python Utility" | "CLI Tool" | "Game Mod";
 
 export interface Project {
     id: string;
@@ -179,6 +179,19 @@ export const projects: Project[] = [
         tags: ["Bot", "Canvas", "Scripting"],
         sourceUrl: "https://github.com/luinbytes/fast_uploader",
         featured: false,
+    },
+    {
+        id: "super-hacker-golf",
+        name: "SuperHackerGolf",
+        type: "Game Mod",
+        description: "Client-side cheat mod for Super Battle Golf with aim assist, trajectory prediction, ESP, and anti-cheat bypass.",
+        longDescription: "MelonLoader mod that hooks Super Battle Golf through HarmonyX patches. Golf assist reads the game's own wind and terrain settings via reflection to predict exact ball trajectory, accounting for air damping, bounce chains, ground roll, and crosswind drift. Combat tools include a silent-aim weapon aimbot with legit/rage/custom modes, ESP overlay, force shield, item spawner, and bunnyhop. Eight HarmonyX patches suppress the game's rate-limiter anti-cheat and vote-kick system.",
+        approach: "Built on MelonLoader 0.7.2 with HarmonyX runtime patching. Reverse-engineers ball physics from static analysis of GameAssembly.dll rather than guessed coefficients. CI pipeline compiles handwritten Unity type stubs so GitHub Actions builds without a game install. Reflection caches use cached FieldInfo and MethodInfo with fallback cascades for resilience across game updates.",
+        outcome: "31 commits with auto-releasing tagged builds on every push to main. The anti-cheat bypass stack covers every known server-side detection path in the game.",
+        techStack: ["C#", "MelonLoader", "HarmonyX", "Unity", ".NET 8"],
+        tags: ["Game Mod", "Reverse Engineering", "C#", "Unity"],
+        sourceUrl: "https://github.com/luinbytes/SuperHackerGolf",
+        featured: true,
     },
     {
         id: "bongocat",
