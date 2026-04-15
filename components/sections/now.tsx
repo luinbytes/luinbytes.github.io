@@ -1,9 +1,9 @@
 "use client";
 
 const currentStatus = {
-  building: "file-deduplicator cloud storage, linux-sonar",
-  learning: "SaaS validation, marketing, first revenue",
-  obsessed: "Making money from self-projects (finally)",
+  building: "wterm, SuperHackerGolf, bitskins-alert-bot",
+  learning: "C# game modding, HarmonyX runtime patching",
+  obsessed: "Game cheats and reverse engineering",
   reading: "The Pragmatic Programmer",
 };
 
@@ -51,7 +51,7 @@ export function Now() {
         </div>
 
         <p className="mt-8 font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled">
-          Last updated: Feb 2026
+          Last updated: Apr 2026
         </p>
       </div>
     </section>
