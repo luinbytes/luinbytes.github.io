@@ -7,10 +7,16 @@ export function About() {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const milestones = [
-  { year: "Feb 2026", event: "First revenue-focused SaaS project launched" },
-    { year: "Jan 2026", event: "Window Walker Raycast extension published to the store!" },
-    { year: "Late 2025", event: "First Raycast extension published to the store!" },
-    { year: "Mid 2025", event: "Started developing Raycast extensions, maintainer of Iniuria.us AI Helper Bot" },
+    { year: "Apr 2026", event: "SuperHackerGolf — client-side cheat mod for Super Battle Golf" },
+    { year: "Apr 2026", event: "linux-sonar — SteelSeries Sonar for Linux, PipeWire audio routing" },
+    { year: "Feb 2026", event: "First sale — Iniuria.us Discord bot subscriptions" },
+    { year: "Feb 2026", event: "file-deduplicator v1 — SHA256 + perceptual image dedup in Go" },
+    { year: "Feb 2026", event: "wterm — Warp-inspired terminal emulator, Go + Bubble Tea" },
+    { year: "Jan 2026", event: "Window Walker Raycast extension published to the store" },
+    { year: "Dec 2025", event: "Portfolio site live at luinbytes.github.io" },
+    { year: "Dec 2025", event: "First Raycast extensions published to the store" },
+    { year: "Jul 2025", event: "ArchiSteamFarm plugins + Raycast integration" },
+    { year: "Mid 2025", event: "Started developing Raycast extensions, maintainer of Iniuria.us" },
     { year: "2024", event: "The 'AI Boom', started developing with AI tools" },
     { year: "2022", event: "LOTS of home labbing..." },
     { year: "2021", event: "Hosted a few of my own game servers." },
