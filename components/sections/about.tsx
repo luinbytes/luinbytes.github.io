@@ -9,7 +9,7 @@ export function About() {
   const milestones = [
     { year: "Apr 2026", event: "SuperHackerGolf — client-side cheat mod for Super Battle Golf" },
     { year: "Apr 2026", event: "linux-sonar — SteelSeries Sonar for Linux, PipeWire audio routing" },
-    { year: "Feb 2026", event: "First sale — Iniuria.us Discord bot subscriptions" },
+    { year: "Feb 2026", event: "First sale — Discord bot subscription revenue" },
     { year: "Feb 2026", event: "file-deduplicator v1 — SHA256 + perceptual image dedup in Go" },
     { year: "Feb 2026", event: "wterm — Warp-inspired terminal emulator, Go + Bubble Tea" },
     { year: "Jan 2026", event: "Window Walker Raycast extension published to the store" },
