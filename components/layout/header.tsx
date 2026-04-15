@@ -127,10 +127,16 @@ export function Header() {
 
           {/* Store link */}
           <a
+            href="https://luinbytes.github.io/super-hacker-golf"
+            className="ml-3 flex items-center gap-1.5 px-3 py-1.5 border border-nd-accent/40 text-nd-accent font-mono text-[11px] tracking-[0.06em] uppercase nd-transition hover:border-nd-accent hover:text-nd-text-display"
+          >
+            SHG
+          </a>
+          <a
             href="https://x6c75.gumroad.com/l/file-deduplicator"
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-3 flex items-center gap-1.5 px-3 py-1.5 border border-nd-border text-nd-text-secondary font-mono text-[11px] tracking-[0.06em] uppercase nd-transition hover:border-nd-text-secondary hover:text-nd-text-display"
+            className="ml-1 flex items-center gap-1.5 px-3 py-1.5 border border-nd-border text-nd-text-secondary font-mono text-[11px] tracking-[0.06em] uppercase nd-transition hover:border-nd-text-secondary hover:text-nd-text-display"
           >
             <ShoppingBag className="w-3 h-3" />
             Store
@@ -186,6 +192,12 @@ export function Header() {
           </div>
 
           <div className="border-t border-nd-border pt-4">
+            <a
+              href="https://luinbytes.github.io/super-hacker-golf"
+              className="block py-3 font-mono text-sm text-nd-accent hover:text-nd-text-display nd-transition border-b border-nd-border"
+            >
+              SuperHackerGolf
+            </a>
             <a
               href="https://github.com/luinbytes"
               target="_blank"
