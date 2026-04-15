@@ -16,7 +16,7 @@ export function About() {
     { year: "Dec 2025", event: "Portfolio site live at luinbytes.github.io" },
     { year: "Dec 2025", event: "First Raycast extensions published to the store" },
     { year: "Jul 2025", event: "ArchiSteamFarm plugins + Raycast integration" },
-    { year: "Mid 2025", event: "Started developing Raycast extensions, maintainer of a Discord AI bot" },
+    { year: "Mid 2025", event: "Started developing Raycast extensions, building and maintaining customer care AI services for a gaming company" },
     { year: "2024", event: "The 'AI Boom', started developing with AI tools" },
     { year: "2022", event: "LOTS of home labbing..." },
     { year: "2021", event: "Hosted a few of my own game servers." },
