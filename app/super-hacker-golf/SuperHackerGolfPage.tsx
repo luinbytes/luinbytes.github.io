@@ -17,7 +17,6 @@ import {
 const SECTION_NAV = [
   { id: "overview", label: "Overview" },
   { id: "features", label: "Features" },
-  { id: "anti-cheat", label: "Anti-Cheat" },
   { id: "physics", label: "Physics" },
   { id: "tech", label: "Tech" },
   { id: "controls", label: "Controls" },
@@ -69,16 +68,14 @@ const features = [
   },
   {
     icon: Shield,
-    title: "Anti-Cheat Bypass",
+    title: "Client-Side Kick Resist",
     description:
-      "8 HarmonyX patches suppress every known server-side detection path. Rate limiter, vote-kick, session ban, and disconnect UI all neutralized.",
+      "The server can flag you and call for a kick, but your client shrugs it off — you stay in the match and keep playing while the lobby thinks otherwise. Entirely client-side.",
     details: [
-      "AntiCheatRateChecker.RegisterHit — primary rate counter prefix",
-      "AntiCheatPerPlayerRateChecker.RegisterHit — per-player variant",
-      "OnPlayerConfirmedCheatingDetected — void-skip detection event",
-      "ServerKickConnection — void-skip server-side kicks",
-      "BanPlayerGuidThisSession — suppress per-session ban path",
-      "Mirror.NetworkManager.OnClientDisconnectInternal — gated skip",
+      "Keeps your session alive locally after a server-side kick is issued",
+      "No network traffic, no modified binaries, no external processes",
+      "Installed once at mod startup",
+      "Fail-soft: isolated from the rest of the mod so a game update never bricks the whole build",
     ],
   },
   {
@@ -97,11 +94,11 @@ const features = [
     icon: Gamepad2,
     title: "Item Spawner",
     description:
-      "IMGUI grid of all 12 player-usable items. Calls CmdAddItem via reflection with the cheats-enabled gate patched open.",
+      "IMGUI grid of all 12 player-usable items, spawnable on demand from a floating panel — even in lobbies where the server-side gate would normally refuse.",
     details: [
       "12-item catalog: Coffee, DuelingPistol, ElephantGun, Airhorn, SpringBoots, GolfCart, RocketLauncher, Landmine, Electromagnet, OrbitalLaser, RocketDriver, FreezeBomb",
-      "Falls back to ServerTryAddItem on non-authorized hosts",
-      "MatchSetupRules.IsCheatsEnabled patched to always return true",
+      "Host-authoritative fallback path for non-authorized clients",
+      "One-click spawning with optional auto-equip",
     ],
   },
   {
@@ -252,8 +249,8 @@ export function SuperHackerGolfPage() {
               <p className="text-nd-text-secondary text-base md:text-lg max-w-2xl leading-relaxed mb-10">
                 Client-side cheat mod for Super Battle Golf. Aim assist with
                 decompiled ball physics, weapon aimbot (legit/rage/silent-aim),
-                ESP overlay, item spawner, force shield, and an 8-patch
-                anti-cheat bypass stack. Built on MelonLoader with HarmonyX.
+                ESP overlay, item spawner, force shield, and client-side kick
+                resistance. Built on MelonLoader with HarmonyX.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3">
@@ -356,10 +353,10 @@ export function SuperHackerGolfPage() {
                       LAYER 04 / OUTPUT
                     </p>
                     <p className="font-mono text-sm text-nd-accent mt-1">
-                      Aim assist · ESP · Bypass
+                      Aim · ESP · Combat · Items
                     </p>
                     <p className="font-mono text-[10px] tracking-[0.04em] text-nd-text-disabled mt-1">
-                      8 patches · 12 items · 28 files
+                      12 items · 28 files · 11 hotkeys
                     </p>
                   </div>
                 </div>
@@ -373,7 +370,7 @@ export function SuperHackerGolfPage() {
               [
                 { label: "Source files", value: "28", total: 30, filled: 28, accentFrom: -1 },
                 { label: "Lines of C#", value: "~13k", total: 20, filled: 20, accentFrom: 18 },
-                { label: "Anti-cheat patches", value: "8", total: 8, filled: 8, accentFrom: -1 },
+                { label: "Rebindable hotkeys", value: "11", total: 11, filled: 11, accentFrom: -1 },
                 { label: "Spawnable items", value: "12", total: 12, filled: 12, accentFrom: -1 },
               ] as const
             ).map((stat) => (
@@ -454,61 +451,11 @@ export function SuperHackerGolfPage() {
         </div>
       </section>
 
-      {/* Anti-Cheat Deep Dive */}
-      <section id="anti-cheat" className="py-24 md:py-32 border-b border-nd-border">
-        <div className="container px-4 mx-auto max-w-5xl">
-          <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-4">
-            02 / Anti-Cheat Audit
-          </span>
-          <h2 className="font-display text-2xl md:text-3xl font-bold text-nd-text-display tracking-[-0.02em] mb-6">
-            8-patch bypass stack
-          </h2>
-          <p className="text-nd-text-secondary text-base max-w-2xl leading-relaxed mb-12">
-            Super Battle Golf ships a rate-limiter anti-cheat that tracks hit
-            frequency and triggers automatic vote-kicks. This mod Harmony-patches
-            both rate checker methods plus every downstream path that can flag or
-            disconnect a cheating client.
-          </p>
-
-          <div className="grid gap-3">
-            {[
-              { method: "AntiCheatRateChecker.RegisterHit", action: "Prefix returns true, skips original", type: "Rate Counter" },
-              { method: "AntiCheatPerPlayerRateChecker.RegisterHit", action: "Prefix returns true, skips original", type: "Rate Counter" },
-              { method: "OnPlayerConfirmedCheatingDetected", action: "Void-skip, detection event becomes no-op", type: "Event Handler" },
-              { method: "ServerKickConnection", action: "Void-skip, server kicks never fire", type: "Server Kick" },
-              { method: "BanPlayerGuidThisSession", action: "Void-skip, per-session ban suppressed", type: "Ban Path" },
-              { method: "DisplayDisconnectReasonMessage", action: "Void-skip, kick UI never renders", type: "Client UI" },
-              { method: "NetworkManager.OnClientDisconnectInternal", action: "Gated skip when cheat-flag disconnect in flight", type: "Network Layer" },
-              { method: "MatchSetupRules.IsCheatsEnabled", action: "Returns true unconditionally for item spawner", type: "Server Gate" },
-            ].map((patch) => (
-              <div
-                key={patch.method}
-                className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 bg-nd-surface border border-nd-border p-4"
-              >
-                <span className="font-mono text-[10px] tracking-[0.06em] uppercase text-nd-accent border border-nd-accent/30 px-2 py-0.5 rounded-full w-fit shrink-0">
-                  {patch.type}
-                </span>
-                <code className="font-mono text-[12px] text-nd-text-display break-all">
-                  {patch.method}
-                </code>
-                <span className="text-[12px] text-nd-text-disabled sm:ml-auto shrink-0">
-                  {patch.action}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          <p className="font-mono text-[11px] tracking-[0.06em] text-nd-text-disabled mt-6">
-            All patches installed in OnApplicationStart. Each wrapped in individual try/catch so a single missing type never blocks the rest of the stack.
-          </p>
-        </div>
-      </section>
-
       {/* Physics Engine */}
       <section id="physics" className="py-24 md:py-32 border-b border-nd-border">
         <div className="container px-4 mx-auto max-w-5xl">
           <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-4">
-            03 / Golf Physics
+            02 / Golf Physics
           </span>
           <h2 className="font-display text-2xl md:text-3xl font-bold text-nd-text-display tracking-[-0.02em] mb-6">
             Decompiled, not guessed
@@ -584,7 +531,7 @@ export function SuperHackerGolfPage() {
       <section id="tech" className="py-24 md:py-32 border-b border-nd-border">
         <div className="container px-4 mx-auto max-w-5xl">
           <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-4">
-            04 / Technical Details
+            03 / Technical Details
           </span>
           <h2 className="font-display text-2xl md:text-3xl font-bold text-nd-text-display tracking-[-0.02em] mb-12">
             How it&apos;s built
@@ -622,7 +569,7 @@ export function SuperHackerGolfPage() {
       <section id="controls" className="py-24 md:py-32 border-b border-nd-border">
         <div className="container px-4 mx-auto max-w-5xl">
           <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-4">
-            05 / Controls
+            04 / Controls
           </span>
           <h2 className="font-display text-2xl md:text-3xl font-bold text-nd-text-display tracking-[-0.02em] mb-12">
             Default hotkeys
@@ -693,7 +640,7 @@ export function SuperHackerGolfPage() {
       <section id="setup" className="py-24 md:py-32 border-b border-nd-border">
         <div className="container px-4 mx-auto max-w-5xl">
           <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-4">
-            06 / Setup
+            05 / Setup
           </span>
           <h2 className="font-display text-2xl md:text-3xl font-bold text-nd-text-display tracking-[-0.02em] mb-12">
             Installation
