@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import {
-  X,
-  ExternalLink,
   Github,
   Download,
   Shield,
@@ -14,6 +13,17 @@ import {
   Keyboard,
   Settings,
 } from "lucide-react";
+
+const SECTION_NAV = [
+  { id: "overview", label: "Overview" },
+  { id: "features", label: "Features" },
+  { id: "anti-cheat", label: "Anti-Cheat" },
+  { id: "physics", label: "Physics" },
+  { id: "tech", label: "Tech" },
+  { id: "controls", label: "Controls" },
+  { id: "setup", label: "Setup" },
+  { id: "download", label: "Download" },
+] as const;
 
 const features = [
   {
@@ -131,96 +141,270 @@ const techStack = [
 ];
 
 export function SuperHackerGolfPage() {
+  const [activeSection, setActiveSection] = useState<string>("overview");
+
+  useEffect(() => {
+    const sectionIds = SECTION_NAV.map((s) => s.id);
+    const elements = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+
+    if (elements.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Pick the entry closest to the top of the viewport among those intersecting.
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort(
+            (a, b) => a.boundingClientRect.top - b.boundingClientRect.top,
+          );
+        if (visible.length > 0) {
+          setActiveSection(visible[0].target.id);
+        }
+      },
+      {
+        // Trigger active state when section crosses the upper third of the viewport.
+        rootMargin: "-30% 0px -60% 0px",
+        threshold: 0,
+      },
+    );
+
+    elements.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+  const handleNavClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    id: string,
+  ) => {
+    e.preventDefault();
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-nd-black">
+    <div className="min-h-screen bg-nd-black scroll-smooth">
+      {/* Sticky side-rail nav (desktop only) */}
+      <nav
+        aria-label="Page sections"
+        className="hidden lg:flex fixed left-6 top-1/2 -translate-y-1/2 z-40 flex-col gap-5"
+      >
+        {SECTION_NAV.map((item) => {
+          const isActive = activeSection === item.id;
+          return (
+            <a
+              key={item.id}
+              href={`#${item.id}`}
+              onClick={(e) => handleNavClick(e, item.id)}
+              className="group flex items-center gap-3 nd-transition"
+              aria-current={isActive ? "true" : undefined}
+            >
+              <span
+                className={`w-1.5 h-1.5 rounded-full nd-transition ${
+                  isActive ? "bg-nd-accent" : "bg-nd-border-visible"
+                }`}
+              />
+              <span
+                className={`font-mono text-[10px] tracking-[0.08em] uppercase nd-transition ${
+                  isActive
+                    ? "text-nd-text-display opacity-100"
+                    : "text-nd-text-disabled opacity-0 group-hover:opacity-100"
+                }`}
+              >
+                {item.label}
+              </span>
+            </a>
+          );
+        })}
+      </nav>
+
       {/* Hero */}
-      <section className="relative border-b border-nd-border">
+      <section id="overview" className="relative border-b border-nd-border">
         <div className="absolute inset-0 dot-grid-subtle opacity-30 pointer-events-none" />
         <div className="container px-4 mx-auto max-w-5xl relative z-10 py-24 md:py-40">
-          {/* Back link */}
-          <Link
-            href="/#projects"
-            className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled hover:text-nd-text-display nd-transition mb-12"
-          >
-            ← Back to projects
-          </Link>
+          <div className="grid lg:grid-cols-[1.2fr_1fr] gap-12 items-center">
+            {/* Left column — copy */}
+            <div>
+              {/* Back link */}
+              <Link
+                href="/#projects"
+                className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled hover:text-nd-text-display nd-transition mb-12"
+              >
+                ← Back to projects
+              </Link>
 
-          <div className="flex items-center gap-3 mb-6">
-            <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled border border-nd-border px-2 py-1 rounded-full">
-              Game Mod
-            </span>
-            <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-success border border-nd-success/30 px-2 py-1 rounded-full">
-              Open Source
-            </span>
-          </div>
+              <div className="flex items-center gap-3 mb-6">
+                <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled border border-nd-border px-2 py-1 rounded-full">
+                  Game Mod
+                </span>
+                <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-success border border-nd-success/30 px-2 py-1 rounded-full">
+                  Open Source
+                </span>
+              </div>
 
-          <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-nd-text-display leading-[1.0] tracking-[-0.03em] mb-6">
-            SuperHackerGolf<span className="text-nd-accent">.</span>
-          </h1>
+              <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-nd-text-display leading-[1.0] tracking-[-0.03em] mb-6">
+                SuperHackerGolf<span className="text-nd-accent">.</span>
+              </h1>
 
-          <p className="text-nd-text-secondary text-base md:text-lg max-w-2xl leading-relaxed mb-10">
-            Client-side cheat mod for Super Battle Golf. Aim assist with
-            decompiled ball physics, weapon aimbot (legit/rage/silent-aim),
-            ESP overlay, item spawner, force shield, and an 8-patch
-            anti-cheat bypass stack. Built on MelonLoader with HarmonyX.
-          </p>
+              <p className="text-nd-text-secondary text-base md:text-lg max-w-2xl leading-relaxed mb-10">
+                Client-side cheat mod for Super Battle Golf. Aim assist with
+                decompiled ball physics, weapon aimbot (legit/rage/silent-aim),
+                ESP overlay, item spawner, force shield, and an 8-patch
+                anti-cheat bypass stack. Built on MelonLoader with HarmonyX.
+              </p>
 
-          <div className="flex flex-col sm:flex-row gap-3">
-            <a
-              href="https://github.com/luinbytes/SuperHackerGolf/releases"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-nd-text-display text-nd-black font-mono text-[13px] font-bold tracking-[0.06em] uppercase rounded-full nd-transition hover:opacity-80 min-h-[44px]"
-            >
-              <Download className="w-4 h-4" />
-              Download
-            </a>
-            <a
-              href="https://github.com/luinbytes/SuperHackerGolf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-transparent border border-nd-border-visible text-nd-text-primary font-mono text-[13px] font-bold tracking-[0.06em] uppercase rounded-full nd-transition hover:border-nd-text-secondary min-h-[44px]"
-            >
-              <Github className="w-4 h-4" />
-              Source Code
-            </a>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <a
+                  href="https://github.com/luinbytes/SuperHackerGolf/releases"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-nd-text-display text-nd-black font-mono text-[13px] font-bold tracking-[0.06em] uppercase rounded-full nd-transition hover:opacity-80 min-h-[44px]"
+                >
+                  <Download className="w-4 h-4" />
+                  Download
+                </a>
+                <a
+                  href="https://github.com/luinbytes/SuperHackerGolf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-transparent border border-nd-border-visible text-nd-text-primary font-mono text-[13px] font-bold tracking-[0.06em] uppercase rounded-full nd-transition hover:border-nd-text-secondary min-h-[44px]"
+                >
+                  <Github className="w-4 h-4" />
+                  Source Code
+                </a>
+              </div>
+            </div>
+
+            {/* Right column — system topology diagram */}
+            <div className="hidden lg:block relative">
+              <div className="absolute inset-0 dot-grid-subtle opacity-20 pointer-events-none" />
+              <div className="relative">
+                <p className="font-mono text-[10px] tracking-[0.12em] uppercase text-nd-text-disabled mb-6">
+                  SYSTEM.TOPOLOGY
+                </p>
+
+                <div className="flex flex-col items-stretch">
+                  {/* Node 1 */}
+                  <div className="bg-nd-surface border border-nd-border px-5 py-4 rounded-sm">
+                    <p className="font-mono text-[10px] tracking-[0.08em] uppercase text-nd-text-disabled">
+                      LAYER 01 / LOADER
+                    </p>
+                    <p className="font-mono text-sm text-nd-text-display mt-1">
+                      MelonLoader 0.7.2
+                    </p>
+                    <p className="font-mono text-[10px] tracking-[0.04em] text-nd-text-disabled mt-1">
+                      IL2CPP interop + mod host
+                    </p>
+                  </div>
+
+                  {/* Connector 1→2 */}
+                  <div className="flex flex-col items-center py-1">
+                    <span className="block w-px h-6 bg-nd-border-visible" />
+                    <span className="font-mono text-[10px] leading-none text-nd-text-disabled -mt-0.5">
+                      ▼
+                    </span>
+                  </div>
+
+                  {/* Node 2 */}
+                  <div className="bg-nd-surface border border-nd-border px-5 py-4 rounded-sm">
+                    <p className="font-mono text-[10px] tracking-[0.08em] uppercase text-nd-text-disabled">
+                      LAYER 02 / PATCHES
+                    </p>
+                    <p className="font-mono text-sm text-nd-text-display mt-1">
+                      HarmonyX runtime hooks
+                    </p>
+                    <p className="font-mono text-[10px] tracking-[0.04em] text-nd-text-disabled mt-1">
+                      prefix / postfix / transpiler
+                    </p>
+                  </div>
+
+                  {/* Connector 2→3 */}
+                  <div className="flex flex-col items-center py-1">
+                    <span className="block w-px h-6 bg-nd-border-visible" />
+                    <span className="font-mono text-[10px] leading-none text-nd-text-disabled -mt-0.5">
+                      ▼
+                    </span>
+                  </div>
+
+                  {/* Node 3 */}
+                  <div className="bg-nd-surface border border-nd-border px-5 py-4 rounded-sm">
+                    <p className="font-mono text-[10px] tracking-[0.08em] uppercase text-nd-text-disabled">
+                      LAYER 03 / TARGET
+                    </p>
+                    <p className="font-mono text-sm text-nd-text-display mt-1">
+                      Super Battle Golf
+                    </p>
+                    <p className="font-mono text-[10px] tracking-[0.04em] text-nd-text-disabled mt-1">
+                      GameAssembly.dll / Unity IMGUI
+                    </p>
+                  </div>
+
+                  {/* Connector 3→4 */}
+                  <div className="flex flex-col items-center py-1">
+                    <span className="block w-px h-6 bg-nd-border-visible" />
+                    <span className="font-mono text-[10px] leading-none text-nd-text-disabled -mt-0.5">
+                      ▼
+                    </span>
+                  </div>
+
+                  {/* Node 4 — accent */}
+                  <div className="bg-nd-surface border border-nd-accent/40 px-5 py-4 rounded-sm">
+                    <p className="font-mono text-[10px] tracking-[0.08em] uppercase text-nd-text-disabled">
+                      LAYER 04 / OUTPUT
+                    </p>
+                    <p className="font-mono text-sm text-nd-accent mt-1">
+                      Aim assist · ESP · Bypass
+                    </p>
+                    <p className="font-mono text-[10px] tracking-[0.04em] text-nd-text-disabled mt-1">
+                      8 patches · 12 items · 28 files
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Stats row */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 pt-10 border-t border-nd-border">
-            <div>
-              <span className="font-display text-2xl md:text-3xl font-bold text-nd-text-display">28</span>
-              <p className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled mt-1">
-                Source files
-              </p>
-            </div>
-            <div>
-              <span className="font-display text-2xl md:text-3xl font-bold text-nd-text-display">~13k</span>
-              <p className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled mt-1">
-                Lines of C#
-              </p>
-            </div>
-            <div>
-              <span className="font-display text-2xl md:text-3xl font-bold text-nd-text-display">8</span>
-              <p className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled mt-1">
-                Anti-cheat patches
-              </p>
-            </div>
-            <div>
-              <span className="font-display text-2xl md:text-3xl font-bold text-nd-text-display">12</span>
-              <p className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled mt-1">
-                Spawnable items
-              </p>
-            </div>
+            {(
+              [
+                { label: "Source files", value: "28", total: 30, filled: 28, accentFrom: -1 },
+                { label: "Lines of C#", value: "~13k", total: 20, filled: 20, accentFrom: 18 },
+                { label: "Anti-cheat patches", value: "8", total: 8, filled: 8, accentFrom: -1 },
+                { label: "Spawnable items", value: "12", total: 12, filled: 12, accentFrom: -1 },
+              ] as const
+            ).map((stat) => (
+              <div key={stat.label}>
+                <span className="font-mono text-[10px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-2">
+                  {stat.label}
+                </span>
+                <span className="font-display text-3xl md:text-4xl font-bold text-nd-text-display block mb-3">
+                  {stat.value}
+                </span>
+                <div className="nd-segmented-bar h-1.5 w-full">
+                  {Array.from({ length: stat.total }).map((_, i) => {
+                    const isFilled = i < stat.filled;
+                    const isAccent = stat.accentFrom >= 0 && i >= stat.accentFrom;
+                    const classes = ["segment", "flex-1"];
+                    if (isFilled && !isAccent) classes.push("filled");
+                    if (isAccent) classes.push("accent");
+                    return <span key={i} className={classes.join(" ")} style={{ height: "100%" }} />;
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Features */}
-      <section className="py-24 md:py-32 border-b border-nd-border">
+      <section id="features" className="py-24 md:py-32 border-b border-nd-border">
         <div className="container px-4 mx-auto max-w-5xl">
           <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-4">
-            Features
+            01 / Features
           </span>
           <p className="text-nd-text-secondary text-base max-w-xl mb-16">
             Everything patched through HarmonyX runtime hooks. No DLL injection, no memory writing, no external processes.
@@ -271,10 +455,10 @@ export function SuperHackerGolfPage() {
       </section>
 
       {/* Anti-Cheat Deep Dive */}
-      <section className="py-24 md:py-32 border-b border-nd-border">
+      <section id="anti-cheat" className="py-24 md:py-32 border-b border-nd-border">
         <div className="container px-4 mx-auto max-w-5xl">
           <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-4">
-            Anti-Cheat Audit
+            02 / Anti-Cheat Audit
           </span>
           <h2 className="font-display text-2xl md:text-3xl font-bold text-nd-text-display tracking-[-0.02em] mb-6">
             8-patch bypass stack
@@ -321,10 +505,10 @@ export function SuperHackerGolfPage() {
       </section>
 
       {/* Physics Engine */}
-      <section className="py-24 md:py-32 border-b border-nd-border">
+      <section id="physics" className="py-24 md:py-32 border-b border-nd-border">
         <div className="container px-4 mx-auto max-w-5xl">
           <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-4">
-            Golf Physics
+            03 / Golf Physics
           </span>
           <h2 className="font-display text-2xl md:text-3xl font-bold text-nd-text-display tracking-[-0.02em] mb-6">
             Decompiled, not guessed
@@ -397,10 +581,10 @@ export function SuperHackerGolfPage() {
       </section>
 
       {/* Tech Stack */}
-      <section className="py-24 md:py-32 border-b border-nd-border">
+      <section id="tech" className="py-24 md:py-32 border-b border-nd-border">
         <div className="container px-4 mx-auto max-w-5xl">
           <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-4">
-            Technical Details
+            04 / Technical Details
           </span>
           <h2 className="font-display text-2xl md:text-3xl font-bold text-nd-text-display tracking-[-0.02em] mb-12">
             How it&apos;s built
@@ -435,37 +619,66 @@ export function SuperHackerGolfPage() {
       </section>
 
       {/* Default Hotkeys */}
-      <section className="py-24 md:py-32 border-b border-nd-border">
+      <section id="controls" className="py-24 md:py-32 border-b border-nd-border">
         <div className="container px-4 mx-auto max-w-5xl">
           <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-4">
-            Controls
+            05 / Controls
           </span>
           <h2 className="font-display text-2xl md:text-3xl font-bold text-nd-text-display tracking-[-0.02em] mb-12">
             Default hotkeys
           </h2>
 
-          <div className="grid sm:grid-cols-2 gap-3">
-            {[
-              { key: "F", action: "Toggle golf aim assist" },
-              { key: "F2", action: "Coffee speed boost" },
-              { key: "F3", action: "Nearest-ball mode" },
-              { key: "F4", action: "Unlock all cosmetics" },
-              { key: "F6", action: "Force shield (toggle/hold/released)" },
-              { key: "F7", action: "Weapon aimbot (toggle/hold/released)" },
-              { key: "F9", action: "Mine pre-arm (host-only)" },
-              { key: "F10", action: "Bunnyhop (toggle/hold/released)" },
-              { key: "Insert", action: "Open/close settings GUI" },
-              { key: "Mouse4", action: "Default weapon-aimbot hold key" },
-              { key: "RMB", action: "Auto-aim camera (hold)" },
-            ].map((bind) => (
-              <div
-                key={bind.key}
-                className="flex items-center gap-4 bg-nd-surface border border-nd-border p-4"
-              >
-                <kbd className="font-mono text-[13px] text-nd-text-display bg-nd-black border border-nd-border-visible px-3 py-1.5 min-w-[80px] text-center">
-                  {bind.key}
-                </kbd>
-                <span className="text-sm text-nd-text-secondary">{bind.action}</span>
+          <div className="space-y-8">
+            {(
+              [
+                {
+                  category: "Aim & Targeting",
+                  binds: [
+                    { key: "F", action: "Toggle golf aim assist" },
+                    { key: "F3", action: "Nearest-ball mode" },
+                    { key: "RMB", action: "Auto-aim camera (hold)" },
+                    { key: "Mouse4", action: "Default weapon-aimbot hold key" },
+                    { key: "F7", action: "Weapon aimbot (toggle/hold/released)" },
+                  ],
+                },
+                {
+                  category: "Combat & Movement",
+                  binds: [
+                    { key: "F2", action: "Coffee speed boost" },
+                    { key: "F6", action: "Force shield (toggle/hold/released)" },
+                    { key: "F9", action: "Mine pre-arm (host-only)" },
+                    { key: "F10", action: "Bunnyhop (toggle/hold/released)" },
+                  ],
+                },
+                {
+                  category: "Utility",
+                  binds: [
+                    { key: "F4", action: "Unlock all cosmetics" },
+                    { key: "Insert", action: "Open/close settings GUI" },
+                  ],
+                },
+              ] satisfies { category: string; binds: { key: string; action: string }[] }[]
+            ).map((group) => (
+              <div key={group.category}>
+                <div className="flex items-center gap-4 mb-3">
+                  <span className="font-mono text-[10px] tracking-[0.08em] uppercase text-nd-text-disabled">
+                    {group.category}
+                  </span>
+                  <div className="flex-1 h-px bg-nd-border" />
+                </div>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  {group.binds.map((bind) => (
+                    <div
+                      key={bind.key}
+                      className="flex items-center gap-4 bg-nd-surface border border-nd-border p-4"
+                    >
+                      <kbd className="font-mono text-[13px] text-nd-text-display bg-nd-black border border-nd-border-visible px-3 py-1.5 min-w-[80px] text-center">
+                        {bind.key}
+                      </kbd>
+                      <span className="text-sm text-nd-text-secondary">{bind.action}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
@@ -477,10 +690,10 @@ export function SuperHackerGolfPage() {
       </section>
 
       {/* Installation */}
-      <section className="py-24 md:py-32 border-b border-nd-border">
+      <section id="setup" className="py-24 md:py-32 border-b border-nd-border">
         <div className="container px-4 mx-auto max-w-5xl">
           <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-4">
-            Setup
+            06 / Setup
           </span>
           <h2 className="font-display text-2xl md:text-3xl font-bold text-nd-text-display tracking-[-0.02em] mb-12">
             Installation
@@ -535,7 +748,7 @@ export function SuperHackerGolfPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-24 md:py-32">
+      <section id="download" className="py-24 md:py-32">
         <div className="container px-4 mx-auto max-w-5xl text-center">
           <h2 className="font-display text-2xl md:text-3xl font-bold text-nd-text-display tracking-[-0.02em] mb-4">
             Get the mod
