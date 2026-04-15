@@ -131,7 +131,7 @@ const features = [
 const techStack = [
   { name: "C#", description: "Core mod logic across 28 source files, ~13k lines" },
   { name: "MelonLoader 0.7.2", description: "Mod loader framework with IL2CPP interop" },
-  { name: "HarmonyX", description: "Runtime method patching for anti-cheat bypass" },
+  { name: "HarmonyX", description: "Runtime method patching and reflection-based hooks" },
   { name: "Unity IMGUI", description: "In-game settings GUI and ESP overlay rendering" },
   { name: ".NET 8", description: "Build target with CI pipeline on GitHub Actions" },
   { name: "Reflection", description: "Game state access via cached FieldInfo/MethodInfo" },
