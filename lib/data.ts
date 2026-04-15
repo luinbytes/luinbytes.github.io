@@ -12,7 +12,8 @@ export interface Project {
     tags: string[];
     sourceUrl?: string;
     demoUrl?: string;
-    purchaseUrl?: string;
+    purchaseUrl?: string;  // Gumroad etc.
+    pageUrl?: string;      // Dedicated product page route
     featured: boolean;
     lumiApproved?: boolean; // Projects Lumi helped build/polish
 }
@@ -191,6 +192,7 @@ export const projects: Project[] = [
         techStack: ["C#", "MelonLoader", "HarmonyX", "Unity", ".NET 8"],
         tags: ["Game Mod", "Reverse Engineering", "C#", "Unity"],
         sourceUrl: "https://github.com/luinbytes/SuperHackerGolf",
+        pageUrl: "/super-hacker-golf",
         featured: true,
     },
     {

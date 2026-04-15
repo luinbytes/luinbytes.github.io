@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { projects, Project, ProjectType } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { X, ExternalLink } from "lucide-react";
@@ -196,6 +197,15 @@ export function Projects() {
 
             {/* Modal Footer */}
             <div className="p-6 md:p-8 bg-nd-black border-t border-nd-border-visible flex flex-wrap gap-3">
+              {selectedProject.pageUrl && (
+                <Link
+                  href={selectedProject.pageUrl}
+                  onClick={() => setSelectedProject(null)}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-nd-accent text-nd-black font-mono text-[13px] font-bold tracking-[0.06em] uppercase rounded-full nd-transition hover:opacity-80 min-h-[44px]"
+                >
+                  Product Page
+                </Link>
+              )}
               {selectedProject.sourceUrl && (
                 <a
                   href={selectedProject.sourceUrl}
