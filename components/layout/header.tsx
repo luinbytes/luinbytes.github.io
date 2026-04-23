@@ -22,6 +22,11 @@ const gameMods = [
     href: "/brc-trainer",
     blurb: "Bomb Rush Cyberfunk — boost, REP, time scale",
   },
+  {
+    name: "DaggerFall",
+    href: "/dagger-fall",
+    blurb: "Devil Daggers — bhop, air control, overlay",
+  },
 ];
 
 export function Header() {
