@@ -76,7 +76,7 @@ export function Projects() {
               </div>
 
               {/* Name */}
-              <h3 className="font-body text-xl font-bold text-nd-text-display mb-3 group-hover:text-nd-interactive nd-transition">
+              <h3 className="font-body text-xl font-bold text-nd-text-display mb-3 group-hover:text-nd-accent nd-transition">
                 {project.name}
               </h3>
 
