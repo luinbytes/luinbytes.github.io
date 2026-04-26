@@ -13,6 +13,10 @@ import {
   ListTodo,
   CheckCircle,
   Tag,
+  CalendarDays,
+  CheckSquare,
+  Layout,
+  Lock,
 } from "lucide-react";
 
 const SECTION_NAV = [
@@ -20,7 +24,7 @@ const SECTION_NAV = [
   { id: "habits", label: "Habits" },
   { id: "tasks", label: "Tasks" },
   { id: "free-vs-pro", label: "Free vs Pro" },
-  { id: "tech", label: "Tech" },
+  { id: "privacy", label: "Privacy" },
   { id: "get-the-app", label: "Get the app" },
 ] as const;
 
@@ -31,9 +35,9 @@ const habitFeatures = [
     description:
       "Track your consistency with a daily streak counter and a full calendar heatmap. See your history at a glance.",
     details: [
-      "Daily streak with best-streak tracking",
-      "Calendar heatmap — Pro: full history, Free: 30 days",
-      "Completion ring shows today's progress at a glance",
+      "Track your longest streak and today's progress",
+      "Calendar heatmap shows your full completion history",
+      "Free: 30-day history · Pro: all time",
     ],
   },
   {
@@ -42,9 +46,9 @@ const habitFeatures = [
     description:
       "Set habits to repeat daily, on specific weekdays, X times per week, or every N days.",
     details: [
-      "Daily / specific weekdays / X per week / every N days",
-      "Target count per day: binary (1) or countable (N)",
-      "Reminder time per habit",
+      "Daily, specific days of the week, X times per week, or every N days",
+      "Set a daily target: tick once, or track multiple completions",
+      "Per-habit reminder notifications",
     ],
   },
   {
@@ -53,9 +57,9 @@ const habitFeatures = [
     description:
       "Life happens. Pause a habit temporarily — your streak stays intact.",
     details: [
-      "Open-ended pause from any date",
-      "Streak preserved while paused",
-      "Resume from Today screen with one tap",
+      "Taking a break? Pause the habit so your streak survives",
+      "Resume any time from the Today screen",
+      "Works for holidays, illness, or just needing a rest",
     ],
   },
   {
@@ -64,9 +68,9 @@ const habitFeatures = [
     description:
       "Quick-tap habit completions without opening the app.",
     details: [
-      "Glance widget on the Android home screen",
-      "Shows today's habits + completion state",
-      "Tap to complete — no app open required",
+      "Add Meteor to your home screen for one-tap habit tracking",
+      "See today's habits and their completion state at a glance",
+      "Tap any habit to complete it — no app launch needed",
     ],
   },
 ];
@@ -78,9 +82,9 @@ const taskFeatures = [
     description:
       "High, medium, and low priority. Tasks sort by priority within each due-date group.",
     details: [
-      "High / Medium / Low — visual indicator on each row",
-      "Sort order: priority within date group",
-      "Overdue tasks surface at the top",
+      "Flag tasks as high, medium, or low priority",
+      "High-priority and overdue tasks surface at the top",
+      "Quick visual indicator on every task row",
     ],
   },
   {
@@ -89,9 +93,9 @@ const taskFeatures = [
     description:
       "Break tasks down and add context without leaving the edit screen.",
     details: [
-      "Unlimited subtasks per task",
-      "Notes field for free-form context",
-      "Subtask completion tracked independently",
+      "Break big tasks into smaller steps with subtasks",
+      "Add a note to any task for extra context",
+      "Subtasks check off independently",
     ],
   },
   {
@@ -100,9 +104,9 @@ const taskFeatures = [
     description:
       "Swipe right to complete, swipe left to delete. Fast.",
     details: [
-      "Swipe-complete with haptic feedback",
-      "Satisfying empty state when inbox is clear",
-      "Undo window on accidental swipe",
+      "Swipe right on any task to mark it done",
+      "Swipe left to delete",
+      "Gentle haptic feedback on every action",
     ],
   },
   {
@@ -111,49 +115,37 @@ const taskFeatures = [
     description:
       "Tag tasks for quick filtering. Search across everything.",
     details: [
-      "Free-form tags on tasks",
-      "Global search across title + notes + tags",
-      "Filter by tag from the task list",
+      "Label tasks with tags to group related work",
+      "Search across task titles, notes, and tags",
+      "Filter the list by any tag",
     ],
   },
 ];
 
-const techStack = [
-  { name: "Kotlin 2.x", description: "Primary language" },
+const insideFeatures = [
+  { icon: CalendarDays, label: "Habit streaks & heatmap" },
+  { icon: CheckSquare, label: "Task list with priorities" },
+  { icon: Layout, label: "Unified today view" },
+  { icon: Smartphone, label: "Home screen widget" },
+  { icon: Lock, label: "Your data stays on your phone" },
+];
+
+const privacyCards = [
   {
-    name: "Jetpack Compose",
-    description: "Declarative UI, Material 3, dynamic color",
-  },
-  { name: "Hilt", description: "Dependency injection" },
-  {
-    name: "Room + DataStore",
-    description:
-      "Local persistence: tasks/habits/completions in Room, settings in DataStore",
-  },
-  {
-    name: "WorkManager",
-    description: "Daily streak rollover, notification scheduling",
+    title: "Stays on your phone",
+    body: "Tasks, habits, and completions are stored locally on your device. Nothing is sent to the cloud. Nothing is shared with third parties.",
   },
   {
-    name: "Glance",
-    description: "Compose-based home screen widget (official Jetpack)",
+    title: "No account required",
+    body: "Download and start. No sign-up, no email, no password. Your data is tied to your device, not a server.",
   },
   {
-    name: "Play Billing 7.x",
-    description: "Subscription entitlement, restore purchases",
+    title: "Export any time",
+    body: "Settings → Export data saves a full JSON backup you can keep, share, or import into anything you build.",
   },
   {
-    name: "Kotlin Coroutines + Flow",
-    description: "Async state, reactive UI",
-  },
-  {
-    name: "Sentry",
-    description:
-      "Anonymised crash reporting (release builds only, no personal data)",
-  },
-  {
-    name: "Min SDK 26",
-    description: "Android 8.0 — covers ~97% of active devices",
+    title: "Crash reports only",
+    body: "The release app sends anonymous crash reports to Sentry if it crashes (device model, app version, stack trace — no personal data, no task or habit content).",
   },
 ];
 
@@ -331,85 +323,34 @@ export function MeteorPage() {
               </div>
             </div>
 
-            {/* Right column — architecture */}
+            {/* Right column — what's inside */}
             <div className="hidden lg:block relative">
               <div className="absolute inset-0 dot-grid-subtle opacity-20 pointer-events-none" />
               <div className="relative">
                 <p className="font-mono text-[10px] tracking-[0.12em] uppercase text-nd-text-disabled mb-6">
-                  APP.ARCHITECTURE
+                  WHAT&apos;S INSIDE
                 </p>
 
-                <div className="flex flex-col items-stretch">
-                  <div className="bg-nd-surface border border-nd-border px-5 py-4 rounded-sm">
-                    <p className="font-mono text-[10px] tracking-[0.08em] uppercase text-nd-text-disabled">
-                      LAYER 01 / UI
-                    </p>
-                    <p className="font-mono text-sm text-nd-text-display mt-1">
-                      Jetpack Compose + Material 3
-                    </p>
+                <div className="bg-nd-surface border border-nd-border p-6">
+                  <div className="space-y-4">
+                    {insideFeatures.map((item) => {
+                      const Icon = item.icon;
+                      return (
+                        <div
+                          key={item.label}
+                          className="flex items-center gap-3"
+                        >
+                          <Icon className="w-4 h-4 text-nd-text-secondary shrink-0" />
+                          <span className="font-mono text-sm text-nd-text-display">
+                            {item.label}
+                          </span>
+                        </div>
+                      );
+                    })}
                   </div>
-
-                  <div className="flex flex-col items-center py-1">
-                    <span className="block w-px h-6 bg-nd-border-visible" />
-                    <span className="font-mono text-[10px] leading-none text-nd-text-disabled -mt-0.5">
-                      ▼
-                    </span>
-                  </div>
-
-                  <div className="bg-nd-surface border border-nd-border px-5 py-4 rounded-sm">
-                    <p className="font-mono text-[10px] tracking-[0.08em] uppercase text-nd-text-disabled">
-                      LAYER 02 / STATE
-                    </p>
-                    <p className="font-mono text-sm text-nd-text-display mt-1">
-                      ViewModel + StateFlow
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col items-center py-1">
-                    <span className="block w-px h-6 bg-nd-border-visible" />
-                    <span className="font-mono text-[10px] leading-none text-nd-text-disabled -mt-0.5">
-                      ▼
-                    </span>
-                  </div>
-
-                  <div className="bg-nd-surface border border-nd-border px-5 py-4 rounded-sm">
-                    <p className="font-mono text-[10px] tracking-[0.08em] uppercase text-nd-text-disabled">
-                      LAYER 03 / DOMAIN
-                    </p>
-                    <p className="font-mono text-sm text-nd-text-display mt-1">
-                      Use Cases + EntitlementRepo
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col items-center py-1">
-                    <span className="block w-px h-6 bg-nd-border-visible" />
-                    <span className="font-mono text-[10px] leading-none text-nd-text-disabled -mt-0.5">
-                      ▼
-                    </span>
-                  </div>
-
-                  <div className="bg-nd-surface border border-nd-border px-5 py-4 rounded-sm">
-                    <p className="font-mono text-[10px] tracking-[0.08em] uppercase text-nd-text-disabled">
-                      LAYER 04 / DATA
-                    </p>
-                    <p className="font-mono text-sm text-nd-text-display mt-1">
-                      Room DB + DataStore + Play Billing
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col items-center py-1">
-                    <span className="block w-px h-6 bg-nd-border-visible" />
-                    <span className="font-mono text-[10px] leading-none text-nd-text-disabled -mt-0.5">
-                      ▼
-                    </span>
-                  </div>
-
-                  <div className="bg-nd-surface border border-nd-accent/40 px-5 py-4 rounded-sm">
-                    <p className="font-mono text-[10px] tracking-[0.08em] uppercase text-nd-text-disabled">
-                      LAYER 05 / OUTPUT
-                    </p>
-                    <p className="font-mono text-sm text-nd-accent mt-1">
-                      Today · Tasks · Habits · Widget
+                  <div className="border-t border-nd-border mt-6 pt-4">
+                    <p className="font-mono text-[10px] text-nd-text-disabled">
+                      No account. No cloud. No ads.
                     </p>
                   </div>
                 </div>
@@ -422,10 +363,10 @@ export function MeteorPage() {
             {(
               [
                 {
-                  label: "Min SDK",
-                  value: "API 26",
-                  total: 26,
-                  filled: 26,
+                  label: "Platform",
+                  value: "Android",
+                  total: 1,
+                  filled: 1,
                   accentFrom: -1,
                 },
                 {
@@ -495,7 +436,7 @@ export function MeteorPage() {
           </p>
 
           <div className="space-y-16">
-            {habitFeatures.map((feature, i) => {
+            {habitFeatures.map((feature) => {
               const Icon = feature.icon;
               return (
                 <div
@@ -507,9 +448,6 @@ export function MeteorPage() {
                       <div className="w-8 h-8 flex items-center justify-center border border-nd-border-visible text-nd-text-secondary">
                         <Icon className="w-4 h-4" />
                       </div>
-                      <span className="font-mono text-[10px] tracking-[0.08em] uppercase text-nd-text-disabled">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
                     </div>
                     <h3 className="font-body text-lg font-bold text-nd-text-display mb-3">
                       {feature.title}
@@ -549,11 +487,11 @@ export function MeteorPage() {
           </h2>
           <p className="text-nd-text-secondary text-base max-w-xl mb-16">
             Unlimited tasks, always free. Priority, subtasks, notes, and due
-            dates — nothing artificial locked away.
+            dates — everything that matters, free.
           </p>
 
           <div className="space-y-16">
-            {taskFeatures.map((feature, i) => {
+            {taskFeatures.map((feature) => {
               const Icon = feature.icon;
               return (
                 <div
@@ -565,9 +503,6 @@ export function MeteorPage() {
                       <div className="w-8 h-8 flex items-center justify-center border border-nd-border-visible text-nd-text-secondary">
                         <Icon className="w-4 h-4" />
                       </div>
-                      <span className="font-mono text-[10px] tracking-[0.08em] uppercase text-nd-text-disabled">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
                     </div>
                     <h3 className="font-body text-lg font-bold text-nd-text-display mb-3">
                       {feature.title}
@@ -660,45 +595,34 @@ export function MeteorPage() {
         </div>
       </section>
 
-      {/* Tech */}
-      <section id="tech" className="py-24 md:py-32 border-b border-nd-border">
+      {/* Privacy */}
+      <section id="privacy" className="py-24 md:py-32 border-b border-nd-border">
         <div className="container px-4 mx-auto max-w-5xl">
           <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-4">
-            04 / Technical
+            04 / Privacy
           </span>
-          <h2 className="font-display text-2xl md:text-3xl font-bold text-nd-text-display tracking-[-0.02em] mb-12">
-            How it&apos;s built.
+          <h2 className="font-display text-2xl md:text-3xl font-bold text-nd-text-display tracking-[-0.02em] mb-6">
+            Your data is yours.
           </h2>
+          <p className="text-nd-text-secondary text-base max-w-2xl mb-12 leading-relaxed">
+            Meteor is local-first. Everything you add stays on your device — we
+            have no servers to breach and no accounts to lose.
+          </p>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {techStack.map((tech) => (
+          <div className="grid md:grid-cols-2 gap-4">
+            {privacyCards.map((card) => (
               <div
-                key={tech.name}
+                key={card.title}
                 className="bg-nd-surface border border-nd-border p-6"
               >
-                <span className="font-mono text-[11px] tracking-[0.06em] uppercase text-nd-text-display block mb-2">
-                  {tech.name}
-                </span>
-                <p className="text-sm text-nd-text-secondary">
-                  {tech.description}
+                <h3 className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-display mb-3">
+                  {card.title}
+                </h3>
+                <p className="text-sm text-nd-text-secondary leading-relaxed">
+                  {card.body}
                 </p>
               </div>
             ))}
-          </div>
-
-          <div className="mt-8 bg-nd-surface border border-nd-border p-6">
-            <h3 className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-display mb-3">
-              AlarmManager &amp; reminders
-            </h3>
-            <p className="text-sm text-nd-text-secondary leading-relaxed">
-              Exact-time habit reminders use AlarmManager with the{" "}
-              <code className="font-mono text-nd-text-display">
-                USE_EXACT_ALARM
-              </code>{" "}
-              permission on API 33+. The user is prompted at first reminder-set
-              if the permission hasn&apos;t been granted. Background streak
-              rollover runs via WorkManager — no exact alarm required.
-            </p>
           </div>
         </div>
       </section>
