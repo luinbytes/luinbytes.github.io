@@ -125,10 +125,10 @@ const SECTIONS: Section[] = [
       <p>
         Questions about this policy can be sent to{" "}
         <a
-          href="mailto:regravegaming911@gmail.com"
+          href="mailto:0x6c75@protonmail.com"
           className="font-mono text-nd-accent underline-offset-4 hover:underline"
         >
-          regravegaming911@gmail.com
+          0x6c75@protonmail.com
         </a>
         .
       </p>
