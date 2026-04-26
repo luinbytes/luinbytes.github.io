@@ -1,7 +1,8 @@
 "use client";
 
+import Link from "next/link";
+
 const currentStatus = {
-  building: "wterm, SuperHackerGolf, bitskins-alert-bot",
   learning: "C# game modding, HarmonyX runtime patching",
   obsessed: "Game cheats and reverse engineering",
   reading: "The Pragmatic Programmer",
@@ -21,7 +22,22 @@ export function Now() {
               Building
             </span>
             <span className="text-nd-text-primary text-base">
-              {currentStatus.building}
+              <a
+                href="https://luinbytes.github.io/wterm/"
+                target="_blank"
+                rel="noopener"
+                className="text-nd-accent hover:underline"
+              >
+                wterm
+              </a>
+              ,{" "}
+              <Link
+                href="/super-hacker-golf"
+                className="text-nd-accent hover:underline"
+              >
+                SuperHackerGolf
+              </Link>
+              , bitskins-alert-bot
             </span>
           </div>
           <div className="py-4 border-b border-nd-border flex gap-4">

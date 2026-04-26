@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { ShoppingBag, ChevronDown } from "lucide-react";
+import { ShoppingBag, ChevronDown, Smartphone } from "lucide-react";
 
 const gameMods = [
   {
@@ -231,6 +231,14 @@ export function Header() {
             )}
           </div>
 
+          <Link
+            href="/meteor"
+            className="ml-1 flex items-center gap-1.5 px-3 py-1.5 border border-nd-accent/40 text-nd-accent font-mono text-[11px] tracking-[0.06em] uppercase nd-transition hover:border-nd-accent hover:text-nd-text-display"
+          >
+            <Smartphone className="w-3 h-3" />
+            Meteor
+          </Link>
+
           <a
             href="https://x6c75.gumroad.com/l/file-deduplicator"
             target="_blank"
@@ -320,6 +328,13 @@ export function Header() {
             >
               Buy Me a Coffee
             </a>
+            <Link
+              href="/meteor"
+              className="block py-3 font-mono text-sm text-nd-accent hover:text-nd-text-display nd-transition border-b border-nd-border"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Meteor
+            </Link>
             <a
               href="https://x6c75.gumroad.com/l/file-deduplicator"
               target="_blank"

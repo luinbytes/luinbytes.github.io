@@ -32,8 +32,8 @@ export function Hero() {
 
         {/* Description */}
         <p className="text-nd-text-secondary text-base md:text-lg max-w-xl leading-relaxed mb-12">
-          Building AI-adjacent tools, Raycast extensions, and PC-gaming
-          utilities. If it saves me 5 seconds, I&apos;ll spend 5 hours
+          Building Android apps, Linux tools, game mods, and Raycast
+          extensions. If it saves me 5 seconds, I&apos;ll spend 5 hours
           automating it.
         </p>
 

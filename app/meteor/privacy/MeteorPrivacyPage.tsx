@@ -141,7 +141,7 @@ export function MeteorPrivacyPage() {
     <div className="bg-nd-black text-nd-text-primary">
       <article className="mx-auto w-full max-w-[680px] px-6 py-20 sm:py-28">
         <Link
-          href="/"
+          href="/meteor"
           className="font-mono text-sm text-nd-text-secondary transition-colors hover:text-nd-accent"
         >
           ← Back

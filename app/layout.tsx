@@ -33,11 +33,12 @@ export const metadata: Metadata = {
     template: "%s | Lu",
   },
   description:
-    "Self-taught software engineer building AI tools, Raycast extensions, and PC-gaming utilities.",
+    "Self-taught software engineer building Android apps, Linux tools, game mods, Raycast extensions, and open-source utilities.",
   twitter: {
     card: "summary_large_image",
     title: "Lu | Software Engineer",
-    description: "Self-taught software engineer building AI tools and Raycast extensions.",
+    description:
+      "Self-taught software engineer building Android apps, Linux tools, game mods, Raycast extensions, and open-source utilities.",
     creator: "@luinbytes",
   },
   openGraph: {
@@ -46,7 +47,7 @@ export const metadata: Metadata = {
     url: "https://luinbytes.github.io",
     title: "Lu | Software Engineer",
     description:
-      "Self-taught software engineer building AI tools, Raycast extensions, and PC-gaming utilities.",
+      "Self-taught software engineer building Android apps, Linux tools, game mods, Raycast extensions, and open-source utilities.",
     siteName: "Luinbytes",
     images: [
       {
@@ -62,6 +63,19 @@ export const metadata: Metadata = {
     "Raycast Extensions",
     "Next.js",
     "TypeScript",
+    "Android",
+    "Kotlin",
+    "Meteor",
+    "Habit Tracker",
+    "Task App",
+    "Linux",
+    "PipeWire",
+    "Game Mod",
+    "BepInEx",
+    "CLI Tool",
+    "Go",
+    "Open Source",
+    "Game Development",
   ],
 };
 

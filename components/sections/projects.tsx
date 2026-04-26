@@ -6,7 +6,7 @@ import { projects, Project, ProjectType } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { X, ExternalLink } from "lucide-react";
 
-type FilterCategory = "All" | "Raycast" | "Web" | "CLI" | "Discord";
+type FilterCategory = "All" | "Raycast" | "Web" | "CLI" | "Discord" | "Game Mod" | "Android";
 
 const filterMap: Record<FilterCategory, ProjectType[] | null> = {
   All: null,
@@ -14,9 +14,11 @@ const filterMap: Record<FilterCategory, ProjectType[] | null> = {
   Web: ["Web App"],
   CLI: ["CLI Tool"],
   Discord: ["Discord Utility"],
+  "Game Mod": ["Game Mod"],
+  Android: ["Android App"],
 };
 
-const filterButtons: FilterCategory[] = ["All", "Raycast", "Web", "CLI", "Discord"];
+const filterButtons: FilterCategory[] = ["All", "Raycast", "Web", "CLI", "Discord", "Game Mod", "Android"];
 
 export function Projects() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
