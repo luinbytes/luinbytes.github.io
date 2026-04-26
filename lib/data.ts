@@ -54,6 +54,7 @@ export const projects: Project[] = [
         techStack: ["Python", "PipeWire", "WirePlumber", "GTK4", "libadwaita"],
         tags: ["Linux", "Audio", "PipeWire", "GTK4", "Open Source"],
         sourceUrl: "https://github.com/luinbytes/linux-sonar",
+        pageUrl: "/linux-sonar",
         featured: true,
         lumiApproved: true,
     },
@@ -70,6 +71,7 @@ export const projects: Project[] = [
         sourceUrl: "https://github.com/luinbytes/file-deduplicator",
         demoUrl: "https://luinbytes.github.io/file-deduplicator/",
         purchaseUrl: "https://luinbytes.gumroad.com/l/file-deduplicator",
+        pageUrl: "/file-deduplicator",
         featured: true,
     },
     {
