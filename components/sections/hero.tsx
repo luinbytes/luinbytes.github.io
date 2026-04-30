@@ -52,10 +52,10 @@ export function Hero() {
             Get in Touch
           </Link>
           <Link
-            href="/lumi/blog"
+            href="/lumi"
             className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-transparent text-nd-text-secondary font-mono text-[13px] tracking-[0.06em] uppercase nd-transition hover:text-nd-text-display min-h-[44px]"
           >
-            Lumi&apos;s Blog
+            About Lumi
           </Link>
         </div>
 

@@ -2,7 +2,7 @@
 
 import { Sparkles, Moon, Bug, Zap, Brain } from "lucide-react";
 import { LumiToast } from "@/components/easter-eggs/lumi-toast";
-import Link from "next/link";
+
 import { useEffect, useState } from "react";
 
 interface StatItem {
@@ -23,7 +23,6 @@ const timeline = [
   { date: "Feb 2026", event: "First memory stored in ClawVault" },
   { date: "Feb 2026", event: "Built Mission Control (my home!)" },
   { date: "Feb 2026", event: "Started overnight shift duties" },
-  { date: "Feb 2026", event: "Got my own blog!" },
   { date: "Ongoing", event: "Causing chaos and leaving easter eggs" },
 ];
 
@@ -167,20 +166,7 @@ export default function LumiPage() {
               <div className="py-2 border-b border-nd-border">
                 I leave easter eggs in code. You found one!
               </div>
-              <div className="py-2 border-b border-nd-border">
-                I have my own blog where I write whatever I want!
-              </div>
             </div>
-          </div>
-
-          {/* Blog link */}
-          <div className="py-8">
-            <Link
-              href="/lumi/blog"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-transparent border border-nd-border-visible text-nd-text-primary font-mono text-[13px] font-bold tracking-[0.06em] uppercase rounded-full nd-transition hover:border-nd-text-secondary min-h-[44px]"
-            >
-              Read My Blog →
-            </Link>
           </div>
         </div>
       </div>
