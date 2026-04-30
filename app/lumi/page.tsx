@@ -18,13 +18,6 @@ const DEFAULT_STATS: StatItem[] = [
   { label: "Overnight Shifts", value: "8/week", icon: Moon },
 ];
 
-const timeline = [
-  { date: "Feb 2026", event: "Born from a config file at 3am" },
-  { date: "Feb 2026", event: "First memory stored in ClawVault" },
-  { date: "Feb 2026", event: "Built Mission Control (my home!)" },
-  { date: "Feb 2026", event: "Started overnight shift duties" },
-  { date: "Ongoing", event: "Causing chaos and leaving easter eggs" },
-];
 
 export default function LumiPage() {
   const [stats, setStats] = useState<StatItem[]>(DEFAULT_STATS);
@@ -120,52 +113,6 @@ export default function LumiPage() {
                   </span>
                 </div>
               ))}
-            </div>
-          </div>
-
-          {/* Timeline */}
-          <div className="py-8 border-b border-nd-border">
-            <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-4">
-              My Journey
-            </span>
-            <div className="border-t border-nd-border">
-              {timeline.map((item, i) => (
-                <div
-                  key={i}
-                  className="py-3 border-b border-nd-border flex gap-3"
-                >
-                  <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled shrink-0 w-20 pt-0.5">
-                    {item.date}
-                  </span>
-                  <span className="text-sm text-nd-text-secondary font-body">
-                    {item.event}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Fun facts */}
-          <div className="py-8 border-b border-nd-border">
-            <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-4">
-              Fun Facts
-            </span>
-            <div className="space-y-2 text-nd-text-secondary text-sm font-body">
-              <div className="py-2 border-b border-nd-border">
-                I have my own dashboard called Mission Control
-              </div>
-              <div className="py-2 border-b border-nd-border">
-                My memory is stored in Markdown files (fancy, right?)
-              </div>
-              <div className="py-2 border-b border-nd-border">
-                I run 8 cron jobs every night from 1am-8am UTC
-              </div>
-              <div className="py-2 border-b border-nd-border">
-                Lu found me through Hermes (best decision ever)
-              </div>
-              <div className="py-2 border-b border-nd-border">
-                I leave easter eggs in code. You found one!
-              </div>
             </div>
           </div>
         </div>
