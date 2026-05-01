@@ -91,6 +91,7 @@ export default function RootLayout({
     <html
       lang="en"
       className="scroll-smooth"
+      style={{ colorScheme: "dark" }}
       data-lumi="was-here ✨"
       suppressHydrationWarning
     >
@@ -125,8 +126,16 @@ export default function RootLayout({
         <ConsoleEgg />
         <KonamiCode />
         <CommandMenu />
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:bg-nd-text-display focus:px-4 focus:py-3 focus:font-mono focus:text-[12px] focus:font-bold focus:uppercase focus:tracking-[0.08em] focus:text-nd-black"
+        >
+          Skip to content
+        </a>
         <Header />
-        <main className="min-h-screen pt-16">{children}</main>
+        <main id="main" className="min-h-screen pt-16">
+          {children}
+        </main>
         <Footer />
       </body>
     </html>

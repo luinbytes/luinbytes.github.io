@@ -57,7 +57,8 @@ export function Header() {
   }, [modsOpen]);
 
   useEffect(() => {
-    setModsOpen(false);
+    const frameId = window.requestAnimationFrame(() => setModsOpen(false));
+    return () => window.cancelAnimationFrame(frameId);
   }, [pathname]);
 
   useEffect(() => {
@@ -147,7 +148,7 @@ export function Header() {
         <Link
           href={isMainPage ? "#home" : "/"}
           onClick={(e) => isMainPage && scrollToSection(e, "#home")}
-          className="font-mono text-sm font-bold tracking-[-0.01em] text-nd-text-display hover:text-nd-interactive nd-transition"
+          className="font-mono text-sm font-bold tracking-[-0.01em] text-nd-text-display hover:text-nd-interactive nd-transition nd-focus"
         >
           luinbytes<span className="text-nd-accent">.</span>dev
         </Link>
@@ -161,6 +162,7 @@ export function Header() {
               onClick={(e) => scrollToSection(e, link.href)}
               className={cn(
                 "font-mono text-[11px] tracking-[0.08em] uppercase px-3 py-2 nd-transition",
+                "nd-focus",
                 activeSection === link.href.replace("#", "")
                   ? "text-nd-text-display"
                   : "text-nd-text-disabled hover:text-nd-text-secondary"
@@ -179,8 +181,9 @@ export function Header() {
               onClick={() => setModsOpen((v) => !v)}
               aria-haspopup="menu"
               aria-expanded={modsOpen}
+              aria-controls="mods-menu"
               className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 border font-mono text-[11px] tracking-[0.06em] uppercase nd-transition",
+                "flex items-center gap-1.5 px-3 py-1.5 border font-mono text-[11px] tracking-[0.06em] uppercase nd-transition nd-focus",
                 modsOpen
                   ? "border-nd-accent text-nd-text-display"
                   : "border-nd-accent/40 text-nd-accent hover:border-nd-accent hover:text-nd-text-display"
@@ -197,6 +200,7 @@ export function Header() {
 
             {modsOpen && (
               <div
+                id="mods-menu"
                 role="menu"
                 className="absolute right-0 top-full mt-2 w-72 bg-nd-black border border-nd-border-visible shadow-[0_8px_24px_rgba(0,0,0,0.45)] z-50"
               >
@@ -215,7 +219,7 @@ export function Header() {
                         href={mod.href}
                         role="menuitem"
                         onClick={() => setModsOpen(false)}
-                        className="group block px-4 py-3 nd-transition hover:bg-nd-surface border-b border-nd-border last:border-b-0"
+                        className="group block px-4 py-3 nd-transition hover:bg-nd-surface border-b border-nd-border last:border-b-0 nd-focus"
                       >
                         <span className="block font-mono text-[12px] tracking-[0.04em] text-nd-text-display group-hover:text-nd-accent nd-transition">
                           {mod.name}
@@ -233,7 +237,7 @@ export function Header() {
 
           <Link
             href="/meteor"
-            className="ml-1 flex items-center gap-1.5 px-3 py-1.5 border border-nd-accent/40 text-nd-accent font-mono text-[11px] tracking-[0.06em] uppercase nd-transition hover:border-nd-accent hover:text-nd-text-display"
+            className="ml-1 flex items-center gap-1.5 px-3 py-1.5 border border-nd-accent/40 text-nd-accent font-mono text-[11px] tracking-[0.06em] uppercase nd-transition hover:border-nd-accent hover:text-nd-text-display nd-focus"
           >
             <Smartphone className="w-3 h-3" />
             Meteor
@@ -243,7 +247,7 @@ export function Header() {
             href="https://x6c75.gumroad.com/l/file-deduplicator"
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-1 flex items-center gap-1.5 px-3 py-1.5 border border-nd-border text-nd-text-secondary font-mono text-[11px] tracking-[0.06em] uppercase nd-transition hover:border-nd-text-secondary hover:text-nd-text-display"
+            className="ml-1 flex items-center gap-1.5 px-3 py-1.5 border border-nd-border text-nd-text-secondary font-mono text-[11px] tracking-[0.06em] uppercase nd-transition hover:border-nd-text-secondary hover:text-nd-text-display nd-focus"
           >
             <ShoppingBag className="w-3 h-3" />
             Store
@@ -252,7 +256,7 @@ export function Header() {
 
         {/* Mobile Menu Toggle */}
         <button
-          className="md:hidden text-nd-text-disabled hover:text-nd-text-display p-2 z-50 nd-transition"
+          className="md:hidden text-nd-text-disabled hover:text-nd-text-display p-2 z-50 nd-transition nd-focus"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
         >
@@ -288,6 +292,7 @@ export function Header() {
                 onClick={(e) => scrollToSection(e, link.href)}
                 className={cn(
                   "block py-3 px-0 font-mono text-sm tracking-[0.06em] uppercase nd-transition border-b border-nd-border",
+                  "nd-focus",
                   activeSection === link.href.replace("#", "")
                     ? "text-nd-text-display"
                     : "text-nd-text-secondary hover:text-nd-text-display"
@@ -307,7 +312,7 @@ export function Header() {
                 key={mod.href}
                 href={mod.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="block py-3 font-mono text-sm text-nd-accent hover:text-nd-text-display nd-transition border-b border-nd-border"
+                className="block py-3 font-mono text-sm text-nd-accent hover:text-nd-text-display nd-transition border-b border-nd-border nd-focus"
               >
                 {mod.name}
               </Link>
@@ -316,7 +321,7 @@ export function Header() {
               href="https://github.com/luinbytes"
               target="_blank"
               rel="noopener noreferrer"
-              className="block py-3 font-mono text-sm text-nd-text-secondary hover:text-nd-text-display nd-transition border-b border-nd-border"
+              className="block py-3 font-mono text-sm text-nd-text-secondary hover:text-nd-text-display nd-transition border-b border-nd-border nd-focus"
             >
               GitHub
             </a>
@@ -324,13 +329,13 @@ export function Header() {
               href="https://buymeacoffee.com/luinbytes"
               target="_blank"
               rel="noopener noreferrer"
-              className="block py-3 font-mono text-sm text-nd-text-secondary hover:text-nd-text-display nd-transition border-b border-nd-border"
+              className="block py-3 font-mono text-sm text-nd-text-secondary hover:text-nd-text-display nd-transition border-b border-nd-border nd-focus"
             >
               Buy Me a Coffee
             </a>
             <Link
               href="/meteor"
-              className="block py-3 font-mono text-sm text-nd-accent hover:text-nd-text-display nd-transition border-b border-nd-border"
+              className="block py-3 font-mono text-sm text-nd-accent hover:text-nd-text-display nd-transition border-b border-nd-border nd-focus"
               onClick={() => setMobileMenuOpen(false)}
             >
               Meteor
@@ -339,7 +344,7 @@ export function Header() {
               href="https://x6c75.gumroad.com/l/file-deduplicator"
               target="_blank"
               rel="noopener noreferrer"
-              className="block py-3 font-mono text-sm text-nd-text-secondary hover:text-nd-text-display nd-transition border-b border-nd-border"
+              className="block py-3 font-mono text-sm text-nd-text-secondary hover:text-nd-text-display nd-transition border-b border-nd-border nd-focus"
             >
               Store
             </a>

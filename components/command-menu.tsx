@@ -7,6 +7,7 @@ import { LucideIcon } from "lucide-react";
 
 export function CommandMenu() {
   const [open, setOpen] = React.useState(false);
+  const menuRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -24,22 +25,56 @@ export function CommandMenu() {
     command();
   }, []);
 
+  const handleDialogKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      setOpen(false);
+      return;
+    }
+
+    if (e.key !== "Tab") return;
+
+    const focusable = menuRef.current?.querySelectorAll<HTMLElement>(
+      'button, [href], input, [tabindex]:not([tabindex="-1"])'
+    );
+
+    if (!focusable?.length) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  };
+
   if (!open) return null;
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Command menu"
       className="fixed inset-0 z-[99] bg-nd-black/80 flex items-start justify-center pt-[20vh]"
       onClick={() => setOpen(false)}
+      onKeyDown={handleDialogKeyDown}
     >
       <div
+        ref={menuRef}
         onClick={(e) => e.stopPropagation()}
         className="w-full max-w-lg"
       >
         <Command className="bg-nd-surface border border-nd-border-visible text-nd-text-primary overflow-hidden">
           <div className="flex items-center border-b border-nd-border px-3">
             <Command.Input
-              placeholder="Type a command or search..."
-              className="w-full bg-transparent p-4 outline-none font-mono text-sm text-nd-text-display placeholder:text-nd-text-disabled"
+              aria-label="Type a command or search"
+              autoFocus
+              placeholder="Type a command or search…"
+              className="w-full bg-transparent p-4 font-mono text-sm text-nd-text-display placeholder:text-nd-text-disabled nd-focus"
             />
             <kbd className="hidden sm:inline-block pointer-events-none h-5 select-none items-center gap-1 bg-nd-surface-raised px-1.5 font-mono text-[10px] text-nd-text-disabled border border-nd-border">
               ESC

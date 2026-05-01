@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { projects, Project, ProjectType } from "@/lib/data";
 import { cn } from "@/lib/utils";
@@ -23,11 +23,60 @@ const filterButtons: FilterCategory[] = ["All", "Raycast", "Web", "CLI", "Discor
 export function Projects() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [activeFilter, setActiveFilter] = useState<FilterCategory>("All");
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
 
   const filteredProjects =
     activeFilter === "All"
       ? projects
       : projects.filter((p) => filterMap[activeFilter]?.includes(p.type));
+
+  const openProject = (project: Project) => {
+    previouslyFocusedRef.current = document.activeElement as HTMLElement;
+    setSelectedProject(project);
+  };
+
+  const closeProject = () => {
+    setSelectedProject(null);
+    window.requestAnimationFrame(() => previouslyFocusedRef.current?.focus());
+  };
+
+  useEffect(() => {
+    if (!selectedProject) return;
+
+    closeButtonRef.current?.focus();
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        closeProject();
+        return;
+      }
+
+      if (e.key !== "Tab") return;
+
+      const focusable = dialogRef.current?.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+
+      if (!focusable?.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [selectedProject]);
 
   return (
     <section id="projects" className="py-24 md:py-32 border-b border-nd-border">
@@ -40,30 +89,34 @@ export function Projects() {
         </p>
 
         {/* Segmented control — Nothing style */}
-        <div className="flex gap-0 mb-10 border border-nd-border-visible rounded-full overflow-hidden inline-flex">
-          {filterButtons.map((filter) => (
-            <button
-              key={filter}
-              onClick={() => setActiveFilter(filter)}
-              className={cn(
-                "px-4 py-2 font-mono text-[11px] tracking-[0.08em] uppercase nd-transition",
-                activeFilter === filter
-                  ? "bg-nd-text-display text-nd-black"
-                  : "bg-transparent text-nd-text-secondary hover:text-nd-text-display"
-              )}
-            >
-              {filter}
-            </button>
-          ))}
+        <div className="mb-10 max-w-full overflow-x-auto pb-2">
+          <div className="inline-flex min-w-max gap-0 border border-nd-border-visible rounded-full overflow-hidden">
+            {filterButtons.map((filter) => (
+              <button
+                key={filter}
+                type="button"
+                onClick={() => setActiveFilter(filter)}
+                className={cn(
+                  "px-4 py-2 font-mono text-[11px] tracking-[0.08em] uppercase nd-transition nd-focus",
+                  activeFilter === filter
+                    ? "bg-nd-text-display text-nd-black"
+                    : "bg-transparent text-nd-text-secondary hover:text-nd-text-display"
+                )}
+              >
+                {filter}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Project cards — flat surface, border separation, no shadows */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredProjects.map((project) => (
-            <div
+            <button
               key={project.id}
-              onClick={() => setSelectedProject(project)}
-              className="group relative bg-nd-surface border border-nd-border p-6 cursor-pointer flex flex-col h-full nd-transition hover:border-nd-border-visible"
+              type="button"
+              onClick={() => openProject(project)}
+              className="group relative bg-nd-surface border border-nd-border p-6 cursor-pointer flex flex-col h-full text-left nd-transition hover:border-nd-border-visible nd-focus"
             >
               {/* Top: tags */}
               <div className="flex items-center gap-2 mb-6">
@@ -104,7 +157,7 @@ export function Projects() {
                 View Details
                 <ExternalLink className="w-3 h-3" />
               </div>
-            </div>
+            </button>
           ))}
         </div>
       </div>
@@ -114,9 +167,15 @@ export function Projects() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div
             className="absolute inset-0 bg-nd-black/80"
-            onClick={() => setSelectedProject(null)}
+            onClick={closeProject}
           />
-          <div className="relative bg-nd-surface border border-nd-border-visible w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-none flex flex-col">
+          <div
+            ref={dialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={`project-dialog-title-${selectedProject.id}`}
+            className="relative bg-nd-surface border border-nd-border-visible w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-none flex flex-col"
+          >
             {/* Modal Header */}
             <div className="sticky top-0 bg-nd-surface border-b border-nd-border p-6 md:p-8 flex justify-between items-start z-10">
               <div>
@@ -130,7 +189,10 @@ export function Projects() {
                     </span>
                   )}
                 </div>
-                <h3 className="font-body text-2xl md:text-3xl font-bold text-nd-text-display tracking-[-0.02em] mb-2">
+                <h3
+                  id={`project-dialog-title-${selectedProject.id}`}
+                  className="font-body text-2xl md:text-3xl font-bold text-nd-text-display tracking-[-0.02em] mb-2"
+                >
                   {selectedProject.name}
                 </h3>
                 <div className="flex flex-wrap gap-2">
@@ -142,8 +204,11 @@ export function Projects() {
                 </div>
               </div>
               <button
-                onClick={() => setSelectedProject(null)}
-                className="p-2 hover:bg-nd-surface-raised nd-transition font-mono text-nd-text-disabled hover:text-nd-text-display"
+                ref={closeButtonRef}
+                type="button"
+                onClick={closeProject}
+                aria-label="Close project details"
+                className="p-2 hover:bg-nd-surface-raised nd-transition font-mono text-nd-text-disabled hover:text-nd-text-display nd-focus"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -202,8 +267,8 @@ export function Projects() {
               {selectedProject.pageUrl && (
                 <Link
                   href={selectedProject.pageUrl}
-                  onClick={() => setSelectedProject(null)}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-nd-accent text-nd-black font-mono text-[13px] font-bold tracking-[0.06em] uppercase rounded-full nd-transition hover:opacity-80 min-h-[44px]"
+                  onClick={closeProject}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-nd-accent text-nd-black font-mono text-[13px] font-bold tracking-[0.06em] uppercase rounded-full nd-transition hover:opacity-80 min-h-[44px] nd-focus"
                 >
                   Product Page
                 </Link>
@@ -213,7 +278,7 @@ export function Projects() {
                   href={selectedProject.sourceUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-nd-text-display text-nd-black font-mono text-[13px] font-bold tracking-[0.06em] uppercase rounded-full nd-transition hover:opacity-80 min-h-[44px]"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-nd-text-display text-nd-black font-mono text-[13px] font-bold tracking-[0.06em] uppercase rounded-full nd-transition hover:opacity-80 min-h-[44px] nd-focus"
                 >
                   View Source
                 </a>
@@ -223,7 +288,7 @@ export function Projects() {
                   href={selectedProject.purchaseUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-transparent border border-nd-accent text-nd-accent font-mono text-[13px] font-bold tracking-[0.06em] uppercase rounded-full nd-transition hover:bg-nd-accent-subtle min-h-[44px]"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-transparent border border-nd-accent text-nd-accent font-mono text-[13px] font-bold tracking-[0.06em] uppercase rounded-full nd-transition hover:bg-nd-accent-subtle min-h-[44px] nd-focus"
                 >
                   Buy $10
                 </a>
@@ -233,7 +298,7 @@ export function Projects() {
                   href={selectedProject.demoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-transparent border border-nd-border-visible text-nd-text-primary font-mono text-[13px] font-bold tracking-[0.06em] uppercase rounded-full nd-transition hover:border-nd-text-secondary min-h-[44px]"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-transparent border border-nd-border-visible text-nd-text-primary font-mono text-[13px] font-bold tracking-[0.06em] uppercase rounded-full nd-transition hover:border-nd-text-secondary min-h-[44px] nd-focus"
                 >
                   Live Demo
                 </a>

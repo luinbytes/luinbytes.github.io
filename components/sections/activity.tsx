@@ -341,7 +341,7 @@ export function Activity() {
               </div>
             ) : (
               <div className="h-[100px] flex items-center justify-center font-mono text-[11px] text-nd-text-disabled tracking-[0.08em] uppercase">
-                [LOADING...]
+                [LOADING…]
               </div>
             )}
           </div>
@@ -373,7 +373,7 @@ export function Activity() {
               </div>
             ) : (
               <div className="h-[100px] flex items-center justify-center font-mono text-[11px] text-nd-text-disabled tracking-[0.08em] uppercase">
-                [LOADING...]
+                [LOADING…]
               </div>
             )}
           </div>
@@ -464,7 +464,7 @@ export function Activity() {
           ) : !statsLoaded ? (
             <div className="bg-nd-surface border border-nd-border p-8 h-[300px] flex items-center justify-center">
               <span className="font-mono text-[11px] text-nd-text-disabled tracking-[0.08em] uppercase">
-                [LOADING...]
+                [LOADING…]
               </span>
             </div>
           ) : (

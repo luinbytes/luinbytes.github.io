@@ -10,7 +10,6 @@ import {
   Eye,
   Zap,
   Target,
-  Keyboard,
   Settings,
   PackageOpen,
 } from "lucide-react";

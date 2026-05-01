@@ -60,14 +60,16 @@ function WindowWalkerDemo() {
           <Search className="w-4 h-4 text-nd-text-disabled" />
           <input
             ref={inputRef}
+            aria-label="Search windows"
+            name="window-search"
             type="text"
-            placeholder="Search windows..."
+            placeholder="Search windows…"
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
               setSelectedIndex(0);
             }}
-            className="bg-transparent text-base text-nd-text-display outline-none w-full placeholder-nd-text-disabled font-body"
+            className="bg-transparent text-base text-nd-text-display w-full placeholder-nd-text-disabled font-body nd-focus"
             autoComplete="off"
           />
         </div>
