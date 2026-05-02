@@ -12,14 +12,14 @@ export function Hero() {
   return (
     <section
       id="home"
-      className="relative flex min-h-[calc(100vh-4rem)] items-center overflow-hidden border-b border-nd-border"
+      className="relative flex min-h-[calc(100svh-12rem)] items-center overflow-hidden border-b border-nd-border"
     >
       <div className="absolute inset-0 dot-grid-subtle opacity-30" />
       <div className="absolute inset-x-0 bottom-0 h-px bg-nd-border-visible" />
 
-      <div className="container relative z-10 mx-auto grid max-w-7xl gap-12 px-4 py-24 md:py-28 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
+      <div className="container relative z-10 mx-auto grid max-w-7xl gap-12 px-4 py-16 md:py-20 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
         <div>
-          <h1 className="max-w-4xl font-body text-5xl font-bold leading-[0.95] tracking-normal text-nd-text-display md:text-7xl lg:text-8xl">
+          <h1 className="max-w-4xl font-body text-5xl font-bold leading-[0.95] tracking-normal text-nd-text-display md:text-6xl lg:text-7xl">
             I get annoyed,
             <br />
             then I build the
