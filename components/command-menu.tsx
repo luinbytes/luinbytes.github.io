@@ -2,8 +2,17 @@
 
 import * as React from "react";
 import { Command } from "cmdk";
-import { Laptop, User, Folder, Mail, Github, Coffee, Monitor } from "lucide-react";
-import { LucideIcon } from "lucide-react";
+import {
+  Coffee,
+  ExternalLink,
+  Folder,
+  Github,
+  Mail,
+  Search,
+  User,
+  type LucideIcon,
+} from "lucide-react";
+import { commandFilters, problemBuilds } from "@/lib/homepage";
 
 export function CommandMenu() {
   const [open, setOpen] = React.useState(false);
@@ -29,6 +38,18 @@ export function CommandMenu() {
   const runCommand = React.useCallback((command: () => void) => {
     setOpen(false);
     command();
+  }, []);
+
+  const scrollToSection = React.useCallback((id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
+  const openHref = React.useCallback((href: string) => {
+    if (href.startsWith("http")) {
+      window.open(href, "_blank", "noopener,noreferrer");
+      return;
+    }
+    window.location.href = href;
   }, []);
 
   const handleDialogKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -87,100 +108,64 @@ export function CommandMenu() {
             </kbd>
           </div>
 
-          <Command.List className="max-h-[300px] overflow-y-auto p-2">
-            <Command.Empty className="p-4 text-center font-mono text-[11px] text-nd-text-disabled tracking-[0.08em] uppercase">
+          <Command.List className="max-h-[360px] overflow-y-auto p-2">
+            <Command.Empty className="p-4 text-center font-mono text-[11px] uppercase tracking-label text-nd-text-disabled">
               No results found.
             </Command.Empty>
 
-            <Command.Group
-              heading="Navigation"
-              className="font-mono text-[10px] tracking-[0.08em] uppercase text-nd-text-disabled mb-1 px-2 pt-2"
-            >
-              <Item
-                icon={User}
-                onSelect={() =>
-                  runCommand(() =>
-                    document
-                      .getElementById("about")
-                      ?.scrollIntoView({ behavior: "smooth" })
-                  )
-                }
-              >
+            <Command.Group heading="Navigation" className="font-mono text-[10px] uppercase tracking-label text-nd-text-disabled mb-1 px-2 pt-2">
+              <Item icon={Folder} onSelect={() => runCommand(() => scrollToSection("builds"))}>
+                Builds
+              </Item>
+              <Item icon={User} onSelect={() => runCommand(() => scrollToSection("about"))}>
                 About
               </Item>
-              <Item
-                icon={Folder}
-                onSelect={() =>
-                  runCommand(() =>
-                    document
-                      .getElementById("projects")
-                      ?.scrollIntoView({ behavior: "smooth" })
-                  )
-                }
-              >
-                Projects
+              <Item icon={Search} onSelect={() => runCommand(() => scrollToSection("status"))}>
+                Status
               </Item>
-              <Item
-                icon={Monitor}
-                onSelect={() =>
-                  runCommand(() =>
-                    document
-                      .getElementById("activity")
-                      ?.scrollIntoView({ behavior: "smooth" })
-                  )
-                }
-              >
-                Activity
-              </Item>
-              <Item
-                icon={Mail}
-                onSelect={() =>
-                  runCommand(() =>
-                    document
-                      .getElementById("contact")
-                      ?.scrollIntoView({ behavior: "smooth" })
-                  )
-                }
-              >
+              <Item icon={Mail} onSelect={() => runCommand(() => scrollToSection("contact"))}>
                 Contact
               </Item>
             </Command.Group>
 
-            <Command.Group
-              heading="Social"
-              className="font-mono text-[10px] tracking-[0.08em] uppercase text-nd-text-disabled mb-1 px-2 pt-4"
-            >
-              <Item
-                icon={Github}
-                onSelect={() =>
-                  runCommand(() =>
-                    window.open("https://github.com/luinbytes", "_blank")
-                  )
-                }
-              >
-                GitHub
-              </Item>
+            <Command.Group heading="Quick filters" className="font-mono text-[10px] uppercase tracking-label text-nd-text-disabled mb-1 px-2 pt-4">
+              {commandFilters.map((filter) => (
+                <Item
+                  key={filter.value}
+                  icon={filter.icon}
+                  keywords={[filter.value]}
+                  onSelect={() => runCommand(() => scrollToSection("builds"))}
+                >
+                  {filter.label}
+                </Item>
+              ))}
             </Command.Group>
 
-            <Command.Group
-              heading="General"
-              className="font-mono text-[10px] tracking-[0.08em] uppercase text-nd-text-disabled mb-1 px-2 pt-4"
-            >
-              <Item
-                icon={Laptop}
-                onSelect={() => runCommand(() => setOpen(false))}
-              >
-                Toggle Theme (Coming Soon)
+            <Command.Group heading="Builds" className="font-mono text-[10px] uppercase tracking-label text-nd-text-disabled mb-1 px-2 pt-4">
+              {problemBuilds.map((build) => (
+                <Item
+                  key={build.id}
+                  icon={build.icon}
+                  keywords={[build.shortName, ...build.filters]}
+                  onSelect={() => runCommand(() => openHref(build.href))}
+                >
+                  {build.buildName}
+                </Item>
+              ))}
+            </Command.Group>
+
+            <Command.Group heading="Social" className="font-mono text-[10px] uppercase tracking-label text-nd-text-disabled mb-1 px-2 pt-4">
+              <Item icon={Github} onSelect={() => runCommand(() => openHref("https://github.com/luinbytes"))}>
+                GitHub
+              </Item>
+              <Item icon={ExternalLink} onSelect={() => runCommand(() => openHref("https://x.com/x6c75"))}>
+                X / Twitter
               </Item>
               <Item
                 icon={Coffee}
-                onSelect={() =>
-                  runCommand(() =>
-                    window.open("https://buymeacoffee.com", "_blank")
-                  )
-                }
+                onSelect={() => runCommand(() => openHref("https://buymeacoffee.com/luinbytes"))}
               >
-                Buy RedBull
+                Buy Me a Coffee
               </Item>
             </Command.Group>
           </Command.List>
@@ -193,18 +178,21 @@ export function CommandMenu() {
 function Item({
   children,
   icon: Icon,
+  keywords,
   onSelect,
 }: {
   children: React.ReactNode;
   icon: LucideIcon;
+  keywords?: string[];
   onSelect: () => void;
 }) {
   return (
     <Command.Item
+      keywords={keywords}
       onSelect={onSelect}
-      className="flex items-center gap-3 px-3 py-2 text-sm text-nd-text-secondary aria-selected:bg-nd-text-display aria-selected:text-nd-black cursor-pointer font-mono"
+      className="flex cursor-pointer items-center gap-3 px-3 py-2 font-mono text-sm text-nd-text-secondary aria-selected:bg-nd-text-display aria-selected:text-nd-black"
     >
-      <Icon className="w-4 h-4" strokeWidth={1.5} />
+      <Icon className="h-4 w-4" strokeWidth={1.5} />
       {children}
     </Command.Item>
   );
