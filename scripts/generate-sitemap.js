@@ -11,7 +11,15 @@ const outputPath = path.join(projectRoot, 'public/sitemap.xml');
 // Static pages
 const staticPages = [
   '',
+  '/brc-trainer',
+  '/dagger-fall',
+  '/file-deduplicator',
+  '/linux-sonar',
   '/lumi',
+  '/meteor',
+  '/meteor/privacy',
+  '/risk-of-anticheat',
+  '/super-hacker-golf',
 ];
 
 function generateSitemap() {

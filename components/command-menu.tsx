@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Command } from "cmdk";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Coffee,
   ExternalLink,
@@ -17,6 +18,8 @@ import { commandFilters, problemBuilds } from "@/lib/homepage";
 export function CommandMenu() {
   const [open, setOpen] = React.useState(false);
   const menuRef = React.useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+  const router = useRouter();
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -40,9 +43,17 @@ export function CommandMenu() {
     command();
   }, []);
 
-  const scrollToSection = React.useCallback((id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-  }, []);
+  const scrollToSection = React.useCallback(
+    (id: string) => {
+      if (pathname !== "/") {
+        router.push(`/#${id}`);
+        return;
+      }
+
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    },
+    [pathname, router]
+  );
 
   const openHref = React.useCallback((href: string) => {
     if (href.startsWith("http")) {
