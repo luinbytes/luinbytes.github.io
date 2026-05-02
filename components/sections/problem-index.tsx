@@ -51,9 +51,8 @@ export function ProblemIndex() {
 
         <div className="grid gap-4 lg:grid-cols-[minmax(0,0.95fr)_minmax(420px,1fr)]">
           <div
-            role="listbox"
+            role="tablist"
             aria-label="Problems I refused to accept"
-            aria-activedescendant={`problem-${selected.id}`}
             className="border border-nd-border-visible"
           >
             {problemBuilds.map((item, index) => {
@@ -62,14 +61,16 @@ export function ProblemIndex() {
 
               return (
                 <button
-                  id={`problem-${item.id}`}
+                  id={`problem-tab-${item.id}`}
                   key={item.id}
                   ref={(node) => {
                     rowRefs.current[index] = node;
                   }}
                   type="button"
-                  role="option"
+                  role="tab"
                   aria-selected={isSelected}
+                  aria-controls={`problem-panel-${item.id}`}
+                  tabIndex={isSelected ? 0 : -1}
                   onClick={() => setSelectedId(item.id)}
                   onKeyDown={(event) => {
                     if (event.key === "ArrowDown") {
@@ -120,7 +121,13 @@ export function ProblemIndex() {
             })}
           </div>
 
-          <article className="min-h-[420px] border border-nd-border-visible bg-nd-surface p-6 md:p-8">
+          <article
+            id={`problem-panel-${selected.id}`}
+            role="tabpanel"
+            aria-labelledby={`problem-tab-${selected.id}`}
+            tabIndex={0}
+            className="min-h-[420px] border border-nd-border-visible bg-nd-surface p-6 md:p-8"
+          >
             <div className="mb-8 flex items-start justify-between gap-6">
               <div>
                 <span className="mb-3 block font-mono text-[11px] uppercase tracking-label text-nd-text-disabled">
