@@ -20,8 +20,6 @@ export function ProblemIndex() {
     return null;
   }
 
-  const SelectedIcon = selected.icon;
-
   const moveSelection = (direction: 1 | -1) => {
     const nextIndex =
       (selectedIndex + direction + problemBuilds.length) % problemBuilds.length;
@@ -53,6 +51,7 @@ export function ProblemIndex() {
           <div
             role="tablist"
             aria-label="Problems I refused to accept"
+            aria-orientation="vertical"
             className="border border-nd-border-visible"
           >
             {problemBuilds.map((item, index) => {
@@ -121,75 +120,86 @@ export function ProblemIndex() {
             })}
           </div>
 
-          <article
-            id={`problem-panel-${selected.id}`}
-            role="tabpanel"
-            aria-labelledby={`problem-tab-${selected.id}`}
-            tabIndex={0}
-            className="min-h-[420px] border border-nd-border-visible bg-nd-surface p-6 md:p-8"
-          >
-            <div className="mb-8 flex items-start justify-between gap-6">
-              <div>
-                <span className="mb-3 block font-mono text-[11px] uppercase tracking-label text-nd-text-disabled">
-                  Selected build
-                </span>
-                <h3 className="font-body text-3xl font-bold leading-tight tracking-normal text-nd-text-display md:text-5xl">
-                  {selected.buildName}
-                </h3>
-              </div>
-              <span className="flex h-14 w-14 shrink-0 items-center justify-center border border-nd-accent text-nd-accent">
-                <SelectedIcon className="h-6 w-6" strokeWidth={1.5} />
-              </span>
-            </div>
+          <div className="min-h-[420px] border border-nd-border-visible bg-nd-surface">
+            {problemBuilds.map((item) => {
+              const DetailIcon = item.icon;
+              const isSelected = item.id === selected.id;
 
-            <div className="grid gap-8 md:grid-cols-[1fr_0.85fr]">
-              <div>
-                <p className="text-base leading-relaxed text-nd-text-primary md:text-lg">
-                  {selected.summary}
-                </p>
-                <p className="mt-5 text-sm leading-relaxed text-nd-text-secondary">
-                  {selected.outcome}
-                </p>
-              </div>
-
-              <div>
-                <span className="mb-3 block font-mono text-[11px] uppercase tracking-label text-nd-text-disabled">
-                  Stack
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  {selected.tech.map((tech) => (
-                    <span
-                      key={tech}
-                      className="border border-nd-border-visible px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-label-tight text-nd-text-secondary"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-10 flex flex-col gap-3 border-t border-nd-border pt-6 sm:flex-row">
-              <Link
-                href={selected.href}
-                className="inline-flex min-h-[44px] items-center justify-center gap-2 border border-nd-text-display bg-nd-text-display px-5 py-3 font-mono text-[12px] font-bold uppercase tracking-label-tight text-nd-black nd-transition hover:opacity-80"
-              >
-                View build
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              {selected.sourceHref && (
-                <a
-                  href={selected.sourceHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex min-h-[44px] items-center justify-center gap-2 border border-nd-border-visible px-5 py-3 font-mono text-[12px] font-bold uppercase tracking-label-tight text-nd-text-primary nd-transition hover:border-nd-text-secondary"
+              return (
+                <article
+                  id={`problem-panel-${item.id}`}
+                  key={item.id}
+                  role="tabpanel"
+                  aria-labelledby={`problem-tab-${item.id}`}
+                  hidden={!isSelected}
+                  tabIndex={isSelected ? 0 : -1}
+                  className="p-6 md:p-8"
                 >
-                  Source
-                  <ExternalLink className="h-4 w-4" />
-                </a>
-              )}
-            </div>
-          </article>
+                  <div className="mb-8 flex items-start justify-between gap-6">
+                    <div>
+                      <span className="mb-3 block font-mono text-[11px] uppercase tracking-label text-nd-text-disabled">
+                        Selected build
+                      </span>
+                      <h3 className="font-body text-3xl font-bold leading-tight tracking-normal text-nd-text-display md:text-5xl">
+                        {item.buildName}
+                      </h3>
+                    </div>
+                    <span className="flex h-14 w-14 shrink-0 items-center justify-center border border-nd-accent text-nd-accent">
+                      <DetailIcon className="h-6 w-6" strokeWidth={1.5} />
+                    </span>
+                  </div>
+
+                  <div className="grid gap-8 md:grid-cols-[1fr_0.85fr]">
+                    <div>
+                      <p className="text-base leading-relaxed text-nd-text-primary md:text-lg">
+                        {item.summary}
+                      </p>
+                      <p className="mt-5 text-sm leading-relaxed text-nd-text-secondary">
+                        {item.outcome}
+                      </p>
+                    </div>
+
+                    <div>
+                      <span className="mb-3 block font-mono text-[11px] uppercase tracking-label text-nd-text-disabled">
+                        Stack
+                      </span>
+                      <div className="flex flex-wrap gap-2">
+                        {item.tech.map((tech) => (
+                          <span
+                            key={tech}
+                            className="border border-nd-border-visible px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-label-tight text-nd-text-secondary"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-10 flex flex-col gap-3 border-t border-nd-border pt-6 sm:flex-row">
+                    <Link
+                      href={item.href}
+                      className="inline-flex min-h-[44px] items-center justify-center gap-2 border border-nd-text-display bg-nd-text-display px-5 py-3 font-mono text-[12px] font-bold uppercase tracking-label-tight text-nd-black nd-transition hover:opacity-80"
+                    >
+                      View build
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                    {item.sourceHref && (
+                      <a
+                        href={item.sourceHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex min-h-[44px] items-center justify-center gap-2 border border-nd-border-visible px-5 py-3 font-mono text-[12px] font-bold uppercase tracking-label-tight text-nd-text-primary nd-transition hover:border-nd-text-secondary"
+                      >
+                        Source
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>
