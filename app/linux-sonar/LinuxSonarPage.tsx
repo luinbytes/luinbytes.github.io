@@ -230,7 +230,7 @@ export function LinuxSonarPage() {
             {/* Left column — copy */}
             <div>
               <Link
-                href="/#projects"
+                href="/#builds"
                 className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled hover:text-nd-text-display nd-transition mb-12"
               >
                 ← Back to projects
