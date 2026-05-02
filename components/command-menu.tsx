@@ -97,34 +97,34 @@ export function CommandMenu() {
       role="dialog"
       aria-modal="true"
       aria-label="Command menu"
-      className="fixed inset-0 z-[99] bg-nd-black/80 flex items-start justify-center pt-[20vh]"
+      className="fixed inset-0 z-[99] flex items-start justify-center bg-nd-black/75 px-4 pt-[14vh] backdrop-blur-sm"
       onClick={() => setOpen(false)}
       onKeyDown={handleDialogKeyDown}
     >
       <div
         ref={menuRef}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-lg"
+        className="w-full max-w-xl"
       >
-        <Command className="bg-nd-surface border border-nd-border-visible text-nd-text-primary overflow-hidden">
-          <div className="flex items-center border-b border-nd-border px-3">
+        <Command className="overflow-hidden border border-nd-border-visible bg-nd-surface text-nd-text-primary shadow-[0_24px_80px_rgba(0,0,0,0.55)]">
+          <div className="flex items-center gap-3 border-b border-nd-border px-4 py-3 focus-within:border-nd-accent">
             <Command.Input
               aria-label="Type a command or search"
               autoFocus
               placeholder="Type a command or search…"
-              className="w-full bg-transparent p-4 font-mono text-sm text-nd-text-display placeholder:text-nd-text-disabled nd-focus"
+              className="min-h-[40px] w-full bg-transparent font-mono text-[13px] text-nd-text-display outline-none placeholder:text-nd-text-disabled"
             />
-            <kbd className="hidden sm:inline-block pointer-events-none h-5 select-none items-center gap-1 bg-nd-surface-raised px-1.5 font-mono text-[10px] text-nd-text-disabled border border-nd-border">
+            <kbd className="hidden h-6 shrink-0 select-none items-center border border-nd-border bg-nd-black px-2 font-mono text-[10px] text-nd-text-disabled sm:inline-flex">
               ESC
             </kbd>
           </div>
 
-          <Command.List className="max-h-[360px] overflow-y-auto p-2">
+          <Command.List className="max-h-[420px] overflow-y-auto p-3">
             <Command.Empty className="p-4 text-center font-mono text-[11px] uppercase tracking-label text-nd-text-disabled">
               No results found.
             </Command.Empty>
 
-            <Command.Group heading="Navigation" className="font-mono text-[10px] uppercase tracking-label text-nd-text-disabled mb-1 px-2 pt-2">
+            <Command.Group heading="Navigation" className="mb-2 px-1 pt-1 font-mono text-[10px] uppercase tracking-label text-nd-text-disabled">
               <Item icon={Folder} onSelect={() => runCommand(() => scrollToSection("builds"))}>
                 Builds
               </Item>
@@ -139,7 +139,7 @@ export function CommandMenu() {
               </Item>
             </Command.Group>
 
-            <Command.Group heading="Quick filters" className="font-mono text-[10px] uppercase tracking-label text-nd-text-disabled mb-1 px-2 pt-4">
+            <Command.Group heading="Quick filters" className="mb-2 px-1 pt-4 font-mono text-[10px] uppercase tracking-label text-nd-text-disabled">
               {commandFilters.map((filter) => (
                 <Item
                   key={filter.value}
@@ -152,7 +152,7 @@ export function CommandMenu() {
               ))}
             </Command.Group>
 
-            <Command.Group heading="Builds" className="font-mono text-[10px] uppercase tracking-label text-nd-text-disabled mb-1 px-2 pt-4">
+            <Command.Group heading="Builds" className="mb-2 px-1 pt-4 font-mono text-[10px] uppercase tracking-label text-nd-text-disabled">
               {problemBuilds.map((build) => (
                 <Item
                   key={build.id}
@@ -165,7 +165,7 @@ export function CommandMenu() {
               ))}
             </Command.Group>
 
-            <Command.Group heading="Social" className="font-mono text-[10px] uppercase tracking-label text-nd-text-disabled mb-1 px-2 pt-4">
+            <Command.Group heading="Social" className="mb-2 px-1 pt-4 font-mono text-[10px] uppercase tracking-label text-nd-text-disabled">
               <Item icon={Github} onSelect={() => runCommand(() => openHref("https://github.com/luinbytes"))}>
                 GitHub
               </Item>
@@ -201,9 +201,9 @@ function Item({
     <Command.Item
       keywords={keywords}
       onSelect={onSelect}
-      className="flex cursor-pointer items-center gap-3 px-3 py-2 font-mono text-sm text-nd-text-secondary aria-selected:bg-nd-text-display aria-selected:text-nd-black"
+      className="group mt-1 flex min-h-[42px] cursor-pointer items-center gap-3 border border-transparent px-3 py-2 font-mono text-[13px] text-nd-text-secondary outline-none nd-transition aria-selected:border-nd-border-visible aria-selected:bg-nd-black aria-selected:text-nd-text-display"
     >
-      <Icon className="h-4 w-4" strokeWidth={1.5} />
+      <Icon className="h-4 w-4 text-nd-text-disabled nd-transition group-aria-selected:text-nd-accent" strokeWidth={1.5} />
       {children}
     </Command.Item>
   );
