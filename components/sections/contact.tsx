@@ -1,163 +1,64 @@
-import { Github, Twitter, Mail, Coffee } from "lucide-react";
+import { ArrowRight, Coffee, Github, Mail, Twitter } from "lucide-react";
+import { contactLinks } from "@/lib/homepage";
+
+const iconMap = {
+  Email: Mail,
+  GitHub: Github,
+  "X / Twitter": Twitter,
+};
 
 export function Contact() {
   return (
-    <section id="contact" className="py-24 md:py-32 border-b border-nd-border">
-      <div className="container px-4 mx-auto max-w-4xl">
-        <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-4">
-          07 / Contact
+    <section id="contact" className="border-b border-nd-border py-20 md:py-28">
+      <div className="container mx-auto max-w-7xl px-4">
+        <span className="mb-4 block font-mono text-[11px] uppercase tracking-label text-nd-accent">
+          05 / Contact
         </span>
-        <h2 className="font-body text-3xl md:text-4xl font-bold text-nd-text-display tracking-[-0.02em] mb-4">
-          Let&apos;s Build Something
-        </h2>
-        <p className="text-nd-text-secondary text-base mb-12 max-w-xl">
-          Got a tedious workflow that needs automating? Or just want to talk about Rust?
-          Drop me a line.
-        </p>
-
-        <div className="grid md:grid-cols-3 gap-12">
-          {/* Socials */}
-          <div className="md:col-span-1 space-y-0 border-t border-nd-border">
-            <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-4 pt-4">
-              Socials
-            </span>
-            <div className="space-y-0">
-              <a
-                href="https://github.com/luinbytes"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 py-3 text-nd-text-secondary hover:text-nd-text-display nd-transition border-b border-nd-border group"
-              >
-                <Github className="w-4 h-4" />
-                <span className="text-sm font-body">GitHub</span>
-              </a>
-              <a
-                href="https://x.com/x6c75"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 py-3 text-nd-text-secondary hover:text-nd-text-display nd-transition border-b border-nd-border group"
-              >
-                <Twitter className="w-4 h-4" />
-                <span className="text-sm font-body">@x6c75</span>
-              </a>
-              <a
-                href="mailto:0x6c75@protonmail.com"
-                className="flex items-center gap-3 py-3 text-nd-text-secondary hover:text-nd-text-display nd-transition border-b border-nd-border group"
-              >
-                <Mail className="w-4 h-4" />
-                <span className="text-sm font-body">Email</span>
-              </a>
-              <a
-                href="https://buymeacoffee.com/luinbytes"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 py-3 text-nd-text-secondary hover:text-nd-text-display nd-transition border-b border-nd-border group"
-              >
-                <Coffee className="w-4 h-4" />
-                <span className="text-sm font-body">Buy Me a Coffee</span>
-              </a>
-            </div>
-
-            {/* Raycast Extensions */}
-            <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-4 pt-6">
-              Raycast Extensions
-            </span>
-            <div className="space-y-0">
-              <a
-                href="https://www.raycast.com/nazzy_wazzy_lu/window-walker?via=lu"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 px-0 py-3 border-b border-nd-border group"
-              >
-                <div className="flex-1">
-                  <div className="text-sm text-nd-text-secondary font-body group-hover:text-nd-text-display nd-transition">
-                    Window Walker
-                  </div>
-                  <div className="font-mono text-[10px] text-nd-text-disabled">
-                    Quick window switching
-                  </div>
-                </div>
-              </a>
-              <a
-                href="https://www.raycast.com/nazzy_wazzy_lu/archisteamfarm?via=lu"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 px-0 py-3 border-b border-nd-border group"
-              >
-                <div className="flex-1">
-                  <div className="text-sm text-nd-text-secondary font-body group-hover:text-nd-text-display nd-transition">
-                    ArchiSteamFarm
-                  </div>
-                  <div className="font-mono text-[10px] text-nd-text-disabled">
-                    Steam bot management
-                  </div>
-                </div>
-              </a>
-              <a
-                href="https://www.raycast.com/khlebobul/bed-time-calculator?via=lu"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 px-0 py-3 border-b border-nd-border group"
-              >
-                <div className="flex-1">
-                  <div className="text-sm text-nd-text-secondary font-body group-hover:text-nd-text-display nd-transition">
-                    Bed Time Calculator
-                  </div>
-                  <div className="font-mono text-[10px] text-nd-text-disabled">
-                    Optimal sleep cycles
-                  </div>
-                </div>
-              </a>
-              <a
-                href="https://raycast.com/?via=lu"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 font-mono text-[10px] text-nd-text-disabled hover:text-nd-interactive nd-transition pt-4"
-              >
-                Get Raycast free →
-              </a>
-            </div>
+        <div className="grid gap-10 md:grid-cols-[1fr_auto] md:items-end">
+          <div>
+            <h2 className="max-w-3xl font-body text-4xl font-bold leading-tight tracking-normal text-nd-text-display md:text-6xl">
+              Open to interesting projects and unsolicited bug reports.
+            </h2>
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-nd-text-secondary">
+              Send the weird workflow, the broken tool, or the idea that keeps
+              getting stuck in your head.
+            </p>
           </div>
 
-          {/* Get in Touch */}
-          <div className="md:col-span-2">
-            <div className="border border-nd-border p-8 md:p-12">
-              <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled block mb-6">
-                Get in Touch
-              </span>
-              <p className="text-nd-text-secondary text-base font-body mb-8 max-w-md">
-                Interested in working together, have a project idea, or just want to say hi?
-                Send me an email and I&apos;ll get back to you.
-              </p>
-              <a
-                href="mailto:0x6c75@protonmail.com"
-                className="inline-flex items-center gap-3 bg-nd-text-display text-nd-black font-mono text-[13px] font-bold tracking-[0.06em] uppercase py-4 px-8 rounded-full nd-transition hover:opacity-80 min-h-[44px]"
-              >
-                <Mail className="w-4 h-4" />
-                Send Email
-              </a>
-            </div>
+          <div className="grid min-w-[260px] gap-3">
+            {contactLinks.map((link) => {
+              const Icon = iconMap[link.label as keyof typeof iconMap];
+              return (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target={link.external ? "_blank" : undefined}
+                  rel={link.external ? "noopener noreferrer" : undefined}
+                  className="group inline-flex min-h-[48px] items-center justify-between gap-4 border border-nd-border-visible px-5 py-3 font-mono text-[12px] font-bold uppercase tracking-label-tight text-nd-text-primary nd-transition hover:border-nd-text-secondary hover:bg-nd-surface"
+                >
+                  <span className="inline-flex items-center gap-3">
+                    <Icon className="h-4 w-4" strokeWidth={1.5} />
+                    {link.label}
+                  </span>
+                  <ArrowRight className="h-4 w-4 text-nd-accent nd-transition group-hover:translate-x-1" />
+                </a>
+              );
+            })}
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="mt-24 pt-8 border-t border-nd-border text-center font-mono text-[11px]">
-          <p className="text-nd-text-disabled tracking-[0.06em]">
-            © {new Date().getFullYear()} Luinbytes. Built with Next.js & Caffeine.
-          </p>
-          <p className="text-nd-text-disabled tracking-[0.06em] mt-1 opacity-60">
-            Powered by{" "}
-            <a
-              href="https://hermes-agent.nousresearch.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-nd-interactive nd-transition"
-            >
-              Hermes
-            </a>{" "}
-            · AI assistant: Lumi
-          </p>
-        </div>
+        <footer className="mt-20 flex flex-col gap-4 border-t border-nd-border pt-6 font-mono text-[11px] uppercase tracking-label text-nd-text-disabled md:flex-row md:items-center md:justify-between">
+          <span>© {new Date().getFullYear()} luinbytes.dev</span>
+          <a
+            href="https://buymeacoffee.com/luinbytes"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 nd-transition hover:text-nd-text-primary"
+          >
+            <Coffee className="h-3.5 w-3.5" />
+            Buy Me a Coffee
+          </a>
+        </footer>
       </div>
     </section>
   );
