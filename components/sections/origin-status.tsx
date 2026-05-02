@@ -35,7 +35,7 @@ export function OriginStatus() {
             {workbenchItems.map((item) => (
               <div
                 key={item.label}
-                className="border-b border-nd-border p-5 md:border-b-0 md:border-r md:last:border-r-0"
+                className="border-b border-nd-border p-5 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0"
               >
                 <dt className="mb-2 font-mono text-[10px] uppercase tracking-label text-nd-text-disabled">
                   {item.label}

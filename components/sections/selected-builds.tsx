@@ -31,13 +31,11 @@ export function SelectedBuilds() {
         <div className="border border-nd-border-visible">
           {selectedBuilds.map((build) => {
             const Icon = build.icon;
-
-            return (
-              <Link
-                key={build.id}
-                href={build.href}
-                className="group grid gap-4 border-b border-nd-border p-5 nd-transition last:border-b-0 hover:bg-nd-surface md:grid-cols-[72px_1fr_auto_32px] md:items-center md:p-6"
-              >
+            const isExternal = build.href.startsWith("http");
+            const rowClassName =
+              "group grid gap-4 border-b border-nd-border p-5 nd-focus nd-transition last:border-b-0 hover:bg-nd-surface md:grid-cols-[72px_1fr_auto_32px] md:items-center md:p-6";
+            const rowContent = (
+              <>
                 <span className="flex h-12 w-12 items-center justify-center border border-nd-border-visible text-nd-text-primary group-hover:border-nd-accent group-hover:text-nd-accent">
                   <Icon className="h-5 w-5" strokeWidth={1.5} />
                 </span>
@@ -60,6 +58,30 @@ export function SelectedBuilds() {
                   ))}
                 </span>
                 <ArrowRight className="h-4 w-4 text-nd-accent nd-transition group-hover:translate-x-1" />
+              </>
+            );
+
+            if (isExternal) {
+              return (
+                <a
+                  key={build.id}
+                  href={build.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={rowClassName}
+                >
+                  {rowContent}
+                </a>
+              );
+            }
+
+            return (
+              <Link
+                key={build.id}
+                href={build.href}
+                className={rowClassName}
+              >
+                {rowContent}
               </Link>
             );
           })}
