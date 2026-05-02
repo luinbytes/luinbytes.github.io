@@ -20,6 +20,12 @@ export function CommandMenu() {
     return () => document.removeEventListener("keydown", down);
   }, []);
 
+  React.useEffect(() => {
+    const openMenu = () => setOpen(true);
+    window.addEventListener("lu:open-command-menu", openMenu);
+    return () => window.removeEventListener("lu:open-command-menu", openMenu);
+  }, []);
+
   const runCommand = React.useCallback((command: () => void) => {
     setOpen(false);
     command();

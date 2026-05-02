@@ -1,70 +1,85 @@
 "use client";
 
 import Link from "next/link";
+import { ArrowDown, ArrowRight, Command } from "lucide-react";
+import { workbenchItems } from "@/lib/homepage";
 
 export function Hero() {
+  const openCommandMenu = () => {
+    window.dispatchEvent(new CustomEvent("lu:open-command-menu"));
+  };
+
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center border-b border-nd-border"
+      className="relative flex min-h-[calc(100vh-4rem)] items-center overflow-hidden border-b border-nd-border"
     >
-      {/* Subtle dot grid background */}
-      <div className="absolute inset-0 dot-grid-subtle opacity-40 pointer-events-none" />
+      <div className="absolute inset-0 dot-grid-subtle opacity-30" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-nd-border-visible" />
 
-      <div className="container px-4 mx-auto max-w-5xl relative z-10 py-32 md:py-48">
-        {/* Status indicator */}
-        <div className="flex items-center gap-2 mb-8">
-          <span className="w-1.5 h-1.5 rounded-full bg-nd-success" />
-          <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-secondary">
-            Available for work
-          </span>
+      <div className="container relative z-10 mx-auto grid max-w-7xl gap-12 px-4 py-24 md:py-28 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
+        <div>
+          <h1 className="max-w-4xl font-body text-5xl font-bold leading-[0.95] tracking-normal text-nd-text-display md:text-7xl lg:text-8xl">
+            I get annoyed,
+            <br />
+            then I build the
+            <br />
+            <span className="text-nd-accent">missing thing.</span>
+          </h1>
+          <p className="mt-8 max-w-2xl text-base leading-relaxed text-nd-text-secondary md:text-lg">
+            Android apps, Linux systems, reverse-engineering tools, automation,
+            and small utilities from the edge cases normal software leaves
+            behind.
+          </p>
+
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+            <Link
+              href="#builds"
+              className="inline-flex min-h-[44px] items-center justify-center gap-2 border border-nd-text-display bg-nd-text-display px-6 py-3 font-mono text-[12px] font-bold uppercase tracking-label-tight text-nd-black nd-transition hover:opacity-80"
+            >
+              Explore Problems
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <button
+              type="button"
+              onClick={openCommandMenu}
+              className="inline-flex min-h-[44px] items-center justify-center gap-2 border border-nd-border-visible px-6 py-3 font-mono text-[12px] font-bold uppercase tracking-label-tight text-nd-text-primary nd-transition hover:border-nd-text-secondary"
+            >
+              <Command className="h-4 w-4" />
+              Open Command Menu
+            </button>
+          </div>
         </div>
 
-        {/* Hero headline — Doto for the "one moment of surprise" */}
-        <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-nd-text-display leading-[1.0] tracking-[-0.03em] mb-8">
-          Self-taught
-          <br />
-          engineer making
-          <br />
-          <span className="text-nd-text-display">computers</span>{" "}
-          <span className="text-nd-accent">do things.</span>
-        </h1>
+        <aside className="border border-nd-border-visible bg-nd-black/80 p-5 md:p-6">
+          <div className="mb-6 flex items-center justify-between border-b border-nd-border pb-4 font-mono text-[10px] uppercase tracking-label text-nd-text-disabled">
+            <span>Workbench</span>
+            <span>May 2026</span>
+          </div>
+          <dl className="space-y-0">
+            {workbenchItems.map((item) => (
+              <div
+                key={item.label}
+                className="grid grid-cols-[7rem_1fr] gap-4 border-b border-nd-border py-4 last:border-b-0"
+              >
+                <dt className="font-mono text-[10px] uppercase tracking-label text-nd-accent">
+                  {item.label}
+                </dt>
+                <dd className="text-sm leading-relaxed text-nd-text-primary">
+                  {item.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </aside>
 
-        {/* Description */}
-        <p className="text-nd-text-secondary text-base md:text-lg max-w-xl leading-relaxed mb-12">
-          Building Android apps, Linux tools, game mods, and Raycast
-          extensions. If it saves me 5 seconds, I&apos;ll spend 5 hours
-          automating it.
-        </p>
-
-        {/* Actions — Nothing button style */}
-        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-          <Link
-            href="#projects"
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-nd-text-display text-nd-black font-mono text-[13px] font-bold tracking-[0.06em] uppercase rounded-full nd-transition hover:opacity-80 min-h-[44px]"
-          >
-            View Projects
-          </Link>
-          <Link
-            href="#contact"
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-transparent border border-nd-border-visible text-nd-text-primary font-mono text-[13px] font-bold tracking-[0.06em] uppercase rounded-full nd-transition hover:border-nd-text-secondary min-h-[44px]"
-          >
-            Get in Touch
-          </Link>
-          <Link
-            href="/lumi"
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-transparent text-nd-text-secondary font-mono text-[13px] tracking-[0.06em] uppercase nd-transition hover:text-nd-text-display min-h-[44px]"
-          >
-            About Lumi
-          </Link>
-        </div>
-
-        {/* Scroll hint — tertiary, pushed to edge */}
-        <div className="mt-24 md:mt-32">
-          <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-nd-text-disabled">
-            Scroll to explore ↓
-          </span>
-        </div>
+        <a
+          href="#builds"
+          className="absolute bottom-6 left-4 hidden items-center gap-3 font-mono text-[11px] uppercase tracking-label text-nd-text-disabled nd-transition hover:text-nd-text-primary md:flex"
+        >
+          <span>{"// next"}</span>
+          <ArrowDown className="h-4 w-4 text-nd-accent" />
+        </a>
       </div>
     </section>
   );
