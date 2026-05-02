@@ -1,11 +1,18 @@
 import { ArrowRight, Coffee, Github, Mail, Twitter } from "lucide-react";
 import { contactLinks } from "@/lib/homepage";
 
-const iconMap = {
-  Email: Mail,
-  GitHub: Github,
-  "X / Twitter": Twitter,
-};
+function getContactIcon(label: string) {
+  switch (label) {
+    case "Email":
+      return Mail;
+    case "GitHub":
+      return Github;
+    case "X / Twitter":
+      return Twitter;
+    default:
+      return Mail;
+  }
+}
 
 export function Contact() {
   return (
@@ -27,14 +34,14 @@ export function Contact() {
 
           <div className="grid min-w-[260px] gap-3">
             {contactLinks.map((link) => {
-              const Icon = iconMap[link.label as keyof typeof iconMap];
+              const Icon = getContactIcon(link.label);
               return (
                 <a
                   key={link.label}
                   href={link.href}
                   target={link.external ? "_blank" : undefined}
                   rel={link.external ? "noopener noreferrer" : undefined}
-                  className="group inline-flex min-h-[48px] items-center justify-between gap-4 border border-nd-border-visible px-5 py-3 font-mono text-[12px] font-bold uppercase tracking-label-tight text-nd-text-primary nd-transition hover:border-nd-text-secondary hover:bg-nd-surface"
+                  className="group inline-flex min-h-[48px] items-center justify-between gap-4 border border-nd-border-visible px-5 py-3 font-mono text-[12px] font-bold uppercase tracking-label-tight text-nd-text-primary nd-focus nd-transition hover:border-nd-text-secondary hover:bg-nd-surface"
                 >
                   <span className="inline-flex items-center gap-3">
                     <Icon className="h-4 w-4" strokeWidth={1.5} />
@@ -53,7 +60,7 @@ export function Contact() {
             href="https://buymeacoffee.com/luinbytes"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 nd-transition hover:text-nd-text-primary"
+            className="inline-flex items-center gap-2 nd-focus nd-transition hover:text-nd-text-primary"
           >
             <Coffee className="h-3.5 w-3.5" />
             Buy Me a Coffee
