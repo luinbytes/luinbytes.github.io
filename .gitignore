@@ -40,6 +40,9 @@ yarn-error.log*
 CLAUDE.md
 .claude/
 
+# local brainstorming mockups
+.superpowers/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
