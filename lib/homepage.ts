@@ -101,8 +101,24 @@ export const problemBuilds: ProblemBuild[] = [
     icon: Gamepad2,
   },
   {
-    id: "raycast-automation",
+    id: "perkaholic",
     index: "05",
+    problem: "Wayland and Wine do not share a windowing path.",
+    buildName: "perkaholic",
+    shortName: "BO3 hybrid trainer",
+    summary:
+      "Hybrid BO3 Zombies trainer under Wine/Proton: XInput proxy DLL owns internal hooks, a native Wayland overlay owns drawing, binary IPC bridges both.",
+    outcome:
+      "Two independent processes that tolerate each other's absence — DLL-only, overlay-only, or both, without crashing either side.",
+    tech: ["C", "Rust", "MinGW", "wgpu", "wlr-layer-shell"],
+    href: "/perkaholic",
+    sourceHref: "https://github.com/luinbytes/perkaholic",
+    filters: ["reverse", "systems", "game", "modding", "linux", "wayland"],
+    icon: Gamepad2,
+  },
+  {
+    id: "raycast-automation",
+    index: "06",
     problem: "Automation is more work than doing the thing.",
     buildName: "Raycast automation",
     shortName: "Small workflow tools",
