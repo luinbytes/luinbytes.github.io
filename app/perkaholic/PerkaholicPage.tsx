@@ -11,7 +11,7 @@ import {
   Crosshair,
   MousePointerClick,
   Network,
-  Shield,
+  Plug,
   Wrench,
 } from "lucide-react";
 
@@ -99,15 +99,15 @@ const features = [
     ],
   },
   {
-    icon: Shield,
-    title: "Legacy External Reader Fallback",
+    icon: Plug,
+    title: "IPC-Only Drawing",
     description:
-      "The old Rust process_vm_readv reader survives as a fallback path. If the IPC frame is missing or stale, the overlay logs the transition and continues drawing from the external scanner rather than going blank.",
+      "The overlay is a pure draw-only IPC consumer. When the DLL frame is missing or stale the overlay draws nothing — it logs the transition and waits. It does not attach to BO3 and does not grab mouse input.",
     details: [
-      "Fallback triggers when IPC seq is unchanged for longer than the stale threshold",
-      "Overlay logs every IPC-to-external and external-to-IPC transition",
-      "process_vm_readv path — never /proc/PID/mem on GPU-using processes",
-      "Fallback preserves draw continuity across DLL restarts and partial startup",
+      "Draws nothing when the IPC frame is missing or stale — logs the transition, no crash, no scan",
+      "No BO3 attach and no mouse grab — click-through always, draw-only consumer",
+      "DLL keeps publishing even when the overlay is absent; IPC write failures are logged and ignored",
+      "Legacy external reader crates remain in the repo as reference/diagnostic code only, not a runtime fallback",
     ],
   },
   {
@@ -345,10 +345,10 @@ export function PerkaholicPage() {
                       LAYER 03 / IPC
                     </p>
                     <p className="font-mono text-sm text-nd-text-display mt-1">
-                      /tmp/perkaholic-ipc.bin
+                      Z:\tmp\perkaholic-ipc.bin ⇄ /tmp/perkaholic-ipc.bin
                     </p>
                     <p className="font-mono text-[10px] tracking-[0.04em] text-nd-text-disabled mt-1">
-                      binary frame · seq + commands
+                      binary frame · seq + commands · Wine Z: maps Linux /tmp
                     </p>
                   </div>
 
@@ -382,7 +382,7 @@ export function PerkaholicPage() {
                 { label: "Source langs", value: "3", total: 3, filled: 3, accentFrom: -1 },
                 { label: "Internal LOC", value: "~4.3k", total: 20, filled: 9, accentFrom: -1 },
                 { label: "Overlay LOC", value: "~18k", total: 20, filled: 20, accentFrom: 17 },
-                { label: "Crates", value: "6", total: 6, filled: 6, accentFrom: -1 },
+                { label: "Crates", value: "5", total: 5, filled: 5, accentFrom: -1 },
               ] as const
             ).map((stat) => (
               <div key={stat.label}>
@@ -506,15 +506,15 @@ export function PerkaholicPage() {
                   "Creates a wlr-layer-shell surface above fullscreen toplevels via Wayland",
                   "Maintains click-through (empty input region) unless the menu is open",
                   "Reads /tmp/perkaholic-ipc.bin each frame and draws the queued ESP primitives",
-                  "Falls back to legacy external reader if the IPC frame is missing or stale; logs every transition",
+                  "Draws nothing when the IPC frame is missing or stale — logs the transition, does not scan for BO3",
                 ],
               },
               {
                 title: "Failure modes handled",
                 items: [
                   "DLL alive, no overlay: IPC publish failures logged and ignored — game runs normally",
-                  "Overlay alive, no game: no mouse grab during scan, no crash, fallback reader idles",
-                  "Stale IPC frame: overlay logs the transition and switches to external reader path",
+                  "Overlay alive, no DLL: overlay draws nothing, logs stale-frame transitions, no crash",
+                  "Stale IPC frame: overlay logs the transition and draws nothing until a fresh frame arrives",
                   "Menu closed: full pointer pass-through — BO3 receives all mouse and keyboard events",
                 ],
               },
@@ -668,12 +668,43 @@ export function PerkaholicPage() {
                 content:
                   "Run make internal to cross-compile the proxy DLL with MinGW, then make internal-install to copy XINPUT9_1_0.dll next to BlackOps3.exe. Verify with objdump -p target/internal/XINPUT9_1_0.dll | rg 'd3d|dxgi|dwmapi' — output should be empty.",
               },
-              {
-                step: "03",
-                title: "Launch BO3 with the proxy override",
-                content:
-                  "Set the Steam launch options to: PERKAHOLIC_INTERNAL_VERBOSE=1 WINEDLLOVERRIDES=xinput9_1_0=n,b gamescope -f -r 144 -w 1920 -h 1080 -- %command%",
-              },
+            ].map((item) => (
+              <div
+                key={item.step}
+                className="flex gap-6 items-start"
+              >
+                <span className="font-display text-3xl font-bold text-nd-text-disabled shrink-0 w-12">
+                  {item.step}
+                </span>
+                <div>
+                  <h3 className="font-body text-lg font-bold text-nd-text-display mb-2">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-nd-text-secondary leading-relaxed">
+                    {item.content}
+                  </p>
+                </div>
+              </div>
+            ))}
+
+            <div className="flex gap-6 items-start">
+              <span className="font-display text-3xl font-bold text-nd-text-disabled shrink-0 w-12">
+                03
+              </span>
+              <div>
+                <h3 className="font-body text-lg font-bold text-nd-text-display mb-2">
+                  Launch BO3 with the proxy override
+                </h3>
+                <p className="text-sm text-nd-text-secondary leading-relaxed">
+                  Set the Steam launch options to:{" "}
+                  <code className="font-mono text-nd-text-display">
+                    PERKAHOLIC_INTERNAL_VERBOSE=1 WINEDLLOVERRIDES=xinput9_1_0=n,b gamescope -f -r 144 -w 1920 -h 1080 -- %command%
+                  </code>
+                </p>
+              </div>
+            </div>
+
+            {[
               {
                 step: "04",
                 title: "Run the overlay",
