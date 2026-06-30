@@ -3,35 +3,68 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Luinbytes builds small, useful software with care.">
+    <meta name="description" content="Luinbytes link dock: main site, GitHub, Discord, X, and email.">
     <title>Luinbytes</title>
-    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="favicon.ico" sizes="32x32">
     <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
   </head>
   <body>
-    <main class="page">
-      <section class="hero" aria-labelledby="title">
-        <p class="eyebrow">Independent software work</p>
-        <h1 id="title">Luinbytes</h1>
-        <p class="lede">
-          Small tools, thoughtful systems, and quiet experiments built with a bias for usefulness.
-        </p>
-        <div class="actions">
-          <a class="button primary" href="https://luinbytes.dev/">Visit luinbytes.dev</a>
-          <a class="button" href="https://github.com/luinbytes">GitHub</a>
-        </div>
+    <svg class="filters" aria-hidden="true" focusable="false">
+      <filter id="water">
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.012 0.035"
+          numOctaves="2"
+          seed="7"
+          result="noise"
+        />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </svg>
+
+    <main class="shell" data-dock>
+      <div class="pond" aria-hidden="true" data-pond></div>
+
+      <section class="intro" aria-labelledby="title">
+        <h1 id="title">luinbytes</h1>
+        <p>main site, source, socials, contact.</p>
       </section>
 
-      <section class="links" aria-label="Featured links">
-        <a href="https://luinbytes.dev/">
-          <span>Main site</span>
-          <strong>Writing, projects, and notes</strong>
+      <section class="dock" aria-label="Luinbytes links">
+        <a class="tile tile-main" href="https://luinbytes.dev/" data-key="1">
+          <span class="key">1</span>
+          <span class="label">Main site</span>
+          <strong>luinbytes.dev</strong>
+          <small>the actual site</small>
         </a>
-        <a href="https://github.com/luinbytes">
-          <span>Open source</span>
-          <strong>Code and public experiments</strong>
+        <a class="tile" href="https://github.com/luinbytes" data-key="2">
+          <span class="key">2</span>
+          <span class="label">GitHub</span>
+          <strong>@luinbytes</strong>
+          <small>repos and experiments</small>
+        </a>
+        <button class="tile" type="button" data-copy="@luinbytes" data-key="3">
+          <span class="key">3</span>
+          <span class="label">Discord</span>
+          <strong>@luinbytes</strong>
+          <small>copy handle</small>
+        </button>
+        <a class="tile" href="https://x.com/x6c75" data-key="4">
+          <span class="key">4</span>
+          <span class="label">X / Twitter</span>
+          <strong>@x6c75</strong>
+          <small>short fragments</small>
+        </a>
+        <a class="tile" href="mailto:0x6c75@protonmail.com" data-key="5">
+          <span class="key">5</span>
+          <span class="label">Email</span>
+          <strong>0x6c75@protonmail.com</strong>
+          <small>direct contact</small>
         </a>
       </section>
     </main>
+
+    <p class="toast" role="status" aria-live="polite" data-toast>Copied Discord handle</p>
   </body>
 </html>
