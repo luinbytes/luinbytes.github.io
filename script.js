@@ -1,23 +1,22 @@
 const dock = document.querySelector("[data-dock]");
-const pond = document.querySelector("[data-pond]");
+const field = document.querySelector("[data-field]");
 const toast = document.querySelector("[data-toast]");
 let toastTimer;
-let rippleTimer = 0;
+let pingTimer = 0;
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 document.addEventListener("pointermove", (event) => {
   document.documentElement.style.setProperty("--mx", `${event.clientX}px`);
   document.documentElement.style.setProperty("--my", `${event.clientY}px`);
-  document.documentElement.style.setProperty("--water-x", `${(event.clientX / innerWidth) * 100}%`);
-  document.documentElement.style.setProperty("--water-y", `${(event.clientY / innerHeight) * 100}%`);
 
-  if (!pond || Date.now() - rippleTimer < 90) return;
-  rippleTimer = Date.now();
-  const ripple = document.createElement("span");
-  ripple.className = "ripple";
-  ripple.style.setProperty("--x", `${event.clientX}px`);
-  ripple.style.setProperty("--y", `${event.clientY}px`);
-  pond.append(ripple);
-  ripple.addEventListener("animationend", () => ripple.remove(), { once: true });
+  if (reducedMotion.matches || !field || Date.now() - pingTimer < 120) return;
+  pingTimer = Date.now();
+  const ping = document.createElement("span");
+  ping.className = "ping";
+  ping.style.setProperty("--x", `${event.clientX}px`);
+  ping.style.setProperty("--y", `${event.clientY}px`);
+  field.append(ping);
+  ping.addEventListener("animationend", () => ping.remove(), { once: true });
 });
 
 document.addEventListener("keydown", (event) => {

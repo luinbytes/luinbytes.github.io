@@ -3,46 +3,34 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Luinbytes link dock: main site, GitHub, Discord, X, and email.">
+    <meta name="description" content="Luinbytes command dock: site, source, socials, and contact.">
     <title>Luinbytes</title>
     <link rel="icon" href="favicon.ico" sizes="32x32">
     <link rel="stylesheet" href="styles.css">
     <script src="script.js" defer></script>
   </head>
   <body>
-    <svg class="filters" aria-hidden="true" focusable="false">
-      <filter id="water">
-        <feTurbulence
-          type="fractalNoise"
-          baseFrequency="0.012 0.035"
-          numOctaves="2"
-          seed="7"
-          result="noise"
-        />
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G" />
-      </filter>
-    </svg>
-
     <main class="shell" data-dock>
-      <div class="pond" aria-hidden="true" data-pond></div>
+      <div class="field" aria-hidden="true" data-field></div>
 
       <section class="intro" aria-labelledby="title">
+        <p class="eyebrow">command dock</p>
         <h1 id="title">luinbytes</h1>
-        <p>main site, source, socials, contact.</p>
+        <p>site, source, contact.</p>
       </section>
 
       <section class="dock" aria-label="Luinbytes links">
         <a class="tile tile-main" href="https://luinbytes.dev/" data-key="1">
           <span class="key">1</span>
-          <span class="label">Main site</span>
+          <span class="label">Primary</span>
           <strong>luinbytes.dev</strong>
-          <small>the actual site</small>
+          <small>portfolio and shipped work</small>
         </a>
         <a class="tile" href="https://github.com/luinbytes" data-key="2">
           <span class="key">2</span>
           <span class="label">GitHub</span>
           <strong>@luinbytes</strong>
-          <small>repos and experiments</small>
+          <small>source and releases</small>
         </a>
         <button class="tile" type="button" data-copy="@luinbytes" data-key="3">
           <span class="key">3</span>
@@ -52,9 +40,9 @@
         </button>
         <a class="tile" href="https://x.com/x6c75" data-key="4">
           <span class="key">4</span>
-          <span class="label">X / Twitter</span>
+          <span class="label">X</span>
           <strong>@x6c75</strong>
-          <small>short fragments</small>
+          <small>notes and fragments</small>
         </a>
         <a class="tile" href="mailto:0x6c75@protonmail.com" data-key="5">
           <span class="key">5</span>
