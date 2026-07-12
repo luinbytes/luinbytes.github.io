@@ -3,20 +3,56 @@ const field = document.querySelector("[data-field]");
 const toast = document.querySelector("[data-toast]");
 let toastTimer;
 let pingTimer = 0;
+let activePings = 0;
+let pointerFrame = 0;
+let pointerX = 0;
+let pointerY = 0;
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-document.addEventListener("pointermove", (event) => {
-  document.documentElement.style.setProperty("--mx", `${event.clientX}px`);
-  document.documentElement.style.setProperty("--my", `${event.clientY}px`);
+function showToast() {
+  if (!toast) return;
 
-  if (reducedMotion.matches || !field || Date.now() - pingTimer < 120) return;
-  pingTimer = Date.now();
+  clearTimeout(toastTimer);
+  toast.classList.add("show");
+  toastTimer = setTimeout(() => toast.classList.remove("show"), 1600);
+}
+
+document.addEventListener("pointermove", (event) => {
+  if (!event.isPrimary || event.pointerType !== "mouse") return;
+
+  pointerX = event.clientX;
+  pointerY = event.clientY;
+  if (!pointerFrame) {
+    pointerFrame = requestAnimationFrame(() => {
+      document.documentElement.style.setProperty("--mx", `${pointerX}px`);
+      document.documentElement.style.setProperty("--my", `${pointerY}px`);
+      pointerFrame = 0;
+    });
+  }
+
+  const now = performance.now();
+  if (
+    reducedMotion.matches ||
+    !field ||
+    document.hidden ||
+    activePings >= 2 ||
+    now - pingTimer < 220
+  ) return;
+
+  pingTimer = now;
+  activePings += 1;
   const ping = document.createElement("span");
   ping.className = "ping";
-  ping.style.setProperty("--x", `${event.clientX}px`);
-  ping.style.setProperty("--y", `${event.clientY}px`);
+  ping.style.setProperty("--x", `${pointerX}px`);
+  ping.style.setProperty("--y", `${pointerY}px`);
   field.append(ping);
-  ping.addEventListener("animationend", () => ping.remove(), { once: true });
+  const removePing = () => {
+    if (!ping.isConnected) return;
+    activePings -= 1;
+    ping.remove();
+  };
+  ping.addEventListener("animationend", removePing, { once: true });
+  ping.addEventListener("animationcancel", removePing, { once: true });
 });
 
 document.addEventListener("keydown", (event) => {
@@ -40,8 +76,6 @@ document.querySelectorAll("[data-copy]").forEach((button) => {
       document.execCommand("copy");
       input.remove();
     }
-    toast?.classList.add("show");
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast?.classList.remove("show"), 1600);
+    showToast();
   });
 });
