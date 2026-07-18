@@ -174,12 +174,55 @@ def assert_copy_feedback(page: Page) -> None:
     assert copied == "@luinbytes", f"Unexpected clipboard content: {copied!r}"
 
 
+def assert_smooth_motion(page: Page) -> None:
+    motion = page.evaluate(
+        """() => {
+            const rules = [];
+            const collectRules = (ruleList) => {
+                for (const rule of ruleList) {
+                    rules.push(rule.cssText);
+                    if (rule.cssRules) collectRules(rule.cssRules);
+                }
+            };
+
+            for (const sheet of document.styleSheets) {
+                if (sheet.href && new URL(sheet.href).origin !== location.origin) continue;
+                collectRules(sheet.cssRules);
+            }
+
+            const printIn = document.getAnimations({ subtree: true })
+                .filter(animation => animation.animationName === 'print-in')
+                .map(animation => ({
+                    duration: animation.effect.getTiming().duration,
+                    easing: getComputedStyle(animation.effect.target).animationTimingFunction,
+                    playState: animation.playState,
+                }));
+            const doorDelays = [...document.querySelectorAll('.door')]
+                .map(door => parseFloat(getComputedStyle(door).animationDelay) * 1000);
+
+            return { rules, printIn, doorDelays };
+        }"""
+    )
+    stepped_rules = [rule for rule in motion["rules"] if "steps(" in rule]
+    assert not stepped_rules, f"Loaded same-origin CSS still uses stepped easing: {stepped_rules}"
+    assert motion["printIn"], "Expected print-in entrance animations in the loaded page"
+    for animation in motion["printIn"]:
+        assert animation["duration"] <= 220, f"print-in duration exceeds 220ms: {animation}"
+        assert animation["easing"] == "cubic-bezier(0.23, 1, 0.32, 1)", (
+            f"print-in must use the shared strong ease-out: {animation}"
+        )
+    assert motion["doorDelays"] == [0, 40, 80, 120, 160], (
+        f"Door entrance delays changed: {motion['doorDelays']}"
+    )
+
+
 def assert_desktop(browser: Browser, base_url: str, screenshots: bool) -> None:
     context = browser.new_context(viewport={"width": 1280, "height": 800})
     context.grant_permissions(["clipboard-read", "clipboard-write"], origin=base_url)
     page = context.new_page()
     page.goto(base_url, wait_until="networkidle")
     controls = assert_destinations(page)
+    assert_smooth_motion(page)
     assert_no_horizontal_overflow(page, "1280px desktop")
 
     boxes = [control.bounding_box() for control in controls]
