@@ -5,10 +5,14 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import hashlib
 import http.server
 import re
 import socket
+import struct
 import threading
+import urllib.request
+from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
 
@@ -16,6 +20,26 @@ from playwright.sync_api import Browser, Page, sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
 ARTIFACTS = ROOT / "artifacts" / "pink-print-launchpad"
+CARD_PATH = "/assets/luinbytes-link-dock-share-card.png"
+CARD_URL = f"https://luinbytes.github.io{CARD_PATH}"
+CARD_SHA256 = "0afa9f6d50c91278eff6a2feefc07146ff8803831ea71a18e6637f5e50f15f94"
+
+
+class MetadataParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.meta: dict[tuple[str, str], str] = {}
+        self.canonical: str | None = None
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        attributes = dict(attrs)
+        if tag == "meta":
+            for key in ("name", "property"):
+                value = attributes.get(key)
+                if value:
+                    self.meta[(key, value)] = attributes.get("content") or ""
+        elif tag == "link" and attributes.get("rel") == "canonical":
+            self.canonical = attributes.get("href")
 
 
 class QuietHandler(http.server.SimpleHTTPRequestHandler):
@@ -57,6 +81,40 @@ def assert_no_horizontal_overflow(page: Page, label: str) -> None:
         f"{label} horizontally overflows: {widest}px content in "
         f"{dimensions['viewport']}px viewport"
     )
+
+
+def assert_social_card(base_url: str) -> None:
+    with urllib.request.urlopen(f"{base_url}/", timeout=10) as response:
+        document = response.read().decode("utf-8")
+
+    parser = MetadataParser()
+    parser.feed(document)
+    expected_meta = {
+        ("property", "og:type"): "website",
+        ("property", "og:url"): "https://luinbytes.github.io/",
+        ("property", "og:title"): "Luinbytes — launchpad",
+        ("property", "og:description"): "Luinbytes launchpad: portfolio, source, socials, and contact.",
+        ("property", "og:site_name"): "Luinbytes",
+        ("property", "og:image"): CARD_URL,
+        ("property", "og:image:width"): "1200",
+        ("property", "og:image:height"): "630",
+        ("property", "og:image:alt"): "Luinbytes launchpad pink-print link dock",
+        ("name", "twitter:card"): "summary_large_image",
+        ("name", "twitter:title"): "Luinbytes — launchpad",
+        ("name", "twitter:description"): "Luinbytes launchpad: portfolio, source, socials, and contact.",
+        ("name", "twitter:image"): CARD_URL,
+    }
+    assert parser.canonical == "https://luinbytes.github.io/", "Missing or incorrect canonical URL"
+    for key, expected in expected_meta.items():
+        assert parser.meta.get(key) == expected, f"Missing or incorrect {key[1]}"
+
+    with urllib.request.urlopen(f"{base_url}{CARD_PATH}", timeout=10) as response:
+        image = response.read()
+    assert image.startswith(b"\x89PNG\r\n\x1a\n"), "Social card is not a PNG"
+    assert image[12:16] == b"IHDR", "Social card lacks a PNG IHDR chunk"
+    assert struct.unpack(">II", image[16:24]) == (1200, 630), "Social card dimensions are incorrect"
+    assert hashlib.sha256(image).hexdigest() == CARD_SHA256, "Social card bytes differ from approval"
+    print("PASS social card: crawler metadata and approved PNG")
 
 
 def assert_destinations(page: Page) -> list:
@@ -186,6 +244,7 @@ def main() -> None:
     args = parser.parse_args()
 
     with static_server() as base_url, sync_playwright() as playwright:
+        assert_social_card(base_url)
         browser = playwright.chromium.launch(headless=True)
         try:
             assert_desktop(browser, base_url, args.screenshots)
