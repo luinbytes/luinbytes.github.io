@@ -72,8 +72,8 @@ class DotCut {
       ["bars", null, "wipe", 5, "drift"],
     ];
     this.palettes = [
-      ["#ff8bbc", "#080208"], ["#f4d9e6", "#160614"], ["#ff6fad", "#080208"],
-      ["#d7a2ff", "#230a1f"], ["#fff7fb", "#160614"], ["#ff8bbc", "#230a1f"],
+      ["#080208", "#ff8bbc"], ["#160614", "#f4d9e6"], ["#080208", "#ff6fad"],
+      ["#230a1f", "#d7a2ff"], ["#160614", "#fff7fb"], ["#230a1f", "#ff8bbc"],
     ];
     this.resize = this.resize.bind(this);
     this.tick = this.tick.bind(this);

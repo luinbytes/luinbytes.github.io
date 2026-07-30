@@ -14,3 +14,4 @@
 [OUTCOMES]
 - 2026-07-30T00:00Z [TOOL] `node --check script.js`, `python3 -m py_compile tests/browser_launchpad.py`, and `git diff --check` pass; the browser regression test is blocked because Python Playwright is not installed.
 - 2026-07-30T00:00Z [USER] All animated canvas palettes are restricted to the existing Luinbytes brand colours.
+- 2026-07-30T00:00Z [USER] LU readability needs the mesh treatment inverted; the field is now dark with bright brand-colour circles and a dark negative-space glyph.
