@@ -107,10 +107,8 @@ class DotCut {
     const size = this.cols * this.rows;
     this.from = new Float32Array(size);
     this.live = new Float32Array(size);
-    this.target = new Uint8Array(size);
     this.delay = new Float32Array(size);
     this.random = Float32Array.from({ length: size }, (_, i) => hash(i * 1.37 + 0.5));
-    this.style = new Float32Array(size);
     this.target = this.rasterize(this.scenes[this.scene]);
     this.live.set(this.target);
     this.from.set(this.target);
@@ -223,7 +221,7 @@ class DotCut {
   }
 
   start() {
-    if (this.running || !this.ctx || document.hidden) return;
+    if (this.running || this.reduced || !this.ctx || document.hidden) return;
     this.running = true;
     this.last = performance.now();
     this.raf = requestAnimationFrame(this.tick);
